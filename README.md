@@ -13,17 +13,22 @@ git submodule update --init
 Then install dependencies using Yarn
 
 ```bash
-# install dependencies
 $ yarn install
 ```
 
 ### Updating Spryker integration
 
 When you want to pull latest updates for Spryker integration submodule
-make sure you reinstall dependencieas afterwards using Yarn
 
 ```bash
-# update dependencies
+git submodule update --remote
+```
+
+(or go inside submodule folder and do `git pull`)
+
+After that make sure you reinstall dependencieas using Yarn
+
+```bash
 $ yarn install
 ```
 
