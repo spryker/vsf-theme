@@ -1,6 +1,6 @@
 {
-  "name": "spryker-vsf-project",
-  "description": "Project based on VueStorefront Next with Spryker integration",
+  "name": "spryker-vsf-b2c",
+  "description": "B2C project based on VueStorefront Next with Spryker integration",
   "author": "Spryker Systems",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,6 @@
-# spryker-vsf-project
+# spryker-vsf-b2c
 
-> Project based on VueStorefront Next with Spryker integration
+> B2C project based on VueStorefront Next with Spryker integration
 
 ## Installation
 
