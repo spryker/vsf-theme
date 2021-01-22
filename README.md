@@ -69,10 +69,10 @@ $ yarn test
 
 ### End-to-end testing
 
-E2E testing is not setup be default but all UI contains attributes
-that simplify interaction between e2e tools and UI.
+E2E testing is not setup by default but all UI contains attributes
+that simplify interaction between e2e tool and UI.
 
-We do recommend to use Cypress for E2E tests as it's simple te setup.
+We do recommend to use Cypress for E2E tests as it's easy te setup and use.
 
 See https://www.cypress.io/ for more info.
 
