@@ -1,0 +1,42 @@
+{
+  "name": "spryker-vsf-project",
+  "description": "Project based on VueStorefront Next with Spryker integration",
+  "author": "Spryker Systems",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build ",
+    "build:analyze": "nuxt build -a -m",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "test": "jest",
+    "postinstall": "cd spryker-integration && yarn build:api-client && yarn build:composables"
+  },
+  "workspaces": [
+    "spryker-integration",
+    "spryker-integration/packages/*"
+  ],
+  "dependencies": {
+    "@storefront-ui/vue": "^0.10.0",
+    "@vue-storefront/nuxt": "^2.2.1",
+    "@vue-storefront/nuxt-theme": "^2.2.1",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "cookie-universal-nuxt": "^2.1.4",
+    "core-js": "^2.6.5",
+    "nuxt": "^2.14.12",
+    "nuxt-i18n": "^6.18.0",
+    "vee-validate": "^3.4.5",
+    "vue-scrollto": "^2.20.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.12",
+    "@nuxt/typescript-build": "^2.0.4",
+    "@vue/test-utils": "^1.1.2",
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
+    "lerna": "^3.22.1",
+    "ts-loader": "^8.0.14",
+    "vue-jest": "^4.0.0-0"
+  }
+}
