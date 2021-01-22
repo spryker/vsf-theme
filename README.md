@@ -1,4 +1,4 @@
-# spryker-vsf-b2c
+# spryker-vsf-b2c - Alpha (extraction)
 
 > B2C project based on VueStorefront Next with Spryker integration
 
