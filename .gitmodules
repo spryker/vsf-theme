@@ -1,4 +1,4 @@
 [submodule "spryker-integration"]
 	path = spryker-integration
-	url = git@github.com:vuestorefront/spryker-pwa.git
-	branch = dev-integration
+	url = git@github.com:spryker/vsf-monorepo.git
+	branch = develop
