@@ -10,7 +10,10 @@
     "build:analyze": "nuxt build -a -m",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "test:e2e:ci": "start-server-and-test start http://localhost:3000 test:e2e"
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
@@ -31,8 +34,10 @@
     "@nuxt/typescript-build": "^2.0.4",
     "@vue/test-utils": "^1.1.2",
     "babel-jest": "^24.1.0",
+    "cypress": "^6.3.0",
     "jest": "^24.1.0",
     "lerna": "^3.22.1",
+    "start-server-and-test": "^1.11.7",
     "ts-loader": "^8.0.14",
     "vue-jest": "^4.0.0-0"
   }
