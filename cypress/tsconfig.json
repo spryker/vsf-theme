@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["@types/node", "@nuxt/types", "nuxt-i18n", "cypress"]
+  },
+  "include": ["**/*.ts"]
+}
