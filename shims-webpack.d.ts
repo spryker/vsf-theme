@@ -1,4 +1,4 @@
-declare module 'webpack-hot-middleware' {
+declare module "webpack-hot-middleware" {
   const middleware: any;
   export interface Options {
     [proName: string]: any;
@@ -13,4 +13,9 @@ declare module 'webpack-hot-middleware' {
   }
 
   export default middleware;
+}
+
+declare module "*.vue" {
+  import Vue from "vue";
+  export = Vue;
 }

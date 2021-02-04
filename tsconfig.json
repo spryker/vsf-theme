@@ -14,7 +14,7 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@types/node", "@nuxt/types", "nuxt-i18n", "cypress"]
+    "types": ["@types/node", "@nuxt/types", "nuxt-i18n", "jest"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

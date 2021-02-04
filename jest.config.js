@@ -1,17 +1,28 @@
 module.exports = {
+  testMatch: ["**/*.spec.(js|ts)"],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-    '^~/(.*)$': '<rootDir>/$1',
-    '^vue$': 'vue/dist/vue.common.js'
+    "^@/(.*)$": "<rootDir>/$1",
+    "^~/(.*)$": "<rootDir>/$1",
+    "^.+\\.(css|less|scss)$": "<rootDir>/config/jest/cssStub.js"
   },
-  moduleFileExtensions: ['js', 'vue', 'json'],
+  setupFiles: ["<rootDir>/config/jest/setupTestEnvironment.ts"],
+  moduleFileExtensions: ["js", "ts", "json", "vue"],
   transform: {
-    '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest'
+    "^.+\\.js$": "babel-jest",
+    "^.+\\.ts$": "ts-jest",
+    "^.*\\.vue$": "vue-jest"
   },
-  collectCoverage: true,
+  transformIgnorePatterns: [
+    "/node_modules/(?!@storefront-ui|@vue-storefront|@spryker-vsf)"
+  ],
   collectCoverageFrom: [
-    '<rootDir>/components/**/*.vue',
-    '<rootDir>/pages/**/*.vue'
-  ]
+    "<rootDir>/composables/**/*.ts",
+    "<rootDir>/components/**/*.vue",
+    "<rootDir>/pages/**/*.vue"
+  ],
+  globals: {
+    "ts-jest": {
+      tsConfig: "tsconfig.spec.json"
+    }
+  }
 };
