@@ -69,12 +69,26 @@ $ yarn test
 
 ### End-to-end testing
 
-E2E testing is not setup by default but all UI contains attributes
-that simplify interaction between e2e tool and UI.
+For E2E testing Cypress is used.
 
-We do recommend to use Cypress for E2E tests as it's easy te setup and use.
+To execute e2e tests run
 
-See https://www.cypress.io/ for more info.
+```bash
+$ yarn test:e2e
+```
+
+To open e2e cypress window
+
+```bash
+$ yarn test:e2e:open
+```
+
+To run e2e in CI you should first build the project (ex. `yarn build`)
+and then it will start server automatically and run e2e tests
+
+```bash
+$ yarn test:e2e:ci
+```
 
 ---
 
