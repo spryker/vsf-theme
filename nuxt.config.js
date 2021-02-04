@@ -43,14 +43,14 @@ export default {
           verbosity: "error"
         },
         useRawSource: {
-          dev: ["@vue-storefront/spryker", "@vue-storefront/core"],
-          prod: ["@vue-storefront/spryker", "@vue-storefront/core"]
+          dev: ["@spryker-vsf/composables", "@vue-storefront/core"],
+          prod: ["@spryker-vsf/composables", "@vue-storefront/core"]
         }
       }
     ],
     ["@vue-storefront/nuxt-theme"],
     [
-      "@vue-storefront/spryker/nuxt",
+      "@spryker-vsf/composables/nuxt",
       {
         baseURL: "http://glue.de.spryker.local/",
         locale: "en",

@@ -11,7 +11,8 @@
         :name="String(userBillingGetters.getId(billingAddress))"
       >
         <span
-          >{{ userBillingGetters.getFirstName(billingAddress) }} {{ userBillingGetters.getLastName(billingAddress) }}</span
+          >{{ userBillingGetters.getFirstName(billingAddress) }}
+          {{ userBillingGetters.getLastName(billingAddress) }}</span
         >
         <span
           >{{ userBillingGetters.getStreetName(billingAddress) }}
@@ -20,9 +21,13 @@
         <span>{{ userBillingGetters.getPostCode(billingAddress) }}</span>
         <span
           >{{ userBillingGetters.getCity(billingAddress)
-          }}{{ userBillingGetters.getProvince(billingAddress) ? `, ${userBillingGetters.getProvince(billingAddress)}` : '' }}</span
+          }}{{
+            userBillingGetters.getProvince(billingAddress)
+              ? `, ${userBillingGetters.getProvince(billingAddress)}`
+              : ""
+          }}</span
         >
-        <span>{{ userBillingGetters.getCountry(billingAddress)}}</span>
+        <span>{{ userBillingGetters.getCountry(billingAddress) }}</span>
         <span>{{ userBillingGetters.getPhone(billingAddress) }}</span>
       </SfAddress>
     </SfAddressPicker>
@@ -38,14 +43,11 @@
 </template>
 
 <script>
-import {
-  SfCheckbox,
-  SfAddressPicker
-} from '@storefront-ui/vue';
-import { userBillingGetters } from '@vue-storefront/spryker';
+import { SfCheckbox, SfAddressPicker } from "@storefront-ui/vue";
+import { userBillingGetters } from "@spryker-vsf/composables";
 
 export default {
-  name: 'UserBillingAddresses',
+  name: "UserBillingAddresses",
   props: {
     currentAddressId: {
       type: Number,
@@ -64,8 +66,8 @@ export default {
     SfCheckbox,
     SfAddressPicker
   },
-  setup (_, { emit }) {
-    const setCurrentAddress = $event => emit('setCurrentAddress', $event);
+  setup(_, { emit }) {
+    const setCurrentAddress = $event => emit("setCurrentAddress", $event);
 
     return {
       setCurrentAddress,
@@ -76,12 +78,13 @@ export default {
 </script>
 
 <style>
-  .billing__addresses {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: var(--spacer-xl);
-  }
-  .billing-address-setAsDefault, .form__action-button--margin-bottom {
-    margin-bottom: var(--spacer-xl);
-  }
+.billing__addresses {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--spacer-xl);
+}
+.billing-address-setAsDefault,
+.form__action-button--margin-bottom {
+  margin-bottom: var(--spacer-xl);
+}
 </style>

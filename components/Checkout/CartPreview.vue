@@ -20,12 +20,21 @@
       />
       <SfProperty
         name="Shipping"
-        :value="checkoutGetters.getFormattedPrice(checkoutGetters.getShippingMethodPrice(chosenShippingMethod))"
+        :value="
+          checkoutGetters.getFormattedPrice(
+            checkoutGetters.getShippingMethodPrice(chosenShippingMethod)
+          )
+        "
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
         name="Total"
-        :value="checkoutGetters.getFormattedPrice(totals.total + checkoutGetters.getShippingMethodPrice(chosenShippingMethod))"
+        :value="
+          checkoutGetters.getFormattedPrice(
+            totals.total +
+              checkoutGetters.getShippingMethodPrice(chosenShippingMethod)
+          )
+        "
         class="sf-property--full-width sf-property--large property-total"
       />
     </div>
@@ -52,7 +61,6 @@
   </div>
 </template>
 <script>
-
 import {
   SfHeading,
   SfButton,
@@ -61,12 +69,17 @@ import {
   SfCharacteristic,
   SfInput,
   SfCircleIcon
-} from '@storefront-ui/vue';
-import { computed, ref } from '@vue/composition-api';
-import { useCart, useCheckout, checkoutGetters, cartGetters } from '@vue-storefront/spryker';
+} from "@storefront-ui/vue";
+import { computed, ref } from "@vue/composition-api";
+import {
+  useCart,
+  useCheckout,
+  checkoutGetters,
+  cartGetters
+} from "@spryker-vsf/composables";
 
 export default {
-  name: 'CartPreview',
+  name: "CartPreview",
   components: {
     SfHeading,
     SfButton,
@@ -80,7 +93,7 @@ export default {
     const { chosenShippingMethod } = useCheckout();
     const { cart, removeFromCart, updateQuantity, applyCoupon } = useCart();
     const listIsHidden = ref(false);
-    const promoCode = ref('');
+    const promoCode = ref("");
     const showPromoCode = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -101,20 +114,20 @@ export default {
       applyCoupon,
       characteristics: [
         {
-          title: 'Safety',
-          description: 'It carefully packaged with a personal touch',
-          icon: 'safety'
+          title: "Safety",
+          description: "It carefully packaged with a personal touch",
+          icon: "safety"
         },
         {
-          title: 'Easy shipping',
+          title: "Easy shipping",
           description:
-            'You’ll receive dispatch confirmation and an arrival date',
-          icon: 'shipping'
+            "You’ll receive dispatch confirmation and an arrival date",
+          icon: "shipping"
         },
         {
-          title: 'Changed your mind?',
-          description: 'Rest assured, we offer free returns within 30 days',
-          icon: 'return'
+          title: "Changed your mind?",
+          description: "Rest assured, we offer free returns within 30 days",
+          icon: "return"
         }
       ]
     };
@@ -167,5 +180,4 @@ export default {
     flex: 1;
   }
 }
-
 </style>

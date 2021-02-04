@@ -377,7 +377,7 @@ import {
   useWishlist,
   facetGetters,
   productGetters
-} from "@vue-storefront/spryker";
+} from "@spryker-vsf/composables";
 import { useUiHelpers, useUiState } from "~/composables";
 import { onSSR } from "@vue-storefront/core";
 import Vue from "vue";

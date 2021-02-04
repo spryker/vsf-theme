@@ -1,31 +1,44 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
-    <form @submit.prevent="handleSubmit(addressIsModified ? handleBillingAddressSubmit : handleFormSubmit)">
-    <SfHeading
-      :level="3"
-      title="Billing address"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
-    <UserBillingAddresses
-      v-if="isAuthenticated && billingAddresses && billingAddresses.length"
-      :setAsDefault="setAsDefault"
-      :billingAddresses="billingAddresses"
-      :currentAddressId="currentAddressId"
-      @setCurrentAddress="setCurrentAddress($event)"
-      @changeSetAsDefault="setAsDefault = $event"
-    />
-    <SfCheckbox
-      :selected="sameAsShipping"
-      @change="handleCheckSameAddress"
-      label="Copy address data from shipping"
-      name="copyShippingAddress"
-      class="form__element"
-    />
+    <form
+      @submit.prevent="
+        handleSubmit(
+          addressIsModified ? handleBillingAddressSubmit : handleFormSubmit
+        )
+      "
+    >
+      <SfHeading
+        :level="3"
+        title="Billing address"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+      <UserBillingAddresses
+        v-if="isAuthenticated && billingAddresses && billingAddresses.length"
+        :setAsDefault="setAsDefault"
+        :billingAddresses="billingAddresses"
+        :currentAddressId="currentAddressId"
+        @setCurrentAddress="setCurrentAddress($event)"
+        @changeSetAsDefault="setAsDefault = $event"
+      />
+      <SfCheckbox
+        :selected="sameAsShipping"
+        @change="handleCheckSameAddress"
+        label="Copy address data from shipping"
+        name="copyShippingAddress"
+        class="form__element"
+      />
       <div class="form" v-if="canAddNewAddress">
-        <ValidationProvider name="firstName" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="firstName"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.firstName"
-            @input="firstName => setBillingDetailsAndUnpickAddress({ firstName })"
+            @input="
+              firstName => setBillingDetailsAndUnpickAddress({ firstName })
+            "
             label="First name"
             name="firstName"
             class="form__element form__element--half"
@@ -34,7 +47,12 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="lastName" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="lastName"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.lastName"
             @input="lastName => setBillingDetailsAndUnpickAddress({ lastName })"
@@ -46,10 +64,17 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="streetName" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="streetName"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.streetName"
-            @input="streetName => setBillingDetailsAndUnpickAddress({ streetName })"
+            @input="
+              streetName => setBillingDetailsAndUnpickAddress({ streetName })
+            "
             label="Street name"
             name="streetName"
             class="form__element form__element--half"
@@ -58,10 +83,18 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="apartment" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="apartment"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.streetNumber"
-            @input="streetNumber => setBillingDetailsAndUnpickAddress({ streetNumber })"
+            @input="
+              streetNumber =>
+                setBillingDetailsAndUnpickAddress({ streetNumber })
+            "
             label="House/Apartment number"
             name="apartment"
             class="form__element form__element--half form__element--half-even"
@@ -70,7 +103,12 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="city" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="city"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.city"
             @input="city => setBillingDetailsAndUnpickAddress({ city })"
@@ -82,10 +120,17 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="zipCode" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="zipCode"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.postalCode"
-            @input="postalCode => setBillingDetailsAndUnpickAddress({ postalCode })"
+            @input="
+              postalCode => setBillingDetailsAndUnpickAddress({ postalCode })
+            "
             label="Zip-code"
             name="zipCode"
             class="form__element form__element--half form__element--half-even"
@@ -94,7 +139,12 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="country" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="country"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfSelect
             :selected="billingDetails.country"
             @change="country => setBillingDetailsAndUnpickAddress({ country })"
@@ -113,10 +163,18 @@
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
-        <ValidationProvider name="phone" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="phone"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="billingDetails.contactInfo.phone"
-            @input="phone => setBillingDetailsAndUnpickAddress({ contactInfo: { phone } })"
+            @input="
+              phone =>
+                setBillingDetailsAndUnpickAddress({ contactInfo: { phone } })
+            "
             label="Phone number"
             name="phone"
             class="form__element form__element--half form__element--half-even"
@@ -134,42 +192,56 @@
       >
         Add new address
       </SfButton>
-    <SfHeading
-      v-if="canContinueToReview"
-      :level="3"
-      title="Payment methods"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
-    <div class="form">
-      <div class="form__element payment-methods" v-if="canContinueToReview">
-        <SfRadio
-          v-for="item in paymentMethods"
-          :key="item.value"
-          :selected="chosenPaymentMethod.value"
-          :label="item.label"
-          :value="item.value"
-          @input="setPaymentMethod(item, { save: true })"
-          name="paymentMethod"
-          :description="item.description"
-          class="form__radio payment-method"
-        >
-          <template #label>
-            <div class="sf-radio__label">
-              {{ item.label }}
-            </div>
-          </template>
-        </SfRadio>
+      <SfHeading
+        v-if="canContinueToReview"
+        :level="3"
+        title="Payment methods"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+      <div class="form">
+        <div class="form__element payment-methods" v-if="canContinueToReview">
+          <SfRadio
+            v-for="item in paymentMethods"
+            :key="item.value"
+            :selected="chosenPaymentMethod.value"
+            :label="item.label"
+            :value="item.value"
+            @input="setPaymentMethod(item, { save: true })"
+            name="paymentMethod"
+            :description="item.description"
+            class="form__radio payment-method"
+          >
+            <template #label>
+              <div class="sf-radio__label">
+                {{ item.label }}
+              </div>
+            </template>
+          </SfRadio>
+        </div>
+        <div class="form__action">
+          <nuxt-link
+            to="/checkout/shipping"
+            class="sf-button color-secondary form__back-button"
+            >Go back</nuxt-link
+          >
+          <SfButton
+            class="form__action-button"
+            type="submit"
+            :disabled="loading.billingAddress"
+            v-if="canContinueToReview"
+          >
+            Review my order
+          </SfButton>
+          <SfButton
+            class="form__action-button"
+            type="submit"
+            :disabled="loading.billingAddress"
+            v-else
+          >
+            Select payment method
+          </SfButton>
+        </div>
       </div>
-      <div class="form__action">
-        <nuxt-link to="/checkout/shipping" class="sf-button color-secondary form__back-button">Go back</nuxt-link>
-        <SfButton class="form__action-button" type="submit" :disabled="loading.billingAddress" v-if="canContinueToReview">
-          Review my order
-        </SfButton>
-        <SfButton class="form__action-button" type="submit" :disabled="loading.billingAddress" v-else>
-          Select payment method
-        </SfButton>
-      </div>
-    </div>
     </form>
   </ValidationObserver>
 </template>
@@ -183,33 +255,34 @@ import {
   SfRadio,
   SfImage,
   SfCheckbox
-} from '@storefront-ui/vue';
-import { ref, computed, onMounted } from '@vue/composition-api';
-import { useCheckout, useUser, userBillingGetters, useUserBilling } from '@vue-storefront/spryker';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, min } from 'vee-validate/dist/rules';
-import { onSSR } from '@vue-storefront/core';
+} from "@storefront-ui/vue";
+import { ref, computed, onMounted } from "@vue/composition-api";
+import {
+  useCheckout,
+  useUser,
+  userBillingGetters,
+  useUserBilling
+} from "@spryker-vsf/composables";
+import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
+import { required, min } from "vee-validate/dist/rules";
+import { onSSR } from "@vue-storefront/core";
 
 const COUNTRIES = [
-  { key: 'US',
-    label: 'United States' },
-  { key: 'UK',
-    label: 'United Kingdom' },
-  { key: 'IT',
-    label: 'Italy' },
-  { key: 'PL',
-    label: 'Poland' }
+  { key: "US", label: "United States" },
+  { key: "UK", label: "United Kingdom" },
+  { key: "IT", label: "Italy" },
+  { key: "PL", label: "Poland" }
 ];
-extend('required', {
+extend("required", {
   ...required,
-  message: 'This field is required'
+  message: "This field is required"
 });
-extend('min', {
+extend("min", {
   ...min,
-  message: 'The field should have at least {length} characters'
+  message: "The field should have at least {length} characters"
 });
 export default {
-  name: 'Payment',
+  name: "Payment",
   components: {
     SfHeading,
     SfInput,
@@ -218,7 +291,8 @@ export default {
     SfRadio,
     SfImage,
     SfCheckbox,
-    UserBillingAddresses: () => import('~/components/Checkout/UserBillingAddresses'),
+    UserBillingAddresses: () =>
+      import("~/components/Checkout/UserBillingAddresses"),
     ValidationProvider,
     ValidationObserver
   },
@@ -262,13 +336,17 @@ export default {
       postalCode: userBillingGetters.getPostCode(address)
     });
 
-    const setCurrentAddress = async (addressId) => {
-      const chosenAddress = userBillingGetters.getAddresses(billing.value, { id: addressId });
+    const setCurrentAddress = async addressId => {
+      const chosenAddress = userBillingGetters.getAddresses(billing.value, {
+        id: addressId
+      });
       if (!chosenAddress || !chosenAddress.length) {
         return;
       }
       currentAddressId.value = addressId;
-      setBillingDetails(mapAbstractAddressToIntegrationAddress(chosenAddress[0]));
+      setBillingDetails(
+        mapAbstractAddressToIntegrationAddress(chosenAddress[0])
+      );
       addressIsModified.value = true;
       sameAsShipping.value = false;
     };
@@ -294,14 +372,16 @@ export default {
 
     const handleFormSubmit = async () => {
       await setBillingDetails(billingDetails.value, { save: true });
-      context.root.$router.push('/checkout/order-review');
+      context.root.$router.push("/checkout/order-review");
     };
 
     const handleBillingAddressSubmit = async () => {
       await setBillingDetails(billingDetails.value, { save: true });
       // here we should have something like loadPaymentMethods which depends on billing address imo
       if (currentAddressId.value > -1 && setAsDefault.value) {
-        const chosenAddress = userBillingGetters.getAddresses(billing.value, { id: currentAddressId.value });
+        const chosenAddress = userBillingGetters.getAddresses(billing.value, {
+          id: currentAddressId.value
+        });
         if (!chosenAddress || !chosenAddress.length) {
           return;
         }
@@ -342,9 +422,13 @@ export default {
       handleBillingAddressSubmit,
       handleCheckSameAddress,
       isAuthenticated,
-      billingAddresses: computed(() => userBillingGetters.getAddresses(billing.value)),
+      billingAddresses: computed(() =>
+        userBillingGetters.getAddresses(billing.value)
+      ),
       setAsDefault,
-      canContinueToReview: computed(() => isBillingAddressCompleted.value && !addressIsModified.value),
+      canContinueToReview: computed(
+        () => isBillingAddressCompleted.value && !addressIsModified.value
+      ),
       currentAddressId: computed(() => currentAddressId.value),
       setCurrentAddress,
       addressIsModified,
@@ -404,7 +488,8 @@ export default {
       display: flex;
     }
   }
-  &__action-button, &__back-button {
+  &__action-button,
+  &__back-button {
     --button-width: 100%;
     @include for-desktop {
       --button-width: auto;
@@ -422,7 +507,7 @@ export default {
   &__back-button {
     margin: var(--spacer-xl) 0 var(--spacer-sm);
     &:hover {
-      color:  white;
+      color: white;
     }
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;

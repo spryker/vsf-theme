@@ -3,7 +3,8 @@
     <!-- Personal data update -->
     <SfTab data-cy="my-profile-tab_personal-data" title="Personal data">
       <p class="message">
-        Feel free to edit any of your details below so your account is always up to date
+        Feel free to edit any of your details below so your account is always up
+        to date
       </p>
 
       <ProfileUpdateForm @submit="updatePersonalData" />
@@ -30,40 +31,44 @@
 </template>
 
 <script>
-import { extend } from 'vee-validate';
-import { email, required, min, confirmed } from 'vee-validate/dist/rules';
-import ProfileUpdateForm from '~/components/MyAccount/ProfileUpdateForm';
-import PasswordResetForm from '~/components/MyAccount/PasswordResetForm';
-import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
-import { useUser } from '@vue-storefront/spryker';
+import { extend } from "vee-validate";
+import { email, required, min, confirmed } from "vee-validate/dist/rules";
+import ProfileUpdateForm from "~/components/MyAccount/ProfileUpdateForm";
+import PasswordResetForm from "~/components/MyAccount/PasswordResetForm";
+import { SfTabs, SfInput, SfButton } from "@storefront-ui/vue";
+import { useUser } from "@spryker-vsf/composables";
 
-extend('email', {
+extend("email", {
   ...email,
-  message: 'Invalid email'
+  message: "Invalid email"
 });
 
-extend('required', {
+extend("required", {
   ...required,
-  message: 'This field is required'
+  message: "This field is required"
 });
 
-extend('min', {
+extend("min", {
   ...min,
-  message: 'The field should have at least {length} characters'
+  message: "The field should have at least {length} characters"
 });
 
-extend('password', {
-  validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
-  message: 'Password must have at least 8 characters including one letter and a number'
+extend("password", {
+  validate: value =>
+    String(value).length >= 8 &&
+    String(value).match(/[A-Za-z]/gi) &&
+    String(value).match(/[0-9]/gi),
+  message:
+    "Password must have at least 8 characters including one letter and a number"
 });
 
-extend('confirmed', {
+extend("confirmed", {
   ...confirmed,
-  message: 'Passwords don\'t match'
+  message: "Passwords don't match"
 });
 
 export default {
-  name: 'PersonalDetails',
+  name: "PersonalDetails",
 
   components: {
     SfTabs,
@@ -85,8 +90,15 @@ export default {
       }
     };
 
-    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => updateUser(form.value), onComplete, onError);
-    const updatePassword = ({ form, onComplete, onError }) => formHandler(() => changePassword(form.value.currentPassword, form.value.newPassword), onComplete, onError);
+    const updatePersonalData = ({ form, onComplete, onError }) =>
+      formHandler(() => updateUser(form.value), onComplete, onError);
+    const updatePassword = ({ form, onComplete, onError }) =>
+      formHandler(
+        () =>
+          changePassword(form.value.currentPassword, form.value.newPassword),
+        onComplete,
+        onError
+      );
 
     return {
       updatePersonalData,
@@ -96,7 +108,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .message,
 .notice {
   font-family: var(--font-family--primary);
@@ -113,5 +125,4 @@ export default {
   margin: var(--spacer-lg) 0 0 0;
   font-size: var(--font-size--sm);
 }
-
 </style>

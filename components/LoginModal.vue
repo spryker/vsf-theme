@@ -4,7 +4,8 @@
       :visible="isLoginModalOpen"
       title="Log in"
       class="modal"
-      @close="toggleLoginModal">
+      @close="toggleLoginModal"
+    >
       <transition name="fade" mode="out-in">
         <div v-if="isLogin" key="log-in">
           <ValidationObserver v-slot="{ handleSubmit }">
@@ -39,7 +40,8 @@
                 label="Remember me"
                 class="form__element"
               />
-              <SfButton data-cy="login-btn_submit"
+              <SfButton
+                data-cy="login-btn_submit"
                 type="submit"
                 class="sf-button--full-width form__button"
                 :disabled="loading"
@@ -51,16 +53,29 @@
             </form>
           </ValidationObserver>
           <div class="action">
-            <SfButton data-cy="login-btn_forgot-password" class="sf-button--text">Forgotten password?</SfButton>
+            <SfButton
+              data-cy="login-btn_forgot-password"
+              class="sf-button--text"
+              >Forgotten password?</SfButton
+            >
           </div>
           <div class="bottom">
             Don't have and account yet?
-            <SfButton data-cy="login-btn_sign-up" class="sf-button--text" @click="isLogin = false">Register today?</SfButton>
+            <SfButton
+              data-cy="login-btn_sign-up"
+              class="sf-button--text"
+              @click="isLogin = false"
+              >Register today?</SfButton
+            >
           </div>
         </div>
         <div v-else key="sign-up" class="form">
           <ValidationObserver v-slot="{ handleSubmit }">
-            <form class="form" @submit.prevent="handleSubmit(handleRegister)" autocomplete="off">
+            <form
+              class="form"
+              @submit.prevent="handleSubmit(handleRegister)"
+              autocomplete="off"
+            >
               <ValidationProvider rules="required|email" v-slot="{ errors }">
                 <SfInput
                   data-cy="login-input_email"
@@ -106,7 +121,10 @@
                   class="form__element"
                 />
               </ValidationProvider>
-              <ValidationProvider :rules="{ required: { allowFalse: false } }" v-slot="{ errors }">
+              <ValidationProvider
+                :rules="{ required: { allowFalse: false } }"
+                v-slot="{ errors }"
+              >
                 <SfCheckbox
                   v-model="createAccount"
                   :valid="!errors[0]"
@@ -130,7 +148,12 @@
           </ValidationObserver>
           <div class="action">
             or
-            <SfButton data-cy="login-btn_login-into-account" class="sf-button--text" @click="isLogin = true">login in to your account</SfButton>
+            <SfButton
+              data-cy="login-btn_login-into-account"
+              class="sf-button--text"
+              @click="isLogin = true"
+              >login in to your account</SfButton
+            >
           </div>
         </div>
       </transition>
@@ -138,25 +161,32 @@
   </div>
 </template>
 <script>
-import { ref, watch } from '@vue/composition-api';
-import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert } from '@storefront-ui/vue';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email } from 'vee-validate/dist/rules';
-import { useUser } from '@vue-storefront/spryker';
-import { useUiState } from '~/composables';
+import { ref, watch } from "@vue/composition-api";
+import {
+  SfModal,
+  SfInput,
+  SfButton,
+  SfCheckbox,
+  SfLoader,
+  SfAlert
+} from "@storefront-ui/vue";
+import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
+import { required, email } from "vee-validate/dist/rules";
+import { useUser } from "@spryker-vsf/composables";
+import { useUiState } from "~/composables";
 
-extend('email', {
+extend("email", {
   ...email,
-  message: 'Invalid email'
+  message: "Invalid email"
 });
 
-extend('required', {
+extend("required", {
   ...required,
-  message: 'This field is required'
+  message: "This field is required"
 });
 
 export default {
-  name: 'LoginModal',
+  name: "LoginModal",
   components: {
     SfModal,
     SfInput,
@@ -181,7 +211,7 @@ export default {
       }
     });
 
-    const handleForm = (fn) => async () => {
+    const handleForm = fn => async () => {
       await fn(form.value);
       toggleLoginModal();
     };
@@ -218,7 +248,8 @@ export default {
   align-items: center;
   justify-content: center;
   margin: var(--spacer-xl) 0 var(--spacer-xl) 0;
-  font: var(--font-weight--light) var(--font-size--base) / 1.6 var(--font-family--secondary);
+  font: var(--font-weight--light) var(--font-size--base) / 1.6
+    var(--font-family--secondary);
   & > * {
     margin: 0 0 0 var(--spacer-xs);
   }

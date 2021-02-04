@@ -10,27 +10,38 @@
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
-              {{ personalDetails.firstName }} {{ personalDetails.lastName }}<br />
+              {{ personalDetails.firstName }} {{ personalDetails.lastName
+              }}<br />
             </p>
             <p class="content">
               {{ personalDetails.email }}
             </p>
           </div>
-          <SfButton class="sf-button--text color-secondary accordion__edit" @click="$emit('click:edit', 0)">Edit</SfButton>
+          <SfButton
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('click:edit', 0)"
+            >Edit</SfButton
+          >
         </div>
       </SfAccordionItem>
       <SfAccordionItem header="Shipping address">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
-              <span class="content__label">{{ checkoutGetters.getShippingMethodName(chosenShippingMethod) }}</span><br />
+              <span class="content__label">{{
+                checkoutGetters.getShippingMethodName(chosenShippingMethod)
+              }}</span
+              ><br />
               {{ shippingDetails.streetName }} {{ shippingDetails.apartment }},
               {{ shippingDetails.zipCode }}<br />
               {{ shippingDetails.city }}, {{ shippingDetails.country }}
             </p>
             <p class="content">{{ shippingDetails.phoneNumber }}</p>
           </div>
-          <SfButton class="sf-button--text color-secondary accordion__edit" @click="$emit('click:edit', 1)">Edit</SfButton
+          <SfButton
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('click:edit', 1)"
+            >Edit</SfButton
           >
         </div>
       </SfAccordionItem>
@@ -42,7 +53,10 @@
             </p>
             <template v-else>
               <p class="content">
-                <span class="content__label">{{ chosenPaymentMethod.label }}</span><br />
+                <span class="content__label">{{
+                  chosenPaymentMethod.label
+                }}</span
+                ><br />
                 {{ billingDetails.streetName }} {{ billingDetails.apartment }},
                 {{ billingDetails.zipCode }}<br />
                 {{ billingDetails.city }}, {{ billingDetails.country }}
@@ -50,7 +64,11 @@
               <p class="content">{{ billingDetails.phoneNumber }}</p>
             </template>
           </div>
-          <SfButton class="sf-button--text color-secondary accordion__edit" @click="$emit('click:edit', 2)">Edit</SfButton>
+          <SfButton
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('click:edit', 2)"
+            >Edit</SfButton
+          >
         </div>
       </SfAccordionItem>
       <SfAccordionItem header="Payment method">
@@ -58,7 +76,11 @@
           <div class="accordion__content">
             <p class="content">{{ chosenPaymentMethod.label }}</p>
           </div>
-          <SfButton class="sf-button--text color-secondary accordion__edit" @click="$emit('click:edit', 2)">Edit</SfButton>
+          <SfButton
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('click:edit', 2)"
+            >Edit</SfButton
+          >
         </div>
       </SfAccordionItem>
     </SfAccordion>
@@ -83,20 +105,36 @@
           <SfImage :src="cartGetters.getItemImage(product)" />
         </SfTableData>
         <SfTableData class="table__data table__description table__data">
-          <div class="product-title">{{ cartGetters.getItemName(product) }}</div>
+          <div class="product-title">
+            {{ cartGetters.getItemName(product) }}
+          </div>
           <div class="product-sku">{{ cartGetters.getItemSku(product) }}</div>
         </SfTableData>
         <SfTableData
-          class="table__data" v-for="(value, key) in cartGetters.getItemAttributes(product, ['size', 'color'])"
+          class="table__data"
+          v-for="(value, key) in cartGetters.getItemAttributes(product, [
+            'size',
+            'color'
+          ])"
           :key="key"
         >
           {{ value }}
         </SfTableData>
-        <SfTableData class="table__data">{{ cartGetters.getItemQty(product) }}</SfTableData>
+        <SfTableData class="table__data">{{
+          cartGetters.getItemQty(product)
+        }}</SfTableData>
         <SfTableData class="table__data price">
           <SfPrice
-            :regular="cartGetters.getFormattedPrice(cartGetters.getItemPrice(product).regular)"
-            :special="cartGetters.getFormattedPrice(cartGetters.getItemPrice(product).special)"
+            :regular="
+              cartGetters.getFormattedPrice(
+                cartGetters.getItemPrice(product).regular
+              )
+            "
+            :special="
+              cartGetters.getFormattedPrice(
+                cartGetters.getItemPrice(product).special
+              )
+            "
             class="product-price"
           />
         </SfTableData>
@@ -112,7 +150,11 @@
           />
           <SfProperty
             name="Shipping"
-            :value="checkoutGetters.getFormattedPrice(checkoutGetters.getShippingMethodPrice(chosenShippingMethod))"
+            :value="
+              checkoutGetters.getFormattedPrice(
+                checkoutGetters.getShippingMethodPrice(chosenShippingMethod)
+              )
+            "
             class="sf-property--full-width property"
           />
         </div>
@@ -129,15 +171,22 @@
             </div>
           </template>
         </SfCheckbox>
-          <div class="summary__action">
-          <nuxt-link to="/checkout/payment" class="sf-button color-secondary summary__back-button">Go back</nuxt-link>
-          <SfButton class="summary__action-button" @click="processOrder" :disabled="loading.order">
+        <div class="summary__action">
+          <nuxt-link
+            to="/checkout/payment"
+            class="sf-button color-secondary summary__back-button"
+            >Go back</nuxt-link
+          >
+          <SfButton
+            class="summary__action-button"
+            @click="processOrder"
+            :disabled="loading.order"
+          >
             Make an order
           </SfButton>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -154,12 +203,17 @@ import {
   SfProperty,
   SfAccordion,
   SfLink
-} from '@storefront-ui/vue';
-import { ref, computed } from '@vue/composition-api';
-import { useCheckout, useCart, cartGetters, checkoutGetters } from '@vue-storefront/spryker';
-import { onSSR } from '@vue-storefront/core';
+} from "@storefront-ui/vue";
+import { ref, computed } from "@vue/composition-api";
+import {
+  useCheckout,
+  useCart,
+  cartGetters,
+  checkoutGetters
+} from "@spryker-vsf/composables";
+import { onSSR } from "@vue-storefront/core";
 export default {
-  name: 'ReviewOrder',
+  name: "ReviewOrder",
   components: {
     SfHeading,
     SfTable,
@@ -213,7 +267,7 @@ export default {
       totals,
       removeFromCart,
       processOrder,
-      tableHeaders: ['Description', 'Colour', 'Size', 'Quantity', 'Amount'],
+      tableHeaders: ["Description", "Colour", "Size", "Quantity", "Amount"],
       cartGetters,
       checkoutGetters
     };
@@ -303,9 +357,9 @@ export default {
       margin: 0 var(--spacer-xl) 0 0;
       width: auto;
     }
-    color:  var(--c-white);
+    color: var(--c-white);
     &:hover {
-      color:  var(--c-white);
+      color: var(--c-white);
     }
   }
   &__property-total {
