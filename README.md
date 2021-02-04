@@ -12,13 +12,7 @@ This project is based on NuxtJs, VueJs and VueStorefront Next so primary documen
 
 ## Installation
 
-Before isntalling dependencies please pull git submodule for Spryker integration
-
-```bash
-$ git submodule update --init
-```
-
-Then install dependencies using Yarn
+Install dependencies using Yarn
 
 ```bash
 $ yarn install
@@ -26,19 +20,14 @@ $ yarn install
 
 ### Updating Spryker integration
 
-When you want to pull latest updates for Spryker integration submodule
+To update Spryker VSF integration you should update all `@spryker-vsf/` scoped NPM packages
 
 ```bash
-$ git submodule update --remote
+$ yarn add @spryker-vsf/api @spryker-vsf/composables
 ```
 
-(or go inside submodule folder and do `git pull`)
-
-After that make sure you reinstall dependencieas using Yarn
-
-```bash
-$ yarn install
-```
+_NOTE:_ You should always check changelogs of new version to see if you need
+to perform any additional steps to finish an update.
 
 ## Build Setup
 
