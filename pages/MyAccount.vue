@@ -16,25 +16,40 @@
           <MyProfile />
         </SfContentPage>
 
-        <SfContentPage data-cy="my-account-page_shipping-details" title="Shipping details">
+        <SfContentPage
+          data-cy="my-account-page_shipping-details"
+          title="Shipping details"
+        >
           <ShippingDetails />
         </SfContentPage>
 
-        <SfContentPage data-cy="my-account-page_billing-details" title="Billing details">
+        <SfContentPage
+          data-cy="my-account-page_billing-details"
+          title="Billing details"
+        >
           <BillingDetails />
         </SfContentPage>
 
-        <SfContentPage data-cy="my-account-page_loyalty-card" title="Loyalty card">
+        <SfContentPage
+          data-cy="my-account-page_loyalty-card"
+          title="Loyalty card"
+        >
           <LoyaltyCard />
         </SfContentPage>
 
-        <SfContentPage data-cy="my-account-page_my-newsletter" title="My newsletter">
+        <SfContentPage
+          data-cy="my-account-page_my-newsletter"
+          title="My newsletter"
+        >
           <MyNewsletter />
         </SfContentPage>
       </SfContentCategory>
 
       <SfContentCategory title="Order details">
-        <SfContentPage data-cy="my-account-page_order-history" title="Order history">
+        <SfContentPage
+          data-cy="my-account-page_order-history"
+          title="Order history"
+        >
           <OrderHistory />
         </SfContentPage>
 
@@ -48,19 +63,19 @@
   </div>
 </template>
 <script>
-import { SfBreadcrumbs, SfContentPages, SfButton } from '@storefront-ui/vue';
-import { computed } from '@vue/composition-api';
-import { useUser } from '@vue-storefront/spryker';
-import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
-import BillingDetails from './MyAccount/BillingDetails';
-import LoyaltyCard from './MyAccount/LoyaltyCard';
-import MyNewsletter from './MyAccount/MyNewsletter';
-import OrderHistory from './MyAccount/OrderHistory';
-import MyReviews from './MyAccount/MyReviews';
+import { SfBreadcrumbs, SfContentPages, SfButton } from "@storefront-ui/vue";
+import { computed } from "@vue/composition-api";
+import { useUser } from "@spryker-vsf/composables";
+import MyProfile from "./MyAccount/MyProfile";
+import ShippingDetails from "./MyAccount/ShippingDetails";
+import BillingDetails from "./MyAccount/BillingDetails";
+import LoyaltyCard from "./MyAccount/LoyaltyCard";
+import MyNewsletter from "./MyAccount/MyNewsletter";
+import OrderHistory from "./MyAccount/OrderHistory";
+import MyReviews from "./MyAccount/MyReviews";
 
 export default {
-  name: 'MyAccount',
+  name: "MyAccount",
   components: {
     SfBreadcrumbs,
     SfContentPages,
@@ -80,7 +95,7 @@ export default {
     await load();
 
     if (!isAuthenticated.value) {
-      return redirect('/');
+      return redirect("/");
     }
   },
 
@@ -91,20 +106,25 @@ export default {
       const { pageName } = $route.params;
 
       if (pageName) {
-        return (pageName.charAt(0).toUpperCase() + pageName.slice(1)).replace('-', ' ');
+        return (pageName.charAt(0).toUpperCase() + pageName.slice(1)).replace(
+          "-",
+          " "
+        );
       }
 
-      return 'My profile';
+      return "My profile";
     });
 
-    const changeActivePage = async (title) => {
-      if (title === 'Log out') {
+    const changeActivePage = async title => {
+      if (title === "Log out") {
         await logout();
-        $router.push('/');
+        $router.push("/");
         return;
       }
 
-      $router.push(`/my-account/${(title || '').toLowerCase().replace(' ', '-')}`);
+      $router.push(
+        `/my-account/${(title || "").toLowerCase().replace(" ", "-")}`
+      );
     };
 
     return { changeActivePage, activePage };
@@ -114,12 +134,12 @@ export default {
     return {
       breadcrumbs: [
         {
-          text: 'Home',
-          route: { link: '#' }
+          text: "Home",
+          route: { link: "#" }
         },
         {
-          text: 'My Account',
-          route: { link: '#' }
+          text: "My Account",
+          route: { link: "#" }
         }
       ]
     };
@@ -127,7 +147,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 #my-account {
   box-sizing: border-box;
   @include for-desktop {

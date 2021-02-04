@@ -2,7 +2,11 @@
   <ValidationObserver v-slot="{ handleSubmit, reset }">
     <form class="form" @submit.prevent="handleSubmit(submitForm(reset))">
       <div class="form__horizontal">
-        <ValidationProvider rules="required|min:2" v-slot="{ errors }" class="form__element">
+        <ValidationProvider
+          rules="required|min:2"
+          v-slot="{ errors }"
+          class="form__element"
+        >
           <SfInput
             data-cy="my-profile-input_firstName"
             v-model="form.firstName"
@@ -13,7 +17,11 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider rules="required|min:2" v-slot="{ errors }" class="form__element">
+        <ValidationProvider
+          rules="required|min:2"
+          v-slot="{ errors }"
+          class="form__element"
+        >
           <SfInput
             data-cy="my-profile-input_lastName"
             v-model="form.lastName"
@@ -25,7 +33,11 @@
           />
         </ValidationProvider>
       </div>
-      <ValidationProvider rules="required|email" v-slot="{ errors }" class="form__element">
+      <ValidationProvider
+        rules="required|email"
+        v-slot="{ errors }"
+        class="form__element"
+      >
         <SfInput
           data-cy="my-profile-input_email"
           v-model="form.email"
@@ -37,19 +49,21 @@
           :errorMessage="errors[0]"
         />
       </ValidationProvider>
-      <SfButton data-cy="my-profile-btn_update" class="form__button">Update personal data</SfButton>
+      <SfButton data-cy="my-profile-btn_update" class="form__button"
+        >Update personal data</SfButton
+      >
     </form>
   </ValidationObserver>
 </template>
 
 <script>
-import { ref } from '@vue/composition-api';
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
-import { useUser, userGetters } from '@vue-storefront/spryker';
-import { SfInput, SfButton } from '@storefront-ui/vue';
+import { ref } from "@vue/composition-api";
+import { ValidationProvider, ValidationObserver } from "vee-validate";
+import { useUser, userGetters } from "@spryker-vsf/composables";
+import { SfInput, SfButton } from "@storefront-ui/vue";
 
 export default {
-  name: 'ProfileUpdateForm',
+  name: "ProfileUpdateForm",
 
   components: {
     SfInput,
@@ -69,7 +83,7 @@ export default {
 
     const form = ref(resetForm());
 
-    const submitForm = (resetValidationFn) => {
+    const submitForm = resetValidationFn => {
       return () => {
         const onComplete = () => {
           form.value = resetForm();
@@ -80,7 +94,7 @@ export default {
           // TODO: Handle error
         };
 
-        emit('submit', { form, onComplete, onError });
+        emit("submit", { form, onComplete, onError });
       };
     };
 
@@ -92,7 +106,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .form {
   &__element {
     display: block;

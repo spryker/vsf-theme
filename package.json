@@ -10,18 +10,15 @@
     "build:analyze": "nuxt build -a -m",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test": "jest",
-    "postinstall": "cd spryker-integration && yarn build:api-client && yarn build:composables"
+    "test": "jest"
   },
-  "workspaces": [
-    "spryker-integration",
-    "spryker-integration/packages/*"
-  ],
   "dependencies": {
+    "@nuxtjs/style-resources": "^1.0.0",
+    "@spryker-vsf/api": "^0.0.3",
+    "@spryker-vsf/composables": "^0.0.3",
     "@storefront-ui/vue": "^0.10.0",
     "@vue-storefront/nuxt": "^2.2.1",
     "@vue-storefront/nuxt-theme": "^2.2.1",
-    "@nuxtjs/style-resources": "^1.0.0",
     "cookie-universal-nuxt": "^2.1.4",
     "core-js": "^2.6.5",
     "nuxt": "^2.14.12",

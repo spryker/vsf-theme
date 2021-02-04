@@ -8,7 +8,8 @@
     >
       <SfTab
         data-cy="shipping-details-tab_change"
-        :title="isNewAddress ? 'Add the address' : 'Update the address'">
+        :title="isNewAddress ? 'Add the address' : 'Update the address'"
+      >
         <p class="message">
           Keep your addresses and contact details updated.
         </p>
@@ -16,15 +17,12 @@
         <ShippingAddressForm
           :address="activeAddress"
           :isNew="isNewAddress"
-          @submit="saveAddress" />
+          @submit="saveAddress"
+        />
       </SfTab>
     </SfTabs>
 
-    <SfTabs
-      v-else
-      :open-tab="1"
-      key="address-list"
-      class="tab-orphan">
+    <SfTabs v-else :open-tab="1" key="address-list" class="tab-orphan">
       <SfTab data-cy="shipping-details-tab_details" title="Shipping details">
         <p class="message">
           Manage all the shipping addresses you want (work place, home address
@@ -35,7 +33,8 @@
           <div
             v-for="address in addresses"
             :key="userShippingGetters.getId(address)"
-            class="shipping">
+            class="shipping"
+          >
             <div class="shipping__content">
               <div class="shipping__address">
                 <UserShippingAddress :address="address" />
@@ -53,14 +52,16 @@
               />
               <SfButton
                 data-cy="shipping-details-btn_change"
-                @click="changeAddress(address)">
+                @click="changeAddress(address)"
+              >
                 Change
               </SfButton>
 
               <SfButton
                 data-cy="shipping-details-btn_delete"
                 class="shipping__button-delete desktop-only"
-                @click="removeAddress(address)">
+                @click="removeAddress(address)"
+              >
                 Delete
               </SfButton>
             </div>
@@ -69,7 +70,8 @@
         <SfButton
           data-cy="shipping-details-btn_add"
           class="action-button"
-          @click="changeAddress()">
+          @click="changeAddress()"
+        >
           Add new address
         </SfButton>
       </SfTab>
@@ -77,19 +79,15 @@
   </transition>
 </template>
 <script>
-import {
-  SfTabs,
-  SfButton,
-  SfIcon
-} from '@storefront-ui/vue';
-import UserShippingAddress from '~/components/UserShippingAddress';
-import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserShipping, userShippingGetters } from '@vue-storefront/spryker';
-import { ref, computed } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
+import { SfTabs, SfButton, SfIcon } from "@storefront-ui/vue";
+import UserShippingAddress from "~/components/UserShippingAddress";
+import ShippingAddressForm from "~/components/MyAccount/ShippingAddressForm";
+import { useUserShipping, userShippingGetters } from "@spryker-vsf/composables";
+import { ref, computed } from "@vue/composition-api";
+import { onSSR } from "@vue-storefront/core";
 
 export default {
-  name: 'ShippingDetails',
+  name: "ShippingDetails",
   components: {
     SfTabs,
     SfButton,
@@ -98,8 +96,16 @@ export default {
     ShippingAddressForm
   },
   setup() {
-    const { shipping, load, addAddress, deleteAddress, updateAddress } = useUserShipping();
-    const addresses = computed(() => userShippingGetters.getAddresses(shipping.value));
+    const {
+      shipping,
+      load,
+      addAddress,
+      deleteAddress,
+      updateAddress
+    } = useUserShipping();
+    const addresses = computed(() =>
+      userShippingGetters.getAddresses(shipping.value)
+    );
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
     const isNewAddress = computed(() => !activeAddress.value);
@@ -142,7 +148,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @mixin for-mobile {
   @media screen and (max-width: $desktop-min) {
     @content;

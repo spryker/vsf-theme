@@ -1,15 +1,15 @@
-import { getCurrentInstance } from '@vue/composition-api';
-import { Category } from '@vue-storefront/spryker-api';
-import { AgnosticFacet } from '@vue-storefront/core';
+import { getCurrentInstance } from "@vue/composition-api";
+import { Category } from "@spryker-vsf/api";
+import { AgnosticFacet } from "@vue-storefront/core";
 
-const nonFilters = ['page', 'sort', 'term', 'itemsPerPage'];
+const nonFilters = ["page", "sort", "term", "itemsPerPage"];
 
 const getContext = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
-const reduceFilters = (query) => (prev, curr) => {
+const reduceFilters = query => (prev, curr) => {
   const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr);
 
   return {
@@ -22,7 +22,9 @@ const getFiltersDataFromUrl = (context, onlyFilters) => {
   const { query } = context.$router.history.current;
 
   return Object.keys(query)
-    .filter(f => onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f))
+    .filter(f =>
+      onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f)
+    )
     .reduce(reduceFilters(query), {});
 };
 
@@ -31,13 +33,16 @@ const useUiHelpers = () => {
 
   const getFacetsFromURL = () => {
     const { query, params } = context.$router.history.current;
-    const categorySlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
+    const categorySlug = Object.keys(params).reduce(
+      (prev, curr) => params[curr] || prev,
+      params.slug_1
+    );
 
     return {
       rootCatSlug: params.slug_1,
       categorySlug,
       page: parseInt(query.page, 10) || 1,
-      sort: query.sort || 'latest',
+      sort: query.sort || "latest",
       filters: getFiltersDataFromUrl(context, true),
       itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
       term: query.term
@@ -80,7 +85,7 @@ const useUiHelpers = () => {
     });
   };
 
-  const isFacetColor = (facet: AgnosticFacet): boolean => facet.id === 'color';
+  const isFacetColor = (facet: AgnosticFacet): boolean => facet.id === "color";
 
   const isFacetCheckbox = (): boolean => false;
 

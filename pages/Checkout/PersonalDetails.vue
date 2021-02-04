@@ -1,15 +1,27 @@
 <template>
   <div>
     <div class="log-in desktop-only">
-      <SfButton class="log-in__button color-secondary" @click="toggleLoginModal">
+      <SfButton
+        class="log-in__button color-secondary"
+        @click="toggleLoginModal"
+      >
         Log in to your account
       </SfButton>
       <p class="log-in__info">or fill the details below:</p>
     </div>
-    <SfHeading :level="3" title="Personal details" class="sf-heading--left sf-heading--no-underline title" />
+    <SfHeading
+      :level="3"
+      title="Personal details"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
     <ValidationObserver v-slot="{ handleSubmit }">
       <form class="form" @submit.prevent="handleSubmit(handleFormSubmit)">
-        <ValidationProvider name="firstName" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="firstName"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="personalDetails.firstName"
             @input="firstName => setPersonalDetails({ firstName })"
@@ -21,10 +33,15 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="lastName" rules="required|min:2" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="lastName"
+          rules="required|min:2"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="personalDetails.lastName"
-            @input="lastName =>  setPersonalDetails({ lastName })"
+            @input="lastName => setPersonalDetails({ lastName })"
             label="Last name"
             name="lastName"
             class="form__element form__element--half form__element--half-even"
@@ -33,7 +50,12 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="email" rules="required|email" v-slot="{ errors }" slim>
+        <ValidationProvider
+          name="email"
+          rules="required|email"
+          v-slot="{ errors }"
+          slim
+        >
           <SfInput
             :value="personalDetails.email"
             @input="email => setPersonalDetails({ email })"
@@ -66,7 +88,13 @@
           />
         </div>
         <transition name="fade">
-          <ValidationProvider v-if="createAccount" name="email" rules="required" v-slot="{ errors }" slim>
+          <ValidationProvider
+            v-if="createAccount"
+            name="email"
+            rules="required"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="personalDetails.password"
               @input="password => setPersonalDetails({ password })"
@@ -80,8 +108,14 @@
           </ValidationProvider>
         </transition>
         <div class="form__action">
-          <nuxt-link to="/" class="sf-button color-secondary form__back-button">Go back</nuxt-link>
-          <SfButton class="form__action-button" type="submit" :disabled="loading.personalDetails">
+          <nuxt-link to="/" class="sf-button color-secondary form__back-button"
+            >Go back</nuxt-link
+          >
+          <SfButton
+            class="form__action-button"
+            type="submit"
+            :disabled="loading.personalDetails"
+          >
             Continue to shipping
           </SfButton>
         </div>
@@ -98,28 +132,28 @@ import {
   SfHeading,
   SfModal,
   SfCharacteristic
-} from '@storefront-ui/vue';
-import { ref, watch } from '@vue/composition-api';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, min, email } from 'vee-validate/dist/rules';
-import { useUiState } from '~/composables';
-import { useCheckout, useUser } from '@vue-storefront/spryker';
-import { onSSR } from '@vue-storefront/core';
+} from "@storefront-ui/vue";
+import { ref, watch } from "@vue/composition-api";
+import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
+import { required, min, email } from "vee-validate/dist/rules";
+import { useUiState } from "~/composables";
+import { useCheckout, useUser } from "@spryker-vsf/composables";
+import { onSSR } from "@vue-storefront/core";
 
-extend('required', {
+extend("required", {
   ...required,
-  message: 'This field is required'
+  message: "This field is required"
 });
-extend('min', {
+extend("min", {
   ...min,
-  message: 'The field should have at least {length} characters'
+  message: "The field should have at least {length} characters"
 });
-extend('email', {
+extend("email", {
   ...email,
-  message: 'Invalid email'
+  message: "Invalid email"
 });
 export default {
-  name: 'PersonalDetails',
+  name: "PersonalDetails",
   components: {
     SfInput,
     SfCheckbox,
@@ -133,7 +167,12 @@ export default {
   setup(props, context) {
     const { toggleLoginModal } = useUiState();
     const { register, isAuthenticated } = useUser();
-    const { loadDetails, personalDetails, setPersonalDetails, loading } = useCheckout();
+    const {
+      loadDetails,
+      personalDetails,
+      setPersonalDetails,
+      loading
+    } = useCheckout();
     const accountBenefits = ref(false);
     const createAccount = ref(false);
     onSSR(async () => {
@@ -142,15 +181,15 @@ export default {
     const handleFormSubmit = async () => {
       if (createAccount.value) {
         await register(personalDetails.value);
-        context.root.$router.push('/checkout/shipping');
+        context.root.$router.push("/checkout/shipping");
         return;
       }
       await setPersonalDetails(personalDetails.value, { save: true });
-      context.root.$router.push('/checkout/shipping');
+      context.root.$router.push("/checkout/shipping");
     };
     watch(isAuthenticated, () => {
       if (isAuthenticated.value) {
-        context.root.$router.push('/checkout/shipping');
+        context.root.$router.push("/checkout/shipping");
       }
     });
     return {
@@ -162,14 +201,10 @@ export default {
       handleFormSubmit,
       toggleLoginModal,
       characteristics: [
-        { description: 'Faster checkout',
-          icon: 'clock' },
-        { description: 'Full rewards program benefits',
-          icon: 'rewards' },
-        { description: 'Earn credits with every purchase',
-          icon: 'credits' },
-        { description: 'Manage your wishliste',
-          icon: 'heart' }
+        { description: "Faster checkout", icon: "clock" },
+        { description: "Full rewards program benefits", icon: "rewards" },
+        { description: "Earn credits with every purchase", icon: "credits" },
+        { description: "Manage your wishliste", icon: "heart" }
       ]
     };
   }
@@ -178,13 +213,14 @@ export default {
 
 <style lang="scss" scoped>
 .title {
- margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+  margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
 .log-in {
   &__info {
     margin: var(--spacer-lg) 0;
     color: var(--c-link);
-    font: var(--font-weight--light) var(--font-size--base) / 1.6 var(--font-family--secondary);
+    font: var(--font-weight--light) var(--font-size--base) / 1.6
+      var(--font-family--secondary);
     @include for-desktop {
       font-weight: var(--font-weight--normal);
     }

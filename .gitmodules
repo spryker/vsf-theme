@@ -1,4 +1,0 @@
-[submodule "spryker-integration"]
-	path = spryker-integration
-	url = git@github.com:spryker/vsf-monorepo.git
-	branch = develop

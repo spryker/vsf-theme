@@ -6,9 +6,19 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <ValidationObserver v-slot="{ handleSubmit, dirty, reset }">
-      <form @submit.prevent="handleSubmit(canContinueToPayment(dirty) ? handleShippingMethodSubmit(reset) : handleShippingAddressSubmit(reset))">
+      <form
+        @submit.prevent="
+          handleSubmit(
+            canContinueToPayment(dirty)
+              ? handleShippingMethodSubmit(reset)
+              : handleShippingAddressSubmit(reset)
+          )
+        "
+      >
         <UserShippingAddresses
-          v-if="isAuthenticated && shippingAddresses && shippingAddresses.length"
+          v-if="
+            isAuthenticated && shippingAddresses && shippingAddresses.length
+          "
           :setAsDefault="setAsDefault"
           :shippingAddresses="shippingAddresses"
           :currentAddressId="currentAddressId"
@@ -16,10 +26,17 @@
           @changeSetAsDefault="setAsDefault = $event"
         />
         <div class="form" v-if="canAddNewAddress">
-          <ValidationProvider name="firstName" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="firstName"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.firstName"
-              @input="firstName => setShippingDetailsAndUnpickAddress({ firstName })"
+              @input="
+                firstName => setShippingDetailsAndUnpickAddress({ firstName })
+              "
               label="First name"
               name="firstName"
               class="form__element form__element--half"
@@ -28,10 +45,17 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="lastName" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="lastName"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.lastName"
-              @input="lastName => setShippingDetailsAndUnpickAddress({ lastName })"
+              @input="
+                lastName => setShippingDetailsAndUnpickAddress({ lastName })
+              "
               label="Last name"
               name="lastName"
               class="form__element form__element--half form__element--half-even"
@@ -40,10 +64,17 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="streetName" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="streetName"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.streetName"
-              @input="streetName => setShippingDetailsAndUnpickAddress({ streetName })"
+              @input="
+                streetName => setShippingDetailsAndUnpickAddress({ streetName })
+              "
               label="Street name"
               name="streetName"
               class="form__element form__element--half"
@@ -52,10 +83,18 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="apartment" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="apartment"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.streetNumber"
-              @input="streetNumber => setShippingDetailsAndUnpickAddress({ streetNumber })"
+              @input="
+                streetNumber =>
+                  setShippingDetailsAndUnpickAddress({ streetNumber })
+              "
               label="House/Apartment number"
               name="apartment"
               class="form__element form__element--half form__element--half-even"
@@ -64,7 +103,12 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="city" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="city"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.city"
               @input="city => setShippingDetailsAndUnpickAddress({ city })"
@@ -76,10 +120,17 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="zipCode" rules="required|min:2" v-slot="{ errors }" slim>
+          <ValidationProvider
+            name="zipCode"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
             <SfInput
               :value="shippingDetails.postalCode"
-              @input="postalCode => setShippingDetailsAndUnpickAddress({ postalCode })"
+              @input="
+                postalCode => setShippingDetailsAndUnpickAddress({ postalCode })
+              "
               label="Zip-code"
               name="zipCode"
               class="form__element form__element--half form__element--half-even"
@@ -88,37 +139,52 @@
               :errorMessage="errors[0]"
             />
           </ValidationProvider>
-          <ValidationProvider name="country" rules="required|min:2" v-slot="{ errors }" slim>
-          <SfSelect
-            :selected="shippingDetails.country"
-            @change="country => setShippingDetailsAndUnpickAddress({ country })"
-            label="Country"
+          <ValidationProvider
             name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
           >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.name"
-              :value="countryOption.name"
+            <SfSelect
+              :selected="shippingDetails.country"
+              @change="
+                country => setShippingDetailsAndUnpickAddress({ country })
+              "
+              label="Country"
+              name="country"
+              class="form__element form__element--half form__select sf-select--underlined"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
             >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
+              <SfSelectOption
+                v-for="countryOption in countries"
+                :key="countryOption.name"
+                :value="countryOption.name"
+              >
+                {{ countryOption.label }}
+              </SfSelectOption>
+            </SfSelect>
           </ValidationProvider>
-          <ValidationProvider name="phone" rules="required|digits:9" v-slot="{ errors }" slim>
-          <SfInput
-            :value="shippingDetails.contactInfo.phone"
-            @input="phone => setShippingDetailsAndUnpickAddress({ contactInfo: { phone } })"
-            label="Phone number"
+          <ValidationProvider
             name="phone"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
+            rules="required|digits:9"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              :value="shippingDetails.contactInfo.phone"
+              @input="
+                phone =>
+                  setShippingDetailsAndUnpickAddress({ contactInfo: { phone } })
+              "
+              label="Phone number"
+              name="phone"
+              class="form__element form__element--half form__element--half-even"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
           </ValidationProvider>
         </div>
         <SfButton
@@ -142,7 +208,9 @@
               :key="checkoutGetters.getShippingMethodName(item)"
               :label="checkoutGetters.getShippingMethodName(item)"
               :value="checkoutGetters.getShippingMethodId(item)"
-              :selected="checkoutGetters.getShippingMethodId(chosenShippingMethod)"
+              :selected="
+                checkoutGetters.getShippingMethodId(chosenShippingMethod)
+              "
               @input="setShippingMethod(item, { save: true })"
               name="shippingMethod"
               :description="checkoutGetters.getShippingMethodDescription(item)"
@@ -164,11 +232,25 @@
             </SfRadio>
           </div>
           <div class="form__action">
-            <nuxt-link to="/checkout/personal-details" class="sf-button color-secondary form__back-button">Go back</nuxt-link>
-            <SfButton class="form__action-button" type="submit" v-if="canContinueToPayment(dirty)" :disabled="!isShippingMethodCompleted || loading.shippingAddress">
+            <nuxt-link
+              to="/checkout/personal-details"
+              class="sf-button color-secondary form__back-button"
+              >Go back</nuxt-link
+            >
+            <SfButton
+              class="form__action-button"
+              type="submit"
+              v-if="canContinueToPayment(dirty)"
+              :disabled="!isShippingMethodCompleted || loading.shippingAddress"
+            >
               Continue to payment
             </SfButton>
-            <SfButton class="form__action-button" type="submit" :disabled="loading.shippingMethods" v-else>
+            <SfButton
+              class="form__action-button"
+              type="submit"
+              :disabled="loading.shippingMethods"
+              v-else
+            >
               Select shipping method
             </SfButton>
           </div>
@@ -186,27 +268,33 @@ import {
   SfSelect,
   SfRadio,
   SfCheckbox
-} from '@storefront-ui/vue';
-import { useCheckout, useUserShipping, useUser, checkoutGetters, userShippingGetters } from '@vue-storefront/spryker';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, min, digits } from 'vee-validate/dist/rules';
-import { onSSR } from '@vue-storefront/core';
-import { ref, onMounted, computed } from '@vue/composition-api';
+} from "@storefront-ui/vue";
+import {
+  useCheckout,
+  useUserShipping,
+  useUser,
+  checkoutGetters,
+  userShippingGetters
+} from "@spryker-vsf/composables";
+import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
+import { required, min, digits } from "vee-validate/dist/rules";
+import { onSSR } from "@vue-storefront/core";
+import { ref, onMounted, computed } from "@vue/composition-api";
 
-extend('required', {
+extend("required", {
   ...required,
-  message: 'This field is required'
+  message: "This field is required"
 });
-extend('min', {
+extend("min", {
   ...min,
-  message: 'The field should have at least {length} characters'
+  message: "The field should have at least {length} characters"
 });
-extend('digits', {
+extend("digits", {
   ...digits,
-  message: 'Please provide a valid phone number'
+  message: "Please provide a valid phone number"
 });
 export default {
-  name: 'Shipping',
+  name: "Shipping",
   components: {
     SfHeading,
     SfInput,
@@ -214,7 +302,8 @@ export default {
     SfSelect,
     SfRadio,
     SfCheckbox,
-    UserShippingAddresses: () => import('~/components/Checkout/UserShippingAddresses'),
+    UserShippingAddresses: () =>
+      import("~/components/Checkout/UserShippingAddresses"),
     ValidationProvider,
     ValidationObserver
   },
@@ -255,13 +344,17 @@ export default {
       postalCode: address.zipCode
     });
 
-    const setCurrentAddress = async (addressId) => {
-      const chosenAddress = userShippingGetters.getAddresses(shipping.value, { id: addressId });
+    const setCurrentAddress = async addressId => {
+      const chosenAddress = userShippingGetters.getAddresses(shipping.value, {
+        id: addressId
+      });
       if (!chosenAddress || !chosenAddress.length) {
         return;
       }
       currentAddressId.value = addressId;
-      setShippingDetails(mapAbstractAddressToIntegrationAddress(chosenAddress[0]));
+      setShippingDetails(
+        mapAbstractAddressToIntegrationAddress(chosenAddress[0])
+      );
       addressIsModified.value = true;
     };
 
@@ -273,7 +366,9 @@ export default {
     onMounted(async () => {
       if (isAuthenticated.value) {
         await loadShipping();
-        const shippingAddresses = userShippingGetters.getAddresses(shipping.value);
+        const shippingAddresses = userShippingGetters.getAddresses(
+          shipping.value
+        );
         if (!shippingAddresses || !shippingAddresses.length) {
           return;
         }
@@ -284,12 +379,14 @@ export default {
       }
     });
 
-    const handleShippingAddressSubmit = (reset) => async () => {
+    const handleShippingAddressSubmit = reset => async () => {
       await setShippingDetails(shippingDetails.value, { save: true });
       await loadShippingMethods();
       reset();
       if (currentAddressId.value > -1 && setAsDefault.value) {
-        const chosenAddress = userShippingGetters.getAddresses(shipping.value, { id: currentAddressId.value });
+        const chosenAddress = userShippingGetters.getAddresses(shipping.value, {
+          id: currentAddressId.value
+        });
         if (!chosenAddress || !chosenAddress.length) {
           return;
         }
@@ -297,10 +394,10 @@ export default {
       }
       addressIsModified.value = false;
     };
-    const handleShippingMethodSubmit = (reset) => async () => {
+    const handleShippingMethodSubmit = reset => async () => {
       await setShippingMethod(chosenShippingMethod.value, { save: true });
       reset();
-      context.root.$router.push('/checkout/payment');
+      context.root.$router.push("/checkout/payment");
     };
 
     const setShippingDetailsAndUnpickAddress = value => {
@@ -309,7 +406,8 @@ export default {
       addressIsModified.value = true;
     };
 
-    const canContinueToPayment = dirty => isShippingAddressCompleted.value && !dirty && !addressIsModified.value;
+    const canContinueToPayment = dirty =>
+      isShippingAddressCompleted.value && !dirty && !addressIsModified.value;
 
     return {
       loading,
@@ -324,7 +422,9 @@ export default {
       shippingMethods,
       checkoutGetters,
       countries: [],
-      shippingAddresses: computed(() => userShippingGetters.getAddresses(shipping.value)),
+      shippingAddresses: computed(() =>
+        userShippingGetters.getAddresses(shipping.value)
+      ),
       canAddNewAddress,
       addressIsModified,
       isAuthenticated,
@@ -406,7 +506,7 @@ export default {
   &__back-button {
     margin: var(--spacer-xl) 0 var(--spacer-sm);
     &:hover {
-      color:  var(--c-white);
+      color: var(--c-white);
     }
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
@@ -418,7 +518,6 @@ export default {
     @include for-desktop {
       margin: 0 0 var(--spacer-2xl) 0;
     }
-
   }
 }
 .shipping {

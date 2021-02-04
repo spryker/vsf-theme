@@ -26,15 +26,12 @@
 </template>
 
 <script>
-import {
-  SfCheckbox,
-  SfAddressPicker
-} from '@storefront-ui/vue';
-import UserShippingAddress from '~/components/UserShippingAddress';
-import { userShippingGetters } from '@vue-storefront/spryker';
+import { SfCheckbox, SfAddressPicker } from "@storefront-ui/vue";
+import UserShippingAddress from "~/components/UserShippingAddress";
+import { userShippingGetters } from "@spryker-vsf/composables";
 
 export default {
-  name: 'UserShippingAddresses',
+  name: "UserShippingAddresses",
   props: {
     currentAddressId: {
       type: Number,
@@ -54,8 +51,8 @@ export default {
     SfAddressPicker,
     UserShippingAddress
   },
-  setup (_, { emit }) {
-    const setCurrentAddress = $event => emit('setCurrentAddress', $event);
+  setup(_, { emit }) {
+    const setCurrentAddress = $event => emit("setCurrentAddress", $event);
 
     return {
       setCurrentAddress,
@@ -78,7 +75,8 @@ export default {
   }
 }
 
-.shipping-address-setAsDefault, .form__action-button--margin-bottom {
+.shipping-address-setAsDefault,
+.form__action-button--margin-bottom {
   margin-bottom: var(--spacer-xl);
 }
 </style>

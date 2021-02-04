@@ -8,7 +8,8 @@
     >
       <SfTab
         data-cy="billing-details-tab_change"
-        :title="isNewAddress ? 'Add the address' : 'Update the address'">
+        :title="isNewAddress ? 'Add the address' : 'Update the address'"
+      >
         <p class="message">
           Keep your addresses and contact details updated.
         </p>
@@ -16,15 +17,12 @@
         <BillingAddressForm
           :address="activeAddress"
           :isNew="isNewAddress"
-          @submit="saveAddress" />
+          @submit="saveAddress"
+        />
       </SfTab>
     </SfTabs>
 
-    <SfTabs
-      v-else
-      :open-tab="1"
-      key="address-list"
-      class="tab-orphan">
+    <SfTabs v-else :open-tab="1" key="address-list" class="tab-orphan">
       <SfTab data-cy="billing-details-tab_details" title="Billing details">
         <p class="message">
           Manage all the billing addresses you want (work place, home address
@@ -35,7 +33,8 @@
           <div
             v-for="address in addresses"
             :key="userBillingGetters.getId(address)"
-            class="billing">
+            class="billing"
+          >
             <div class="billing__content">
               <div class="billing__address">
                 <UserBillingAddress :address="address" />
@@ -53,14 +52,16 @@
               />
               <SfButton
                 data-cy="billing-details-btn_change"
-                @click="changeAddress(address)">
+                @click="changeAddress(address)"
+              >
                 Change
               </SfButton>
 
               <SfButton
                 data-cy="billing-details-btn_delete"
                 class="billing__button-delete desktop-only"
-                @click="removeAddress(address)">
+                @click="removeAddress(address)"
+              >
                 Delete
               </SfButton>
             </div>
@@ -69,7 +70,8 @@
         <SfButton
           data-cy="billing-details-btn_add"
           class="action-button"
-          @click="changeAddress()">
+          @click="changeAddress()"
+        >
           Add new address
         </SfButton>
       </SfTab>
@@ -77,19 +79,15 @@
   </transition>
 </template>
 <script>
-import {
-  SfTabs,
-  SfButton,
-  SfIcon
-} from '@storefront-ui/vue';
-import UserBillingAddress from '~/components/UserBillingAddress';
-import BillingAddressForm from '~/components/MyAccount/BillingAddressForm';
-import { useUserBilling, userBillingGetters } from '@vue-storefront/spryker';
-import { ref, computed } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
+import { SfTabs, SfButton, SfIcon } from "@storefront-ui/vue";
+import UserBillingAddress from "~/components/UserBillingAddress";
+import BillingAddressForm from "~/components/MyAccount/BillingAddressForm";
+import { useUserBilling, userBillingGetters } from "@spryker-vsf/composables";
+import { ref, computed } from "@vue/composition-api";
+import { onSSR } from "@vue-storefront/core";
 
 export default {
-  name: 'BillingDetails',
+  name: "BillingDetails",
   components: {
     SfTabs,
     SfButton,
@@ -98,8 +96,16 @@ export default {
     BillingAddressForm
   },
   setup() {
-    const { billing, load, addAddress, deleteAddress, updateAddress } = useUserBilling();
-    const addresses = computed(() => userBillingGetters.getAddresses(billing.value));
+    const {
+      billing,
+      load,
+      addAddress,
+      deleteAddress,
+      updateAddress
+    } = useUserBilling();
+    const addresses = computed(() =>
+      userBillingGetters.getAddresses(billing.value)
+    );
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
     const isNewAddress = computed(() => !activeAddress.value);
@@ -142,7 +148,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @mixin for-mobile {
   @media screen and (max-width: $desktop-min) {
     @content;
