@@ -29,6 +29,36 @@ $ yarn add @spryker-vsf/api @spryker-vsf/composables
 _NOTE:_ You should always check changelogs of new version to see if you need
 to perform any additional steps to finish an update.
 
+## Configuration
+
+You need to configure Spryker integration before launching the app in `nuxt.config.js`
+by adding `@spryker-vsf/composables/nuxt` to the `buildModules` array after `@vue-storefront/nuxt`.
+
+At the very least you should specify Glue API base URL and the rest is optional:
+
+```js
+{
+  buildModules: [
+    [
+      "@spryker-vsf/composables/nuxt",
+      {
+        baseURL: "{GLUE_API_URL}",
+        locale: "en",
+        currency: "EUR",
+        currencies: [
+          { name: "EUR", label: "Euro" },
+          { name: "USD", label: "Dollar" }
+        ],
+        locales: [
+          { name: "en", label: "English" },
+          { name: "de", label: "German" }
+        ]
+      }
+    ]
+  ]
+}
+```
+
 ## Build Setup
 
 ```bash
