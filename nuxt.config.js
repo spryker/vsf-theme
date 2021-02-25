@@ -72,8 +72,7 @@ export default {
       "@spryker-vsf/composables/nuxt",
       {
         axiosConfig: {
-          //baseURL: 'http://glue.de.spryker.local',
-          baseURL: "https://glue.de.aldi-us-staging.cloud.spryker.toys/"
+          baseURL: "http://glue.de.spryker.local"
         },
         currency: {
           default: "EUR",
