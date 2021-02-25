@@ -1,138 +1,190 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit, reset }">
-    <form class="form" @submit.prevent="handleSubmit(submitForm(reset))">
-      <div class="form__horizontal">
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
+  <ValidationObserver v-slot="{ handleSubmit }">
+    <form class="form" @submit.prevent="handleSubmit(onSubmit)">
+      <ValidationProvider
+        rules="required"
+        v-slot="{ errors }"
+        class="form__element form__element--salutation"
+      >
+        <SfSelect
+          data-cy="login-input_salutation"
+          v-model="userForm.salutation"
+          :valid="!errors[0] && !fieldErrors.salutation"
+          :errorMessage="errors[0] || fieldErrors.salutation"
+          name="salutation"
+          label="Salutation"
+          class="form__select sf-select--underlined"
         >
-          <SfInput
-            data-cy="my-profile-input_firstName"
-            v-model="form.firstName"
-            name="firstName"
-            label="First Name"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="my-profile-input_lastName"
-            v-model="form.lastName"
-            name="lastName"
-            label="Last Name"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-      </div>
+          <SfSelectOption
+            v-for="option in salutationList"
+            :key="option"
+            :value="option"
+            :name="option"
+            >{{ option }}</SfSelectOption
+          >
+        </SfSelect>
+      </ValidationProvider>
+      <ValidationProvider
+        rules="required"
+        v-slot="{ errors }"
+        class="form__element form__element--first-name form__element--first-name-even"
+      >
+        <SfInput
+          data-cy="login-input_firstName"
+          v-model="userForm.firstName"
+          :valid="!errors[0] && !fieldErrors.firstName"
+          :errorMessage="errors[0] || fieldErrors.firstName"
+          name="first-name"
+          label="First Name"
+        />
+      </ValidationProvider>
+      <ValidationProvider
+        rules="required"
+        v-slot="{ errors }"
+        class="form__element form__element--last-name form__element--last-name-even"
+      >
+        <SfInput
+          data-cy="login-input_lastName"
+          v-model="userForm.lastName"
+          :valid="!errors[0] && !fieldErrors.lastName"
+          :errorMessage="errors[0] || fieldErrors.lastName"
+          name="last-name"
+          label="Last Name"
+        />
+      </ValidationProvider>
       <ValidationProvider
         rules="required|email"
         v-slot="{ errors }"
         class="form__element"
       >
         <SfInput
-          data-cy="my-profile-input_email"
-          v-model="form.email"
-          type="email"
-          name="email"
-          label="Your e-mail"
-          required
-          :valid="!errors[0]"
+          data-cy="login-input_email"
+          v-model="userForm.email"
+          :valid="!errors[0] && !fieldErrors.email"
           :errorMessage="errors[0]"
+          name="email"
+          label="Your email"
         />
       </ValidationProvider>
-      <SfButton data-cy="my-profile-btn_update" class="form__button"
-        >Update personal data</SfButton
-      >
+      <div class="form__element">
+        <SfButton
+          data-cy="login-btn_submit"
+          type="submit"
+          class="sf-button--full-width form__button"
+          :disabled="loading"
+        >
+          <SfLoader :class="{ loader: loading }" :loading="loading">
+            <div>Update an account</div>
+          </SfLoader>
+        </SfButton>
+
+        <div class="error-log" v-if="formErrors.length > 0">
+          <p v-for="error in formErrors" :key="error">
+            {{ error }}
+          </p>
+        </div>
+      </div>
     </form>
   </ValidationObserver>
 </template>
 
 <script>
-import { ref } from "@vue/composition-api";
-import { ValidationProvider, ValidationObserver } from "vee-validate";
-import { useUser, userGetters } from "@spryker-vsf/composables";
-import { SfInput, SfButton } from "@storefront-ui/vue";
+import { ref } from '@vue/composition-api';
+import { useUser, userGetters } from '@spryker-vsf/composables';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { SfInput, SfButton, SfSelect, SfLoader } from '@storefront-ui/vue';
 
 export default {
-  name: "ProfileUpdateForm",
+  name: 'ProfileUpdateForm',
 
   components: {
+    SfSelect,
     SfInput,
     SfButton,
+    SfLoader,
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
 
-  setup(_, { emit }) {
-    const { user } = useUser();
+  setup(_, context) {
+    const { user, loading, updateUser, error } = useUser();
+    const salutationList = ref(['Mr', 'Ms', 'Mrs', 'Dr']);
 
-    const resetForm = () => ({
-      firstName: userGetters.getFirstName(user.value),
-      lastName: userGetters.getLastName(user.value),
-      email: userGetters.getEmailAddress(user.value)
+    const userForm = ref({
+      firstName: user.value.attributes.firstName,
+      lastName: user.value.attributes.lastName,
+      email: user.value.attributes.email,
+      salutation: user.value.attributes.salutation,
     });
+    const formErrors = ref([]);
+    const fieldErrors = ref({});
 
-    const form = ref(resetForm());
+    const setFormErrors = (_formErrors, _fieldErrors) => {
+      formErrors.value = _formErrors;
+      fieldErrors.value = _fieldErrors;
+    };
 
-    const submitForm = resetValidationFn => {
-      return () => {
-        const onComplete = () => {
-          form.value = resetForm();
-          resetValidationFn();
-        };
-
-        const onError = () => {
-          // TODO: Handle error
-        };
-
-        emit("submit", { form, onComplete, onError });
-      };
+    const onSubmit = async () => {
+      setFormErrors([], {});
+      await updateUser({ user: userForm.value });
+      if (error.value.updateUser) {
+        const { tag, value } = error.value.updateUser;
+        tag === 'validate'
+          ? setFormErrors(...userGetters.getAuthErrors(value))
+          : (formErrors.value = ['Something went wrong. Please try again.']);
+      } else {
+        context.emit(
+          'successDataSubmit',
+          'User personal data has changed successfully.',
+        );
+      }
     };
 
     return {
-      form,
-      submitForm
+      userForm,
+      salutationList,
+      formErrors,
+      fieldErrors,
+      loading,
+      onSubmit,
     };
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@storefront-ui/vue/styles';
+
 .form {
+  @include for-desktop {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
   &__element {
-    display: block;
-    margin: 0 0 var(--spacer-lg) 0;
-  }
-  &__button {
-    display: block;
-    width: 100%;
+    margin: 0 0 var(--spacer-base) 0;
+
     @include for-desktop {
-      width: 17.5rem;
+      flex: 0 0 100%;
     }
-  }
-  &__horizontal {
-    @include for-desktop {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .form__element {
+
+    &--salutation {
       @include for-desktop {
-        flex: 1;
-        margin-right: var(--spacer-2xl);
+        flex: 1 1 10%;
+      }
+    }
+
+    &--first-name,
+    &--last-name {
+      @include for-desktop {
+        flex: 1 1 35%;
       }
 
-      &:last-child {
-        margin-right: 0;
+      &-even {
+        @include for-desktop {
+          padding: 0 0 0 var(--spacer-xl);
+        }
       }
     }
   }

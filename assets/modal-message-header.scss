@@ -1,0 +1,14 @@
+.message-header {
+  margin-bottom: 30px;
+  &_title {
+    font-family: var(--font-family--primary);
+    font-size: var(--font-size--lg);
+    font-weight: var(--font-weight--bold);
+    color: var(--c-primary);
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+  &_description {
+    margin: 0;
+  }
+}

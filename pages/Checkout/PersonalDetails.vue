@@ -2,124 +2,128 @@
   <div>
     <div class="log-in desktop-only">
       <SfButton
+        data-cy="personal-details-btn_login"
         class="log-in__button color-secondary"
-        @click="toggleLoginModal"
-      >
-        Log in to your account
+        @click="toggleModal()"
+        >Sign in / sign up
       </SfButton>
+
       <p class="log-in__info">or fill the details below:</p>
     </div>
+
     <SfHeading
       :level="3"
       title="Personal details"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form class="form" @submit.prevent="handleSubmit(handleFormSubmit)">
+
+    <ValidationObserver v-slot="{ invalid }" key="add-address">
+      <div class="form">
         <ValidationProvider
-          name="firstName"
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
-          slim
+          class="form__element"
+        >
+          <SfSelect
+            data-cy="personal-details-input_salutation"
+            v-model="personalDetails.salutation"
+            name="salutation"
+            label="Salutation"
+            class="form__select sf-select--underlined"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            required
+          >
+            <SfSelectOption
+              v-for="salutation in salutations"
+              :key="salutation"
+              :value="salutation"
+              :name="salutation"
+              >{{ salutation }}
+            </SfSelectOption>
+          </SfSelect>
+        </ValidationProvider>
+
+        <ValidationProvider
+          rules="required"
+          v-slot="{ errors }"
+          class="form__element form__element--half"
         >
           <SfInput
-            :value="personalDetails.firstName"
-            @input="firstName => setPersonalDetails({ firstName })"
+            data-cy="personal-details-input_firstName"
+            v-model="personalDetails.firstName"
             label="First name"
             name="firstName"
-            class="form__element form__element--half"
-            required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            required
           />
         </ValidationProvider>
+
         <ValidationProvider
-          name="lastName"
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
-          slim
+          class="form__element form__element--half form__element--half-even"
         >
           <SfInput
-            :value="personalDetails.lastName"
-            @input="lastName => setPersonalDetails({ lastName })"
+            data-cy="personal-details-input_lastName"
+            v-model="personalDetails.lastName"
             label="Last name"
             name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            required
           />
         </ValidationProvider>
+
         <ValidationProvider
-          name="email"
           rules="required|email"
           v-slot="{ errors }"
-          slim
+          class="form__element"
         >
           <SfInput
-            :value="personalDetails.email"
-            @input="email => setPersonalDetails({ email })"
+            data-cy="personal-details-input_email"
+            v-model="personalDetails.email"
             label="Your email"
             name="email"
-            class="form__element"
-            required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            required
           />
         </ValidationProvider>
+
         <div class="info">
-          <p class="info__heading">
-            Enjoy these perks with your free account!
-          </p>
+          <p class="info__heading">Enjoy these perks with your free account!</p>
           <SfCharacteristic
             v-for="(characteristic, key) in characteristics"
             :key="key"
             :description="characteristic.description"
             :icon="characteristic.icon"
-            size-icon="1rem"
+            size-icon="24px"
             class="info__characteristic"
           />
         </div>
-        <div class="form__element form__group">
-          <SfCheckbox
-            v-model="createAccount"
-            name="createAccount"
-            label="I want to create an account"
-          />
-        </div>
-        <transition name="fade">
-          <ValidationProvider
-            v-if="createAccount"
-            name="email"
-            rules="required"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              :value="personalDetails.password"
-              @input="password => setPersonalDetails({ password })"
-              type="password"
-              label="Create Password"
-              class="form__element"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-        </transition>
+
         <div class="form__action">
-          <nuxt-link to="/" class="sf-button color-secondary form__back-button"
-            >Go back</nuxt-link
-          >
+          <NuxtLink to="/">
+            <SfButton
+              data-cy="personal-details-btn_go-back"
+              class="color-secondary form__back-button"
+            >
+              Go back
+            </SfButton>
+          </NuxtLink>
+
           <SfButton
+            data-cy="personal-details-btn_continue"
             class="form__action-button"
-            type="submit"
-            :disabled="loading.personalDetails"
+            @click="$emit('nextStep')"
+            :disabled="invalid"
           >
             Continue to shipping
           </SfButton>
         </div>
-      </form>
+      </div>
     </ValidationObserver>
   </div>
 </template>
@@ -131,29 +135,22 @@ import {
   SfButton,
   SfHeading,
   SfModal,
-  SfCharacteristic
-} from "@storefront-ui/vue";
-import { ref, watch } from "@vue/composition-api";
-import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
-import { required, min, email } from "vee-validate/dist/rules";
-import { useUiState } from "~/composables";
-import { useCheckout, useUser } from "@spryker-vsf/composables";
-import { onSSR } from "@vue-storefront/core";
+  SfCharacteristic,
+  SfSelect,
+} from '@storefront-ui/vue';
+import { ref, watch } from '@vue/composition-api';
+import { useUiState } from '~/composables';
+import {
+  useCheckoutShipping,
+  useUser,
+  useCart,
+} from '@spryker-vsf/composables';
+import { useVSFContext } from '@vue-storefront/core';
+import { getSalutation } from '~/helpers/user';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
-extend("required", {
-  ...required,
-  message: "This field is required"
-});
-extend("min", {
-  ...min,
-  message: "The field should have at least {length} characters"
-});
-extend("email", {
-  ...email,
-  message: "Invalid email"
-});
 export default {
-  name: "PersonalDetails",
+  name: 'PersonalDetails',
   components: {
     SfInput,
     SfCheckbox,
@@ -161,53 +158,43 @@ export default {
     SfHeading,
     SfModal,
     SfCharacteristic,
+    ValidationProvider,
     ValidationObserver,
-    ValidationProvider
+    SfSelect,
   },
-  setup(props, context) {
-    const { toggleLoginModal } = useUiState();
-    const { register, isAuthenticated } = useUser();
-    const {
-      loadDetails,
-      personalDetails,
-      setPersonalDetails,
-      loading
-    } = useCheckout();
+  setup(_, context) {
+    context.emit('changeStep', 0);
+    const { cart } = useCart();
+    const { toggleModal } = useUiState();
+    const { personalDetails } = useCheckoutShipping('checkout');
+    const { isAuthenticated } = useUser();
     const accountBenefits = ref(false);
-    const createAccount = ref(false);
-    onSSR(async () => {
-      await loadDetails();
-    });
-    const handleFormSubmit = async () => {
-      if (createAccount.value) {
-        await register(personalDetails.value);
-        context.root.$router.push("/checkout/shipping");
-        return;
-      }
-      await setPersonalDetails(personalDetails.value, { save: true });
-      context.root.$router.push("/checkout/shipping");
-    };
-    watch(isAuthenticated, () => {
-      if (isAuthenticated.value) {
-        context.root.$router.push("/checkout/shipping");
+    const salutations = ref(['', ...getSalutation()]);
+    const {
+      $spryker: {
+        config: { sprykerAuth },
+      },
+    } = useVSFContext();
+
+    watch(cart, () => {
+      if (isAuthenticated.value && sprykerAuth.getCartId()) {
+        context.emit('nextStep');
       }
     });
+
     return {
-      loading,
       personalDetails,
       accountBenefits,
-      createAccount,
-      setPersonalDetails,
-      handleFormSubmit,
-      toggleLoginModal,
       characteristics: [
-        { description: "Faster checkout", icon: "clock" },
-        { description: "Full rewards program benefits", icon: "rewards" },
-        { description: "Earn credits with every purchase", icon: "credits" },
-        { description: "Manage your wishliste", icon: "heart" }
-      ]
+        { description: 'Faster checkout', icon: 'clock' },
+        { description: 'Full rewards program benefits', icon: 'rewards' },
+        { description: 'Earn credits with every purchase', icon: 'credits' },
+        { description: 'Manage your wishliste', icon: 'heart' },
+      ],
+      salutations,
+      toggleModal,
     };
-  }
+  },
 };
 </script>
 
@@ -230,7 +217,6 @@ export default {
   }
 }
 .info {
-  margin: 0 0 var(--spacer-xl) 0;
   &__heading {
     font-family: var(--font-family--secondary);
     font-weight: var(--font-weight--normal);
@@ -243,7 +229,7 @@ export default {
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
+    margin: var(--spacer-xl) 0;
     &__heading {
       flex: 100%;
       margin: 0 0 var(--spacer-sm) 0;
@@ -262,17 +248,19 @@ export default {
     align-items: center;
   }
   &__element {
-    margin: 0 0 var(--spacer-xl) 0;
+    margin: 0 0 var(--spacer-sm);
     @include for-desktop {
       flex: 0 0 100%;
     }
     &--half {
       @include for-desktop {
-        flex: 1 1 50%;
+        flex: 1 1 calc(50% - var(--spacer-xl));
+        margin-right: calc(var(--spacer-xl) / 2);
       }
       &-even {
         @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
+          margin-left: calc(var(--spacer-xl) / 2);
+          margin-right: 0;
         }
       }
     }
@@ -289,7 +277,7 @@ export default {
     @include for-desktop {
       flex: 0 0 100%;
       flex-direction: row;
-      margin: 0;
+      margin: var(--spacer-lg) 0 0;
     }
   }
   &__action-button {
@@ -301,9 +289,6 @@ export default {
   &__back-button {
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
-      &:hover {
-        color: var(--c-white);
-      }
     }
   }
   &__button {

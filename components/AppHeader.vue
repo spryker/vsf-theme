@@ -5,10 +5,12 @@
     @click:wishlist="toggleWishlistSidebar"
     @click:account="handleAccountClick"
     @enter:search="changeSearchTerm"
-    @change:search="p => (term = p)"
+    @change:search="(p) => (term = p)"
     :searchValue="term"
     :cartItemsQty="cartTotalItems"
     :accountIcon="accountIcon"
+    :wishlistIcon="isAuthenticated ? 'heart' : false"
+    is-nav-visible
     class="sf-header--has-mobile-search"
   >
     <!-- TODO: add mobile view buttons after SFUI team PR -->
@@ -20,30 +22,45 @@
       >
         <SfImage
           src="/icons/logo.svg"
-          alt="Vue Storefront Next"
+          alt="Spryker Shop"
           class="sf-header__logo-image"
         />
       </nuxt-link>
     </template>
     <template #navigation>
-      <SfHeaderNavigationItem
-        class="nav-item"
-        data-cy="app-header-url_women"
-        label="WOMEN"
-        :link="localePath('/c/women')"
-      />
-      <SfHeaderNavigationItem
-        class="nav-item"
-        data-cy="app-header-url_men"
-        label="MEN"
-        :link="localePath('/c/men')"
-      />
-      <SfHeaderNavigationItem
-        class="nav-item"
-        data-cy="app-header-url_kids"
-        label="KIDS"
-        :link="localePath('/c/kids')"
-      />
+      <SfHeaderNavigation
+        :is-visible-on-mobile="isVisible"
+        @close="isVisible = false"
+      >
+        <SfHeaderNavigationItem
+          v-for="(category, index) in categories"
+          :key="index"
+          :label="category.label"
+          :link="localePath(category.url)"
+          @mouseenter="currentCategory = category.label"
+          @mouseleave="currentCategory = ''"
+          @click="currentCategory = category.label"
+        >
+          <SfMegaMenu
+            v-if="category.items.length"
+            :is-absolute="true"
+            :visible="currentCategory === category.label"
+            :title="category.label"
+            @close="currentCategory = ''"
+          >
+            <SfList>
+              <SfListItem
+                v-for="(subcategory, childIndex) in category.items"
+                :key="childIndex"
+              >
+                <SfLink :link="localePath(subcategory.url)">
+                  {{ subcategory.label }}
+                </SfLink>
+              </SfListItem>
+            </SfList>
+          </SfMegaMenu>
+        </SfHeaderNavigationItem>
+      </SfHeaderNavigation>
     </template>
     <template #aside>
       <LocaleSelector class="smartphone-only" />
@@ -52,36 +69,49 @@
 </template>
 
 <script>
-import { SfHeader, SfImage } from "@storefront-ui/vue";
-import { useUiState } from "~/composables";
+import {
+  SfHeader,
+  SfImage,
+  SfMegaMenu,
+  SfList,
+  SfLink,
+} from '@storefront-ui/vue';
+import { useUiState, useUiHelpers } from '~/composables';
 import {
   useCart,
   useWishlist,
   useUser,
-  cartGetters
-} from "@spryker-vsf/composables";
-import { computed, ref } from "@vue/composition-api";
-import { onSSR } from "@vue-storefront/core";
-import { useUiHelpers } from "~/composables";
-import LocaleSelector from "./LocaleSelector";
+  cartGetters,
+  useCategory,
+} from '@spryker-vsf/composables';
+import { computed, ref } from '@vue/composition-api';
+import { onSSR } from '@vue-storefront/core';
+import LocaleSelector from './LocaleSelector';
 
 export default {
+  name: 'AppHeader',
   components: {
     SfHeader,
     SfImage,
-    LocaleSelector
+    LocaleSelector,
+    SfMegaMenu,
+    SfList,
+    SfLink,
   },
-  setup(props, { root }) {
+  setup(_, { root: { $router, $route } }) {
     const {
       toggleCartSidebar,
       toggleWishlistSidebar,
-      toggleLoginModal
+      toggleModal,
     } = useUiState();
     const { changeSearchTerm, getFacetsFromURL } = useUiHelpers();
-    const { isAuthenticated, load } = useUser();
-    const { cart, loadCart } = useCart();
-    const { loadWishlist } = useWishlist();
+    const { isAuthenticated, load: loadUser } = useUser();
+    const { cart, load: loadCart } = useCart();
+    const { load: loadWishlist } = useWishlist();
     const term = ref(getFacetsFromURL().term);
+    const { categories, search: searchCategories } = useCategory(
+      'category-tree',
+    );
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -89,39 +119,49 @@ export default {
     });
 
     const accountIcon = computed(() =>
-      isAuthenticated.value ? "profile_fill" : "profile"
+      isAuthenticated.value ? 'profile_fill' : 'profile',
     );
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
-        return root.$router.push("/my-account");
+        return $router.push('/my-account');
       }
 
-      toggleLoginModal();
+      toggleModal();
     };
 
     onSSR(async () => {
-      await load();
+      await loadUser();
       await loadCart();
+      await searchCategories();
       await loadWishlist();
+      await searchCategories();
     });
 
     return {
+      isAuthenticated,
       accountIcon,
       cartTotalItems,
       handleAccountClick,
       toggleCartSidebar,
       toggleWishlistSidebar,
       changeSearchTerm,
-      term
+      categories,
+      term,
+      currentCategory: '',
+      isVisible: false,
     };
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@storefront-ui/vue/styles';
+
 .sf-header {
+  position: relative;
+  z-index: 1;
   --header-padding: var(--spacer-sm);
   @include for-desktop {
     --header-padding: 0;

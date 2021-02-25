@@ -1,0 +1,17 @@
+.confirmation-header {
+  padding-bottom: 20px;
+  &_title {
+    font-family: var(--font-family--primary);
+    font-size: var(--font-size--lg);
+    font-weight: var(--font-weight--bold);
+    color: var(--c-primary);
+    text-transform: uppercase;
+    margin: 0;
+    padding: 30px 0;
+    border-bottom: solid 1px var(--c-light);
+  }
+  &_description {
+    margin: 0;
+    padding: 30px 0;
+  }
+}

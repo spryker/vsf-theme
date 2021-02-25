@@ -15,38 +15,84 @@
       />
       <SfProperty
         name="Subtotal"
-        :value="checkoutGetters.getFormattedPrice(totals.subtotal)"
-        class="sf-property--full-width sf-property--large property"
+        :value="`${cartGetters.getFormattedPrice(totals.subtotal)}`"
+        :class="[
+          'sf-property--full-width',
+          'sf-property--large',
+          { discounted: totals.special > 0 },
+        ]"
+      />
+      <SfProperty
+        name="Tax"
+        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
+        :class="['sf-property--full-width', 'sf-property--large']"
       />
       <SfProperty
         name="Shipping"
-        :value="
-          checkoutGetters.getFormattedPrice(
-            checkoutGetters.getShippingMethodPrice(chosenShippingMethod)
-          )
-        "
+        v-if="shippingPrice"
+        :value="`${cartGetters.getFormattedPrice(shippingPrice)}`"
         class="sf-property--full-width sf-property--large property"
+      />
+      <template v-if="vouchers.length">
+        <SfProperty
+          name="Voucher"
+          v-for="voucher in vouchers"
+          :key="voucher.id"
+          :value="`- ${cartGetters.getFormattedPrice(voucher.value)}`"
+          class="sf-property--full-width sf-property--small property"
+        >
+          <template #name>
+            <span class="sf-property__name">
+              Voucher ({{ voucher.name }})
+              <a
+                href="#"
+                @click.prevent="() => removeCoupon({ coupon: voucher.code })"
+                >X</a
+              >
+            </span>
+          </template>
+        </SfProperty>
+      </template>
+      <SfProperty
+        v-if="totals.special > 0"
+        :value="`${cartGetters.getFormattedPrice(totals.special)}`"
+        class="sf-property--full-width sf-property--small property special-price"
       />
       <SfProperty
         name="Total"
-        :value="
-          checkoutGetters.getFormattedPrice(
-            totals.total +
-              checkoutGetters.getShippingMethodPrice(chosenShippingMethod)
-          )
-        "
+        :value="`${cartGetters.getFormattedPrice(
+          totals.total + shippingPrice,
+        )}`"
         class="sf-property--full-width sf-property--large property-total"
       />
-    </div>
-    <div class="highlighted promo-code">
-      <SfInput
-        data-cy="cart-preview-input_promoCode"
-        v-model="promoCode"
-        name="promoCode"
-        :label="$t('Enter promo code')"
-        class="sf-input--filled promo-code__input"
-      />
-      <SfButton class="promo-code__button">Apply</SfButton>
+      <template v-if="giftCards.length">
+        <SfProperty
+          name="Gift Card"
+          v-for="giftCard in giftCards"
+          :key="giftCard.id"
+          :value="`- ${cartGetters.getFormattedPrice(giftCard.value)}`"
+          class="sf-property--full-width sf-property--small property"
+        >
+          <template #name>
+            <span class="sf-property__name">
+              Gift Card ({{ giftCard.name }})
+              <a
+                href="#"
+                @click.prevent="() => removeCoupon({ coupon: giftCard.code })"
+                >X</a
+              >
+            </span>
+          </template>
+        </SfProperty>
+        <SfProperty
+          name="Price to pay"
+          :value="`${cartGetters.getFormattedPrice(
+            totals.priceToPay + shippingPrice,
+          )}`"
+          class="sf-property--full-width sf-property--large property-total"
+        />
+      </template>
+      <VoucherCardForm />
     </div>
     <div class="highlighted">
       <SfCharacteristic
@@ -68,18 +114,20 @@ import {
   SfProperty,
   SfCharacteristic,
   SfInput,
-  SfCircleIcon
-} from "@storefront-ui/vue";
-import { computed, ref } from "@vue/composition-api";
+  SfCircleIcon,
+} from '@storefront-ui/vue';
+import { computed, ref } from '@vue/composition-api';
 import {
   useCart,
-  useCheckout,
   checkoutGetters,
-  cartGetters
-} from "@spryker-vsf/composables";
+  cartGetters,
+  userCheckoutShippingGetters,
+  useCheckoutShipping,
+} from '@spryker-vsf/composables';
+import VoucherCardForm from './VoucherCardForm';
 
 export default {
-  name: "CartPreview",
+  name: 'CartPreview',
   components: {
     SfHeading,
     SfButton,
@@ -87,51 +135,67 @@ export default {
     SfProperty,
     SfCharacteristic,
     SfInput,
-    SfCircleIcon
+    SfCircleIcon,
+    VoucherCardForm,
   },
   setup() {
-    const { chosenShippingMethod } = useCheckout();
-    const { cart, removeFromCart, updateQuantity, applyCoupon } = useCart();
+    const { chosenShippingMethod } = useCheckoutShipping('checkout');
+    const {
+      cart,
+      removeItem,
+      updateQuantity,
+      applyCoupon,
+      removeCoupon,
+    } = useCart();
     const listIsHidden = ref(false);
-    const promoCode = ref("");
-    const showPromoCode = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
+    const shippingPrice = computed(
+      () =>
+        userCheckoutShippingGetters.getMethodPrice(chosenShippingMethod.value)
+          .regular,
+    );
     const totals = computed(() => cartGetters.getTotals(cart.value));
+    const discounts = computed(() => cartGetters.getDiscounts(cart.value));
+    const vouchers = computed(() => cartGetters.getCoupons(cart.value));
+    const giftCards = computed(() => cartGetters.getGiftCards(cart.value));
 
     return {
+      discounts,
       totalItems,
       listIsHidden,
+      vouchers,
+      giftCards,
       products,
       chosenShippingMethod,
       totals,
-      promoCode,
-      showPromoCode,
-      removeFromCart,
+      removeItem,
       updateQuantity,
       checkoutGetters,
       cartGetters,
       applyCoupon,
+      removeCoupon,
       characteristics: [
         {
-          title: "Safety",
-          description: "It carefully packaged with a personal touch",
-          icon: "safety"
+          title: 'Safety',
+          description: 'It carefully packaged with a personal touch',
+          icon: 'safety',
         },
         {
-          title: "Easy shipping",
+          title: 'Easy shipping',
           description:
-            "You’ll receive dispatch confirmation and an arrival date",
-          icon: "shipping"
+            'You’ll receive dispatch confirmation and an arrival date',
+          icon: 'shipping',
         },
         {
-          title: "Changed your mind?",
-          description: "Rest assured, we offer free returns within 30 days",
-          icon: "return"
-        }
-      ]
+          title: 'Changed your mind?',
+          description: 'Rest assured, we offer free returns within 30 days',
+          icon: 'return',
+        },
+      ],
+      shippingPrice,
     };
-  }
+  },
 };
 </script>
 
@@ -178,6 +242,21 @@ export default {
   &__input {
     --input-background: var(--c-white);
     flex: 1;
+  }
+}
+
+.discounted {
+  &::v-deep .sf-property__value {
+    color: var(--c-danger);
+    text-decoration: line-through;
+  }
+}
+
+.special-price {
+  justify-content: flex-end;
+
+  &::v-deep .sf-property__name {
+    display: none;
   }
 }
 </style>

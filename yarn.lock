@@ -2423,22 +2423,22 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@spryker-vsf/api@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.0.3.tgz#0f4331543cdbc3ab46fee2d37a57f30a5c0e032c"
-  integrity sha512-mBN8pFD9xjJVOc4o2m4mbk1c3teYH7vi18LrOW39IVZvIuzZzgQ1ekEflButbLWtRen6C2NaPe74oJy8aB3vng==
+"@spryker-vsf/api@^0.1.0-next.0":
+  version "0.1.0-next.0"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.1.0-next.0.tgz#f75d3f00542e8e96a12dbad230879128457e8b53"
+  integrity sha512-yyB9NJsbyAN+WgkV6tCRG/gd1y83/2GWgWyf5RPbv+70nHxRsLscneEGwhWBT99IWDA/FCqg1C1paCb6QPugiQ==
   dependencies:
-    "@vue-storefront/core" "2.1.1-rc.1"
+    "@vue-storefront/core" "^2.2.1"
     axios "^0.21.0"
 
-"@spryker-vsf/composables@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.0.3.tgz#bb94d8c247993ff3c3ded68d379d0a100b30fac5"
-  integrity sha512-EuZsZGeeB8ChfLJf0ekwa8GT/BJPEvXr+Kf4YP1MqOZd9a4hk8VsdLqjEc7EbXicZB62PWJ6KmVfKlx1YxW5LA==
+"@spryker-vsf/composables@^0.1.0-next.1":
+  version "0.1.0-next.1"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.1.0-next.1.tgz#d58d773b2671acdad7eb16b4851daac99aa3d8e8"
+  integrity sha512-2gFZOlaGM09nF0cAgeMDscKAWSxtxI57Ii4BzvdyvqPg7ZJhcke+ZDxlTwRdI9RQlkwIdnwaQdSKyJam85JkVQ==
   dependencies:
-    "@spryker-vsf/api" "^0.0.3"
-    "@vue-storefront/core" "2.1.1-rc.1"
-    lodash-es "^4.17.15"
+    "@spryker-vsf/api" "^0.1.0-next.0"
+    "@vue-storefront/core" "^2.2.1"
+    lodash "^4.17.20"
 
 "@storefront-ui/shared@0.10.0":
   version "0.10.0"
@@ -2844,10 +2844,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@vue-storefront/core@2.1.1-rc.1":
-  version "2.1.1-rc.1"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.1.1-rc.1.tgz#41f90f092c6a2d7d0da99572d6a9413f43e6ab66"
-  integrity sha512-eucjb2nd2kgsBxk4Nix+pM5XxxpzmzPaue6CKfTUllAIgs/BoQoYQavE5mWROAvtq90Fne1UzbJRBYMkpXj/mg==
+"@vue-storefront/core@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.2.1.tgz#7be69893a356a774d0c1de9926bdd8979100ea05"
+  integrity sha512-Uo6jsqQndEX9X/JGb4k/+CoO7QwoUrum5efXvREIEXoiDrVjuag4jzPly3k9lSq3zs9mivUkhYJR5lJd0JsFTA==
   dependencies:
     "@vue/composition-api" "1.0.0-beta.21"
     express "^4.17.1"

@@ -1,93 +1,95 @@
+import { generateParams } from "@spryker-vsf/api";
 import { getCurrentInstance } from "@vue/composition-api";
-import { Category } from "@spryker-vsf/api";
-import { AgnosticFacet } from "@vue-storefront/core";
-
-const nonFilters = ["page", "sort", "term", "itemsPerPage"];
+import {
+  AgnosticCategoryTree,
+  AgnosticFacetSearchParams,
+  AgnosticGroupedFacet
+} from "@vue-storefront/core";
 
 const getContext = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
-const reduceFilters = query => (prev, curr) => {
-  const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr);
-
-  return {
-    ...prev,
-    [curr]: makeArray ? query[curr] : [query[curr]]
-  };
-};
-
-const getFiltersDataFromUrl = (context, onlyFilters) => {
-  const { query } = context.$router.history.current;
-
-  return Object.keys(query)
-    .filter(f =>
-      onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f)
-    )
-    .reduce(reduceFilters(query), {});
-};
-
 const useUiHelpers = () => {
   const context = getContext();
 
-  const getFacetsFromURL = () => {
-    const { query, params } = context.$router.history.current;
+  const getFacetsFromURL = (): AgnosticFacetSearchParams => {
+    const { params, query } = context.$router.history.current;
     const categorySlug = Object.keys(params).reduce(
       (prev, curr) => params[curr] || prev,
       params.slug_1
     );
 
     return {
-      rootCatSlug: params.slug_1,
-      categorySlug,
-      page: parseInt(query.page, 10) || 1,
-      sort: query.sort || "latest",
-      filters: getFiltersDataFromUrl(context, true),
-      itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
-      term: query.term
+      ...query,
+      categorySlug
     };
   };
 
-  const getCatLink = (category: Category): string => {
-    return `/c/${context.$route.params.slug_1}/${category.nodeId}`;
+  const getCatLink = (category: AgnosticCategoryTree): string => {
+    const { query } = context.$router.history.current;
+    const filteredQuery = Object.keys(query)
+      .filter(key => query[key].length > 0)
+      .reduce((acc, cur) => ({ ...acc, [cur]: query[cur] }), { page: 1 });
+
+    return encodeURI(`${category.url}?${generateParams(filteredQuery)}`);
   };
 
   const changeSorting = (sort: string) => {
     const { query } = context.$router.history.current;
+
     context.$router.push({ query: { ...query, sort } });
   };
 
-  const changeFilters = (filters: any) => {
-    context.$router.push({
-      query: {
-        ...getFiltersDataFromUrl(context, false),
-        ...filters
-      }
-    });
+  const changeFilters = (filters): void => {
+    const { query } = context.$router.history.current;
+    const filterParams = Object.keys(filters).reduce(
+      (acc, param) => {
+        const filterParams = filters[param];
+
+        if (!filterParams || !filterParams.length) {
+          delete acc[param];
+        } else if (filterParams) {
+          acc[param] = filterParams;
+        }
+
+        return acc;
+      },
+      { ...query, page: 1 }
+    );
+
+    context.$router.push({ query: filterParams });
+  };
+
+  const changePage = (page: number) => {
+    const { query } = context.$router.history.current;
+
+    context.$router.push({ query: { ...query, page } });
   };
 
   const changeItemsPerPage = (itemsPerPage: number) => {
-    context.$router.push({
-      query: {
-        ...getFiltersDataFromUrl(context, false),
-        itemsPerPage
-      }
-    });
+    const { query } = context.$router.history.current;
+
+    context.$router.push({ query: { ...query, itemsPerPage } });
   };
 
   const changeSearchTerm = (term: string) => {
     context.$router.push({
+      path: "/c/catalog-search",
       query: {
-        ...getFiltersDataFromUrl(context, false),
-        term: term || undefined
+        term,
+        page: 1
       }
     });
   };
 
-  const isFacetColor = (facet: AgnosticFacet): boolean => facet.id === "color";
+  const isFacetColor = (facet: AgnosticGroupedFacet): boolean =>
+    facet?.id === "color";
 
-  const isFacetCheckbox = (): boolean => false;
+  const isFacetCheckbox = (facet: AgnosticGroupedFacet): boolean => {
+    return !(facet as any).isMultiValued;
+  };
 
   return {
     getFacetsFromURL,
@@ -95,6 +97,7 @@ const useUiHelpers = () => {
     changeSorting,
     changeFilters,
     changeItemsPerPage,
+    changePage,
     changeSearchTerm,
     isFacetColor,
     isFacetCheckbox
