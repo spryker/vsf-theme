@@ -2,109 +2,105 @@
   <div>
     <div class="highlighted">
       <SfHeading
+        :level="3"
         title="Order review"
         class="sf-heading--left sf-heading--no-underline title"
       />
       <div class="highlighted__header">
         <h3 class="highlighted__title">Personal details</h3>
-        <SfButton
-          data-cy="order-review-btn_personal-edit"
-          class="sf-button--text"
-          @click="$emit('click:edit', 0)"
-          >Edit</SfButton
-        >
+        <NuxtLink to="/checkout/personal-details">
+          <SfButton
+            data-cy="order-review-btn_personal-edit"
+            class="sf-button--text"
+            v-if="!isAuthenticated"
+            >Edit
+          </SfButton>
+        </NuxtLink>
       </div>
       <p class="content">
-        {{ personalDetails.firstName }} {{ personalDetails.lastName }}<br />
+        {{ personalDetails.salutation }}. {{ personalDetails.firstName }}
+        {{ personalDetails.lastName }}<br />
       </p>
       <p class="content">{{ personalDetails.email }}</p>
-    </div>
-    <div class="highlighted">
+
       <div class="highlighted__header">
         <h3 class="highlighted__title">Shipping details</h3>
-        <SfButton
-          data-cy="order-review-btn_shipping-edit"
-          class="sf-button--text"
-          @click="$emit('click:edit', 1)"
-          >Edit</SfButton
-        >
+        <NuxtLink to="/checkout/shipping">
+          <SfButton
+            data-cy="order-review-btn_shipping-edit"
+            class="sf-button--text"
+            >Edit</SfButton
+          >
+        </NuxtLink>
       </div>
       <p class="content">
-        <span class="content__label">{{
-          checkoutGetters.getShippingMethodName(chosenShippingMethod)
-        }}</span
+        <span class="content__label"
+          >Shipment method: {{ chosenShippingMethod.name }}</span
         ><br />
-        {{ shippingDetails.streetName }} {{ shippingDetails.apartment }},
+        {{ shippingDetails.address1 }} {{ shippingDetails.address2 }},
         {{ shippingDetails.zipCode }}<br />
         {{ shippingDetails.city }}, {{ shippingDetails.country }}
       </p>
       <p class="content">{{ shippingDetails.phoneNumber }}</p>
-    </div>
-    <div class="highlighted">
+
       <div class="highlighted__header">
-        <h3 class="highlighted__title">Billing address</h3>
-        <SfButton
-          data-cy="order-review-btn_billing-edit"
-          class="sf-button--text"
-          @click="$emit('click:edit', 2)"
-          >Edit</SfButton
-        >
+        <h3 class="highlighted__title">Billing details</h3>
+        <NuxtLink to="/checkout/payment">
+          <SfButton
+            data-cy="order-review-btn_billing-edit"
+            class="sf-button--text"
+            @click="$emit('changeStep', 2)"
+            >Edit</SfButton
+          >
+        </NuxtLink>
       </div>
-      <p v-if="billingSameAsShipping" class="content">
-        Same as shipping address
+      <p class="content">
+        <span class="content__label"
+          >Payment method: {{ chosenPaymentDetails.paymentMethodName }}</span
+        ><br />
+        {{ billingDetails.address1 }} {{ billingDetails.address2 }},
+        {{ billingDetails.zipCode }}<br />
+        {{ billingDetails.city }}, {{ billingDetails.country }}
       </p>
-      <template v-else>
-        <p class="content">
-          <span class="content__label">{{ chosenPaymentMethod }}</span
-          ><br />
-          {{ billingDetails.streetName }} {{ billingDetails.apartment }},
-          {{ billingDetails.zipCode }}<br />
-          {{ billingDetails.city }}, {{ billingDetails.country }}
-        </p>
-        <p class="content">{{ billingDetails.phoneNumber }}</p>
-      </template>
-    </div>
-    <div class="highlighted">
-      <div class="highlighted__header">
-        <h3 class="highlighted__title">Payment method</h3>
-        <SfButton
-          data-cy="order-review-btn_payment-edit"
-          class="sf-button--text"
-          @click="$emit('click:edit', 2)"
-          >Edit</SfButton
-        >
-      </div>
-      <p class="content">{{ paymentMethod.label }}</p>
+      <p class="content">{{ billingDetails.phoneNumber }}</p>
     </div>
   </div>
 </template>
 <script>
-import { SfHeading, SfButton } from "@storefront-ui/vue";
-import { useCheckout, checkoutGetters } from "@spryker-vsf/composables";
+import { SfHeading, SfButton } from '@storefront-ui/vue';
+import {
+  useCheckoutBilling,
+  useCheckoutShipping,
+  useUser,
+} from '@spryker-vsf/composables';
 
 export default {
-  name: "OrderReview",
+  name: 'OrderReview',
   components: {
     SfHeading,
-    SfButton
+    SfButton,
   },
 
   setup() {
+    const { billingDetails, chosenPaymentDetails } = useCheckoutBilling(
+      'checkout',
+    );
     const {
-      personalDetails,
       shippingDetails,
       chosenShippingMethod,
-      chosenPaymentMethod
-    } = useCheckout();
+      personalDetails,
+    } = useCheckoutShipping('checkout');
+    const { isAuthenticated } = useUser();
 
     return {
       personalDetails,
       shippingDetails,
       chosenShippingMethod,
-      chosenPaymentMethod,
-      checkoutGetters
+      chosenPaymentDetails,
+      billingDetails,
+      isAuthenticated,
     };
-  }
+  },
 };
 </script>
 
@@ -113,10 +109,9 @@ export default {
   box-sizing: border-box;
   width: 100%;
   background-color: var(--c-light);
-  padding: var(--spacer-2xl);
-  margin-bottom: var(--spacer-xl);
+  padding: var(--spacer-xl) var(--spacer-xl) 0;
   &:last-child {
-    margin-bottom: 0;
+    padding-bottom: var(--spacer-xl);
   }
   &--total {
     margin-bottom: 1px;
@@ -125,7 +120,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacer-xl);
+    margin: var(--spacer-sm) 0;
   }
   &__title {
     font-family: var(--font-family--primary);
@@ -136,18 +131,16 @@ export default {
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
   @include for-desktop {
-    margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    margin: 0 0 var(--spacer-base);
   }
 }
 .content {
-  margin: 0 0 var(--spacer-xl) 0;
+  margin: 0 0 var(--spacer-xs);
   color: var(--c-text);
   font-size: var(--font-size--sm);
   font-weight: var(--font-weight--light);
   line-height: 1.6;
-  &:last-child {
-    margin: 0;
-  }
+
   &__label {
     font-weight: var(--font-weight--normal);
   }

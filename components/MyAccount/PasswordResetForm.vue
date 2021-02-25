@@ -1,125 +1,154 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit, reset }">
-    <form class="form" @submit.prevent="handleSubmit(submitForm(reset))">
-      <ValidationProvider rules="required" v-slot="{ errors }" class="form__element">
+  <ValidationObserver ref="validationObserver" v-slot="{ handleSubmit }">
+    <form class="form" @submit.prevent="handleSubmit(onSubmit)">
+      <ValidationProvider
+        rules="required"
+        v-slot="{ errors }"
+        class="form__element"
+      >
         <SfInput
-          data-cy="my-profile-input_currentPassword"
-          v-model="form.currentPassword"
-          type="password"
-          name="currentPassword"
-          label="Current Password"
-          required
-          :valid="!errors[0]"
+          data-cy="password-input_old"
+          v-model="passwordForm.password"
+          :valid="!errors[0] && !fieldErrors.password"
           :errorMessage="errors[0]"
+          type="password"
+          name="password"
+          label="Old password"
         />
       </ValidationProvider>
-      <div class="form__horizontal">
-        <ValidationProvider rules="required|password" v-slot="{ errors }" vid="password" class="form__element">
-          <SfInput
-            data-cy="my-profile-input_newPassword"
-            v-model="form.newPassword"
-            type="password"
-            name="newPassword"
-            label="New Password"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider rules="required|confirmed:password" v-slot="{ errors }" class="form__element">
-          <SfInput
-            data-cy="my-profile-input_repeatPassword"
-            v-model="form.repeatPassword"
-            type="password"
-            name="repeatPassword"
-            label="Repeat Password"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+      <ValidationProvider
+        rules="required|min:8|password"
+        v-slot="{ errors }"
+        class="form__element"
+      >
+        <SfInput
+          data-cy="password-input_new"
+          v-model="passwordForm.newPassword"
+          :valid="!errors[0] && !fieldErrors.newPassword"
+          :errorMessage="errors[0]"
+          type="password"
+          name="newPassword"
+          label="New password"
+        />
+      </ValidationProvider>
+      <ValidationProvider
+        rules="required|min:8|password"
+        v-slot="{ errors }"
+        class="form__element"
+      >
+        <SfInput
+          data-cy="password-input_confirm"
+          v-model="passwordForm.confirmPassword"
+          :valid="!errors[0] && !fieldErrors.confirmPassword"
+          :errorMessage="errors[0]"
+          type="password"
+          name="confirmPassword"
+          label="Confirm password"
+        />
+      </ValidationProvider>
+      <div class="form__element">
+        <SfButton
+          data-cy="password-btn_submit"
+          type="submit"
+          class="sf-button--full-width form__button"
+          :disabled="loading"
+        >
+          <SfLoader :class="{ loader: loading }" :loading="loading">
+            <div>Update an account</div>
+          </SfLoader>
+        </SfButton>
+
+        <div class="error-log" v-if="formErrors.length > 0">
+          <p v-for="error in formErrors" :key="error">
+            {{ error }}
+          </p>
+        </div>
       </div>
-      <SfButton data-cy="my-profile-btn_update-password" class="form__button">Update password</SfButton>
     </form>
   </ValidationObserver>
 </template>
 
 <script>
 import { ref } from '@vue/composition-api';
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
-import { SfInput, SfButton } from '@storefront-ui/vue';
+import { useUser, userGetters } from '@spryker-vsf/composables';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { SfInput, SfButton, SfSelect, SfLoader } from '@storefront-ui/vue';
 
 export default {
   name: 'PasswordResetForm',
 
   components: {
+    SfSelect,
     SfInput,
     SfButton,
+    SfLoader,
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
 
-  setup(_, { emit }) {
-    const resetForm = () => ({
-      currentPassword: '',
+  setup(_, context) {
+    const { loading, changePassword, error } = useUser();
+    const passwordFormInitialData = {
+      password: '',
       newPassword: '',
-      repeatPassword: ''
+      confirmPassword: '',
+    };
+    const passwordForm = ref({ ...passwordFormInitialData });
+    const formErrors = ref([]);
+    const fieldErrors = ref({});
+
+    const setFormErrors = (_formErrors, _fieldErrors) => {
+      formErrors.value = _formErrors;
+      fieldErrors.value = _fieldErrors;
+    };
+
+    const onSubmit = async () => {
+      setFormErrors([], {});
+      await changePassword(passwordForm.value);
+      if (error.value.changePassword) {
+        const { tag, value } = error.value.changePassword;
+        tag === 'validate'
+          ? setFormErrors(...userGetters.getAuthErrors(value))
+          : (formErrors.value = ['Something went wrong. Please try again.']);
+      } else {
+        passwordForm.value = { ...passwordFormInitialData };
+        context.emit('successDataSubmit', 'Password has changed successfully.');
+        context.refs.validationObserver.reset();
+      }
+    };
+
+    extend('password', {
+      validate: (value) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i;
+        return regex.test(value) && value.length < 64;
+      },
+      message: `Password needs at least one lower case letter,
+               at least 1 upper case letter, at least 1 number and at least 1 special character and
+               it should be from 8 to 64 characters long`,
     });
 
-    const form = ref(resetForm());
-
-    const submitForm = (resetValidationFn) => {
-      return () => {
-        const onComplete = () => {
-          form.value = resetForm();
-          resetValidationFn();
-        };
-
-        const onError = () => {
-          // TODO: Handle error
-        };
-
-        emit('submit', { form, onComplete, onError });
-      };
-    };
-
     return {
-      form,
-      submitForm
+      passwordForm,
+      formErrors,
+      fieldErrors,
+      loading,
+      onSubmit,
     };
-  }
+  },
 };
 </script>
 
-<style lang='scss' scoped>
-.form {
-  &__element {
-    display: block;
-    margin: 0 0 var(--spacer-lg) 0;
-  }
-  &__button {
-    display: block;
-    width: 100%;
-    @include for-desktop {
-      width: 17.5rem;
-    }
-  }
-  &__horizontal {
-    @include for-desktop {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .form__element {
-      @include for-desktop {
-        flex: 1;
-        margin-right: var(--spacer-2xl);
-      }
+<style lang="scss" scoped>
+@import '~@storefront-ui/vue/styles';
 
-      &:last-child {
-        margin-right: 0;
-      }
-    }
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &__element {
+    flex: 0 0 100%;
+    margin: 0 0 var(--spacer-base) 0;
   }
 }
 </style>

@@ -14,31 +14,33 @@
       >
     </template>
     <template #right>
+      <CurrencySelector />
       <LocaleSelector />
     </template>
   </SfTopBar>
 </template>
 
 <script>
-import { SfButton, SfTopBar } from "@storefront-ui/vue";
-import { useUiState } from "~/composables";
-import { useUser, userGetters } from "@spryker-vsf/composables";
-import LocaleSelector from "./LocaleSelector";
+import { SfButton, SfTopBar } from '@storefront-ui/vue';
+import { useUiState } from '~/composables';
+import { useUser, userGetters } from '@spryker-vsf/composables';
+import CurrencySelector from './CurrencySelector';
+import LocaleSelector from './LocaleSelector';
 
 export default {
-  components: { SfTopBar, SfButton, LocaleSelector },
+  components: { SfTopBar, SfButton, LocaleSelector, CurrencySelector },
   setup() {
-    const { toggleLoginModal } = useUiState();
+    const { toggleModal } = useUiState();
     const { isAuthenticated, logout, user } = useUser();
 
     return {
-      toggleLoginModal,
+      toggleModal,
       isAuthenticated,
       logout,
       user,
-      userGetters
+      userGetters,
     };
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

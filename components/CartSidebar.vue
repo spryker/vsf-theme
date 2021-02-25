@@ -7,11 +7,27 @@
       @close="toggleCartSidebar"
     >
       <template #content-top>
-        <SfProperty
-          class="sf-property--large cart-summary desktop-only"
-          name="Total items"
-          :value="totalItems"
-        />
+        <SfNotification
+          :visible="!!cartErrorMessage"
+          :message="cartErrorMessage"
+          type="danger"
+          class="error-notification"
+          @click:close="cartErrorMessage = null"
+        >
+          <template #icon>
+            <div />
+          </template>
+        </SfNotification>
+        <div v-if="totalItems" class="cart-meta">
+          <SfProperty
+            class="sf-property--large cart-summary desktop-only"
+            name="Total items"
+            :value="totalItems"
+          />
+          <SfButton class="color-light" @click="clearCartItems">
+            Clear cart
+          </SfButton>
+        </div>
       </template>
       <transition name="sf-fade" mode="out-in">
         <div v-if="totalItems" key="my-cart" class="my-cart">
@@ -25,27 +41,28 @@
                 :title="cartGetters.getItemName(product)"
                 :regular-price="
                   cartGetters.getFormattedPrice(
-                    cartGetters.getItemPrice(product).regular
+                    cartGetters.getItemPrice(product).regular,
                   )
                 "
                 :special-price="
                   cartGetters.getFormattedPrice(
-                    cartGetters.getItemPrice(product).special
+                    cartGetters.getItemPrice(product).special,
                   )
                 "
                 :stock="99999"
                 :qty="cartGetters.getItemQty(product)"
-                @input="updateQuantity(product, $event)"
-                @click:remove="removeFromCart(product)"
+                @input="updateCartItemQty({ product, quantity: $event })"
+                @click:remove="removeCartItem({ product })"
                 class="collected-product"
               >
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
-                      v-for="(attribute,
-                      key) in cartGetters.getItemAttributes(product, [
+                      v-for="(
+                        attribute, key
+                      ) in cartGetters.getItemAttributes(product, [
                         'color',
-                        'size'
+                        'brand',
                       ])"
                       :key="key"
                       :name="key"
@@ -54,16 +71,13 @@
                   </div>
                 </template>
                 <template #actions>
-                  <div class="desktop-only collected-product__actions">
-                    <SfButton class="sf-button--text collected-product__save">
-                      Save for later
-                    </SfButton>
-                    <SfButton
-                      class="sf-button--text collected-product__compare"
-                    >
-                      Add to compare
-                    </SfButton>
-                  </div>
+                  <SfButton
+                    v-if="isAuthenticated"
+                    class="sf-button--text desktop-only"
+                    @click="addToWishlist({ product })"
+                  >
+                    Save for later
+                  </SfButton>
                 </template>
               </SfCollectedProduct>
             </transition-group>
@@ -95,14 +109,14 @@
             >
               <template #value>
                 <SfPrice
-                  :regular="cartGetters.getFormattedPrice(totals.subtotal)"
+                  :regular="cartGetters.getFormattedPrice(totals.total)"
                 />
               </template>
             </SfProperty>
             <nuxt-link
-              :to="
-                `/checkout/${isAuthenticated ? 'shipping' : 'personal-details'}`
-              "
+              :to="`/checkout/${
+                isAuthenticated ? 'shipping' : 'personal-details'
+              }`"
             >
               <SfButton
                 class="sf-button--full-width color-secondary"
@@ -129,36 +143,88 @@ import {
   SfSidebar,
   SfHeading,
   SfButton,
-  SfIcon,
   SfProperty,
   SfPrice,
   SfCollectedProduct,
-  SfImage
-} from "@storefront-ui/vue";
-import { computed } from "@vue/composition-api";
-import { useCart, useUser, cartGetters } from "@spryker-vsf/composables";
-import { useUiState } from "~/composables";
-import { onSSR } from "@vue-storefront/core";
+  SfImage,
+  SfNotification,
+} from '@storefront-ui/vue';
+import { computed, ref, watch } from '@vue/composition-api';
+import {
+  useCart,
+  useUser,
+  cartGetters,
+  useWishlist,
+} from '@spryker-vsf/composables';
+import { useUiState } from '~/composables';
+import { onSSR } from '@vue-storefront/core';
 
 export default {
-  name: "Cart",
+  name: 'Cart',
   components: {
     SfSidebar,
     SfButton,
     SfHeading,
-    SfIcon,
     SfProperty,
     SfPrice,
     SfCollectedProduct,
-    SfImage
+    SfImage,
+    SfNotification,
   },
   setup() {
     const { isCartSidebarOpen, toggleCartSidebar } = useUiState();
-    const { cart, removeFromCart, updateQuantity, loadCart } = useCart();
+    const {
+      error,
+      cart,
+      removeItem,
+      updateItemQty,
+      load: loadCart,
+      clear: clearCart,
+      loading,
+    } = useCart();
     const { isAuthenticated } = useUser();
+    const { addItem: addToWishlist } = useWishlist();
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
+
+    const cartErrorMessage = ref(null);
+
+    const cartError = ref(null);
+
+    function makeErrorMessage({ tag, value }) {
+      return tag === 'validate'
+        ? value.errors
+            .map((error) => error.detail)
+            .join(' ')
+            .trim() || null
+        : 'Something went wrong, please try again';
+    }
+
+    async function updateCartItemQty(params) {
+      cartError.value = null;
+      await updateItemQty(params);
+      cartError.value = error.value?.updateItemQty ?? null;
+    }
+
+    async function removeCartItem(params) {
+      cartError.value = null;
+      await removeItem(params);
+      cartError.value = error.value?.removeItem ?? null;
+    }
+
+    async function clearCartItems(params) {
+      cartError.value = null;
+      await clearCart();
+      cartError.value = error.value?.clear ?? null;
+    }
+
+    watch(cartError, () => {
+      cartErrorMessage.value =
+        cartError.value && isCartSidebarOpen.value
+          ? makeErrorMessage(cartError.value)
+          : null;
+    });
 
     onSSR(async () => {
       await loadCart();
@@ -167,15 +233,19 @@ export default {
     return {
       isAuthenticated,
       products,
-      removeFromCart,
-      updateQuantity,
+      removeCartItem,
+      updateCartItemQty,
       isCartSidebarOpen,
       toggleCartSidebar,
       totals,
       totalItems,
-      cartGetters
+      cartGetters,
+      clearCartItems,
+      loading,
+      cartErrorMessage,
+      addToWishlist,
     };
-  }
+  },
 };
 </script>
 
@@ -241,7 +311,14 @@ export default {
 }
 .collected-product {
   margin: 0 0 var(--spacer-sm) 0;
-  --image-height: 12.5rem;
+  --image-height: auto;
+  --collected-product-image-background: #fff;
+  @include for-desktop {
+    &:hover {
+      --collected-product-actions-display: flex;
+      --collected-product-configuration-display: none;
+    }
+  }
   &__properties {
     margin: var(--spacer-xs) 0 0 0;
     display: flex;
@@ -254,7 +331,7 @@ export default {
     }
   }
   &__actions {
-    transition: opacity 150ms ease-in-out;
+    display: none;
   }
   &__save,
   &__compare {
@@ -274,10 +351,26 @@ export default {
     --cp-save-opacity: 1;
     --cp-compare-opacity: 1;
     @include for-desktop {
+      --collected-product-configuration-display: flex;
       .collected-product__properties {
         display: none;
       }
     }
   }
+}
+
+.cart-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  & .sf-button {
+    font-size: var(--font-size--xs);
+    padding: var(--spacer-xs) var(--spacer-sm);
+  }
+}
+
+.error-notification {
+  font-size: var(--font-size--sm);
 }
 </style>

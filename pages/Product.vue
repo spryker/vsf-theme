@@ -1,8 +1,19 @@
 <template>
   <div id="product">
+    <SfNotification
+      :visible="!!cartErrorMessage"
+      :message="cartErrorMessage"
+      type="danger"
+      class="message"
+      @click:close="cartErrorMessage = null"
+    >
+      <template #icon>
+        <SfIcon icon="error" color="white" />
+      </template>
+    </SfNotification>
     <SfBreadcrumbs
       class="breadcrumbs desktop-only"
-      :breadcrumbs="breadcrumbs"
+      :breadcrumbs="productGetters.getProductBreadcrumbs(products)"
     />
     <div class="product">
       <!-- TODO: replace example images with the getter, wait for SfGallery fix by SFUI team: https://github.com/DivanteLtd/storefront-ui/issues/1074 -->
@@ -14,6 +25,11 @@
             :level="3"
             class="sf-heading--no-underline sf-heading--left"
           />
+          <template v-for="label in productGetters.getBadgeLabels(products)">
+            <SfBadge :class="label.frontEndReference" :key="label.value">{{
+              label.value
+            }}</SfBadge>
+          </template>
           <SfIcon
             icon="drag"
             size="xl"
@@ -25,12 +41,12 @@
           <SfPrice
             :regular="
               productGetters.getFormattedPrice(
-                productGetters.getPrice(product).regular
+                productGetters.getPrice(product).regular,
               )
             "
             :special="
               productGetters.getFormattedPrice(
-                productGetters.getPrice(product).special
+                productGetters.getPrice(product).special,
               )
             "
           />
@@ -51,7 +67,7 @@
         </div>
         <div>
           <p class="product__description desktop-only">
-            {{ description }}
+            {{ productGetters.getDescription(product) }}
           </p>
           <SfButton
             data-cy="product-btn_size-guide"
@@ -59,51 +75,64 @@
           >
             Size guide
           </SfButton>
-          <!-- TODO: add size selector after design is added -->
-          <SfSelect
-            data-cy="product-select_size"
-            v-if="options.size"
-            :selected="configuration.size"
-            @change="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
+          <template v-for="(optionValue, optionName) in options">
+            <template v-if="optionName === 'color'">
+              <div class="product__colors desktop-only" :key="optionName">
+                <p class="product__color-label">{{ optionValue.title }}:</p>
+                <SfColor
+                  data-cy="product-color_update"
+                  v-for="(color, i) in optionValue.options"
+                  :key="i"
+                  :color="color.value"
+                  class="product__color"
+                  @click="updateFilter({ color })"
+                />
+              </div>
+            </template>
+            <template v-else>
+              <SfSelect
+                :value="configuration[optionName]"
+                @input="(option) => updateFilter({ [optionName]: option })"
+                placeholder="Choose an option"
+                :label="optionValue.title"
+                class="sf-select--underlined"
+                :required="true"
+                :key="optionName"
+              >
+                <SfSelectOption
+                  v-for="option in optionValue.options"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </SfSelectOption>
+              </SfSelect>
+            </template>
+          </template>
+          <template v-if="Object.keys(configuration).length">
+            <SfButton
+              data-cy="product-btn_reset-attributes"
+              class="sf-button--text"
+              @click="resetAttributes()"
             >
-              {{ size.label }}
-            </SfSelectOption>
-          </SfSelect>
-          <!-- TODO: add color picker after PR done by SFUI team -->
-          <div v-if="options.color" class="product__colors desktop-only">
-            <p class="product__color-label">Color:</p>
-            <div>
-              <!-- TODO: handle selected logic differently as the selected prop for SfColor is a boolean -->
-              <SfColor
-                data-cy="product-color_update"
-                v-for="(color, i) in options.color"
-                :key="i"
-                :color="color.value"
-                class="product__color"
-                @click="updateFilter({ color })"
-              />
-            </div>
-          </div>
+              Reset attributes
+            </SfButton>
+          </template>
           <SfAddToCart
             data-cy="product-cart_add"
-            :stock="stock"
+            :stock="productGetters.getStock(product)"
             v-model="qty"
-            :disabled="loading"
-            :canAddToCart="stock > 0"
-            @click="addToCart(product, parseInt(qty))"
+            :disabled="loading || !isProductConfigured"
+            :canAddToCart="productGetters.getStock(product) > 0"
+            @click="addItemToCart({ product, quantity: parseInt(qty) })"
             class="product__add-to-cart"
           />
           <SfButton
+            v-if="isAuthenticated"
             data-cy="product-btn_save-later"
             class="sf-button--text desktop-only product__save"
+            :disabled="loading || !isProductConfigured"
+            @click="addToWishlist({ product })"
           >
             Save for later
           </SfButton>
@@ -116,14 +145,6 @@
         </div>
         <SfTabs :openTab="1" class="product__tabs">
           <SfTab data-cy="product-tab_description" title="Description">
-            <div>
-              <p>
-                The Karissa V-Neck Tee features a semi-fitted shape that's
-                flattering for every figure. You can hit the gym with confidence
-                while it hugs curves and hides common "problem" areas. Find
-                stunning women's cocktail dresses and party dresses.
-              </p>
-            </div>
             <SfProperty
               v-for="(property, i) in properties"
               :key="i"
@@ -158,16 +179,7 @@
             data-cy="product-tab_additional"
             class="product__additional-info"
           >
-            <p class="product__additional-info__title">Brand</p>
-            <p>{{ brand }}</p>
-            <p class="product__additional-info__title">Take care of me</p>
-            <p class="product__additional-info__paragraph">
-              Just here for the care instructions?
-            </p>
-            <p class="product__additional-info__paragraph">
-              Yeah, we thought so
-            </p>
-            <p>{{ careInstructions }}</p>
+            <div>Additional Information</div>
           </SfTab>
         </SfTabs>
       </div>
@@ -209,6 +221,7 @@
 import {
   SfProperty,
   SfHeading,
+  SfBadge,
   SfPrice,
   SfRating,
   SfSelect,
@@ -218,72 +231,123 @@ import {
   SfIcon,
   SfImage,
   SfBanner,
-  SfAlert,
-  SfSticky,
   SfReview,
   SfBreadcrumbs,
   SfButton,
-  SfColor
-} from "@storefront-ui/vue";
+  SfColor,
+  SfNotification,
+} from '@storefront-ui/vue';
 
-import InstagramFeed from "~/components/InstagramFeed.vue";
-import RelatedProducts from "~/components/RelatedProducts.vue";
-import { ref, computed } from "@vue/composition-api";
+import InstagramFeed from '~/components/InstagramFeed.vue';
+import RelatedProducts from '~/components/RelatedProducts.vue';
+import { ref, computed, watch } from '@vue/composition-api';
 import {
   useProduct,
   useCart,
   productGetters,
   useReview,
-  reviewGetters
-} from "@spryker-vsf/composables";
-import { onSSR } from "@vue-storefront/core";
+  useWishlist,
+  reviewGetters,
+  useUser,
+} from '@spryker-vsf/composables';
+import { onSSR } from '@vue-storefront/core';
+import { useUiState } from '~/composables';
 
 export default {
-  name: "Product",
-  transition: "fade",
+  name: 'Product',
+  transition: 'fade',
   setup(props, context) {
     const qty = ref(1);
     const { id } = context.root.$route.params;
-    const { products, search } = useProduct("products");
+    const { products, search } = useProduct('products');
+    const { isCartSidebarOpen } = useUiState();
+
     const {
       products: relatedProducts,
       search: searchRelatedProducts,
-      loading: relatedLoading
-    } = useProduct("relatedProducts");
-    const { addToCart, loading } = useCart();
+      loading: relatedLoading,
+    } = useProduct('relatedProducts');
+    const { addItem, loading, cart, error } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview(
-      "productReviews"
+      'productReviews',
     );
+    const { addItem: addToWishlist } = useWishlist();
+    const { isAuthenticated } = useUser();
 
+    const productQuery = context.root.$route.query;
     const product = computed(
       () =>
         productGetters.getFiltered(products.value, {
           master: true,
-          attributes: context.root.$route.query
-        })[0]
-    );
-    const options = computed(() =>
-      productGetters.getAttributes(products.value, ["color", "size"])
-    );
-    const configuration = computed(() =>
-      productGetters.getAttributes(product.value, ["color", "size"])
-    );
-    const categories = computed(() =>
-      productGetters.getCategoryIds(product.value)
-    );
-    const reviews = computed(() =>
-      reviewGetters.getItems(productReviews.value)
+          attributes: productQuery,
+        })[0],
     );
 
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
+    const options = computed(() =>
+      productGetters.getAttributesExpanded(
+        products.value,
+        productGetters.getAttributesName(products.value),
+        {
+          attributes: productQuery,
+        },
+      ),
+    );
+    const configuration = computed(() =>
+      productGetters.getAttributesExpanded(
+        product.value,
+        productGetters.getAttributesName(products.value),
+        {
+          attributes: productQuery,
+        },
+      ),
+    );
+    const isProductConfigured = computed(
+      () =>
+        productGetters.getAttributesName(products.value).length ===
+        Object.keys(configuration.value).length,
+    );
+    const properties = computed(() =>
+      productGetters.getProperties(product.value),
+    );
+    const categories = computed(() =>
+      productGetters.getCategoryIds(product.value),
+    );
+    const reviews = computed(() =>
+      reviewGetters.getItems(productReviews.value),
+    );
+
+    const cartError = ref(null);
+    const cartErrorMessage = ref(null);
+
+    function makeErrorMessage({ tag, value }) {
+      return tag === 'validate'
+        ? value.errors
+            .map((error) => error.detail)
+            .join(' ')
+            .trim() || null
+        : 'Something went wrong, please try again';
+    }
+
+    watch(cartError, () => {
+      cartErrorMessage.value =
+        cartError.value && !isCartSidebarOpen.value
+          ? makeErrorMessage(cartError.value)
+          : null;
+    });
+
     const productGallery = computed(() =>
-      productGetters.getGallery(product.value).map(img => ({
+      productGetters.getGallery(product.value).map((img) => ({
         mobile: { url: img.small },
         desktop: { url: img.normal },
-        big: { url: img.big }
-      }))
+        big: { url: img.big },
+      })),
     );
+
+    async function addItemToCart(params) {
+      cartError.value = null;
+      await addItem(params);
+      cartError.value = error.value?.addItem ?? null;
+    }
 
     onSSR(async () => {
       await search({ id });
@@ -291,45 +355,62 @@ export default {
       await searchReviews({ productId: id });
     });
 
-    const updateFilter = filter => {
+    const updateFilter = (filter) => {
       context.root.$router.push({
         path: context.root.$route.path,
         query: {
           ...configuration.value,
-          ...filter
-        }
+          ...filter,
+        },
+      });
+    };
+
+    const resetAttributes = () => {
+      context.root.$router.push({
+        path: context.root.$route.path,
+        query: {},
       });
     };
 
     return {
       updateFilter,
+      resetAttributes,
+      addToWishlist,
       configuration,
+      isProductConfigured,
+      properties,
+      products,
       product,
       reviews,
       reviewGetters,
+      isAuthenticated,
       averageRating: computed(() =>
-        productGetters.getAverageRating(product.value)
+        productGetters.getAverageRating(product.value),
       ),
       totalReviews: computed(() =>
-        productGetters.getTotalReviews(product.value)
+        productGetters.getTotalReviews(product.value),
       ),
       relatedProducts: computed(() =>
-        productGetters.getFiltered(relatedProducts.value, { master: true })
+        productGetters.getFiltered(relatedProducts.value, {
+          master: true,
+          related: true,
+        }),
       ),
       relatedLoading,
       options,
       qty,
-      addToCart,
+      addItemToCart,
       loading,
       productGetters,
-      productGallery
+      productGallery,
+      cartErrorMessage,
     };
   },
   components: {
-    SfAlert,
     SfColor,
     SfProperty,
     SfHeading,
+    SfBadge,
     SfPrice,
     SfRating,
     SfSelect,
@@ -339,66 +420,18 @@ export default {
     SfIcon,
     SfImage,
     SfBanner,
-    SfSticky,
     SfReview,
     SfBreadcrumbs,
     SfButton,
     InstagramFeed,
-    RelatedProducts
+    RelatedProducts,
+    SfNotification,
   },
-  data() {
-    return {
-      stock: 5,
-      properties: [
-        {
-          name: "Product Code",
-          value: "578902-00"
-        },
-        {
-          name: "Category",
-          value: "Pants"
-        },
-        {
-          name: "Material",
-          value: "Cotton"
-        },
-        {
-          name: "Country",
-          value: "Germany"
-        }
-      ],
-      description:
-        "Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.",
-      detailsIsActive: false,
-      brand:
-        "Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.",
-      careInstructions: "Do not wash!",
-      breadcrumbs: [
-        {
-          text: "Home",
-          route: {
-            link: "#"
-          }
-        },
-        {
-          text: "Category",
-          route: {
-            link: "#"
-          }
-        },
-        {
-          text: "Pants",
-          route: {
-            link: "#"
-          }
-        }
-      ]
-    };
-  }
 };
 </script>
-
 <style lang="scss" scoped>
+@import '~@storefront-ui/vue/styles';
+
 #product {
   box-sizing: border-box;
   padding: 0 var(--spacer-sm);

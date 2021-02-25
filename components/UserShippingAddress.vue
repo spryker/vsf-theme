@@ -1,53 +1,54 @@
 <template>
-  <div>
-    <p class="name">{{ address.firstName }} {{ address.lastName }}</p>
-    <p>{{ street }}</p>
-
+  <div :class="{ 'default-address': isDefault(address) }">
+    <p class="name">{{ getFirstName(address) }} {{ getLastName(address) }}</p>
+    <p v-if="getCompanyName(address)">{{ getCompanyName(address) }}</p>
+    <p>{{ getStreetName(address) }} {{ getStreetNumber(address) }}</p>
     <p>
-      {{ address.city }}
-      {{ address.state }}
-      {{ address.postalCode }}
+      {{ getPostCode(address) }} {{ getCity(address) }},
+      {{ getCountry(address) }}
     </p>
-
-    <p>{{ country }}</p>
-    <p v-if="address.phone">T: {{ address.phone }}</p>
+    <p v-if="getPhone(address)">{{ getPhone(address) }}</p>
   </div>
 </template>
 
 <script>
-import { toRef, computed } from '@vue/composition-api';
+import { userShippingGetters } from '@spryker-vsf/composables';
 
 export default {
+  name: 'UserShippingAddress',
   props: {
     address: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-
-  setup(props) {
-    const address = toRef(props, 'address');
-
-    const street = computed(() => {
-      const parts = [
-        address.streetName,
-        address.streetNumber && ` ${ address.streetNumber }`,
-        address.apartment && `, Apartment ${ address.apartment }`
-      ];
-
-      return parts.filter(Boolean).join('');
-    });
-
-    const country = computed(() => {
-      const country = address.country;
-      return country;
-    });
+  setup() {
+    const {
+      getFirstName,
+      getLastName,
+      getCity,
+      getCountry,
+      getPhone,
+      getStreetName,
+      getStreetNumber,
+      isDefault,
+      getCompanyName,
+      getPostCode,
+    } = userShippingGetters;
 
     return {
-      street,
-      country
+      getFirstName,
+      getLastName,
+      getCity,
+      getCountry,
+      getPhone,
+      getStreetName,
+      getStreetNumber,
+      isDefault,
+      getCompanyName,
+      getPostCode,
     };
-  }
+  },
 };
 </script>
 
@@ -55,8 +56,13 @@ export default {
 p {
   margin: 0;
 }
-
 .name {
   font-weight: var(--font-weight--semibold);
+}
+
+.default-address {
+  .name {
+    color: var(--c-primary);
+  }
 }
 </style>

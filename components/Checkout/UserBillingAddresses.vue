@@ -1,34 +1,39 @@
 <template>
   <div>
     <SfAddressPicker
-      :selected="String(currentAddressId)"
-      @input="setCurrentAddress($event)"
-      class="billing__addresses"
+      :selected="currentAddressId"
+      @change="setCurrentAddress($event)"
+      class="billing-addresses"
     >
       <SfAddress
+        class="billing-addresses__address"
         v-for="billingAddress in billingAddresses"
-        :key="userBillingGetters.getId(billingAddress)"
-        :name="String(userBillingGetters.getId(billingAddress))"
+        :key="userCheckoutBillingGetters.getAddressId(billingAddress)"
+        :name="userCheckoutBillingGetters.getAddressId(billingAddress)"
       >
+        <span>
+          {{ userCheckoutBillingGetters.getAddressSalutation(billingAddress) }}.
+          {{ userCheckoutBillingGetters.getAddressFirstName(billingAddress) }}
+          {{ userCheckoutBillingGetters.getAddressLastName(billingAddress) }}
+        </span>
         <span
-          >{{ userBillingGetters.getFirstName(billingAddress) }}
-          {{ userBillingGetters.getLastName(billingAddress) }}</span
-        >
-        <span
-          >{{ userBillingGetters.getStreetName(billingAddress) }}
-          {{ userBillingGetters.getApartmentNumber(billingAddress) }}</span
-        >
-        <span>{{ userBillingGetters.getPostCode(billingAddress) }}</span>
-        <span
-          >{{ userBillingGetters.getCity(billingAddress)
-          }}{{
-            userBillingGetters.getProvince(billingAddress)
-              ? `, ${userBillingGetters.getProvince(billingAddress)}`
-              : ""
-          }}</span
-        >
-        <span>{{ userBillingGetters.getCountry(billingAddress) }}</span>
-        <span>{{ userBillingGetters.getPhone(billingAddress) }}</span>
+          >{{ userCheckoutBillingGetters.getAddressStreetName(billingAddress) }}
+          {{
+            userCheckoutBillingGetters.getAddressApartmentNumber(billingAddress)
+          }}
+        </span>
+        <span>{{
+          userCheckoutBillingGetters.getAddressPostCode(billingAddress)
+        }}</span>
+        <span>
+          {{ userCheckoutBillingGetters.getAddressCity(billingAddress) }}
+        </span>
+        <span>
+          {{ userCheckoutBillingGetters.getAddressCountry(billingAddress) }}
+        </span>
+        <span>
+          {{ userCheckoutBillingGetters.getAddressPhone(billingAddress) }}
+        </span>
       </SfAddress>
     </SfAddressPicker>
     <SfCheckbox
@@ -43,45 +48,51 @@
 </template>
 
 <script>
-import { SfCheckbox, SfAddressPicker } from "@storefront-ui/vue";
-import { userBillingGetters } from "@spryker-vsf/composables";
+import { SfCheckbox, SfAddressPicker } from '@storefront-ui/vue';
+import { userCheckoutBillingGetters } from '@spryker-vsf/composables';
 
 export default {
-  name: "UserBillingAddresses",
+  name: 'UserBillingAddresses',
   props: {
     currentAddressId: {
-      type: Number,
-      required: true
+      type: String,
+      required: true,
     },
     setAsDefault: {
       type: Boolean,
-      required: true
+      required: true,
     },
     billingAddresses: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   components: {
     SfCheckbox,
-    SfAddressPicker
+    SfAddressPicker,
   },
   setup(_, { emit }) {
-    const setCurrentAddress = $event => emit("setCurrentAddress", $event);
+    const setCurrentAddress = ($event) => emit('setCurrentAddress', $event);
 
     return {
       setCurrentAddress,
-      userBillingGetters
+      userCheckoutBillingGetters,
     };
-  }
+  },
 };
 </script>
 
-<style>
-.billing__addresses {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+<style lang="scss">
+.billing-addresses {
+  @include for-desktop {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+  }
   margin-bottom: var(--spacer-xl);
+  &__address {
+    margin-bottom: var(--spacer-sm);
+  }
 }
 .billing-address-setAsDefault,
 .form__action-button--margin-bottom {

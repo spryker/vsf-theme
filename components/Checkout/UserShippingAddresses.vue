@@ -1,17 +1,45 @@
 <template>
   <div>
     <SfAddressPicker
-      :selected="String(currentAddressId)"
-      @input="setCurrentAddress($event)"
+      :selected="currentAddressId"
+      @change="setCurrentAddress($event)"
       class="shipping-addresses"
     >
       <SfAddress
         class="shipping-addresses__address"
         v-for="shippingAddress in shippingAddresses"
-        :key="userShippingGetters.getId(shippingAddress)"
-        :name="String(userShippingGetters.getId(shippingAddress))"
+        :key="userCheckoutShippingGetters.getAddressId(shippingAddress)"
+        :name="userCheckoutShippingGetters.getAddressId(shippingAddress)"
       >
-        <UserShippingAddress :address="shippingAddress" />
+        <span>
+          {{
+            userCheckoutShippingGetters.getAddressSalutation(shippingAddress)
+          }}.
+          {{ userCheckoutShippingGetters.getAddressFirstName(shippingAddress) }}
+          {{ userCheckoutShippingGetters.getAddressLastName(shippingAddress) }}
+        </span>
+        <span
+          >{{
+            userCheckoutShippingGetters.getAddressStreetName(shippingAddress)
+          }}
+          {{
+            userCheckoutShippingGetters.getAddressApartmentNumber(
+              shippingAddress,
+            )
+          }}
+        </span>
+        <span>{{
+          userCheckoutShippingGetters.getAddressPostCode(shippingAddress)
+        }}</span>
+        <span>
+          {{ userCheckoutShippingGetters.getAddressCity(shippingAddress) }}
+        </span>
+        <span>
+          {{ userCheckoutShippingGetters.getAddressCountry(shippingAddress) }}
+        </span>
+        <span>
+          {{ userCheckoutShippingGetters.getAddressPhone(shippingAddress) }}
+        </span>
       </SfAddress>
     </SfAddressPicker>
     <SfCheckbox
@@ -26,43 +54,43 @@
 </template>
 
 <script>
-import { SfCheckbox, SfAddressPicker } from "@storefront-ui/vue";
-import UserShippingAddress from "~/components/UserShippingAddress";
-import { userShippingGetters } from "@spryker-vsf/composables";
+import { SfCheckbox, SfAddressPicker } from '@storefront-ui/vue';
+import { userCheckoutShippingGetters } from '@spryker-vsf/composables';
 
 export default {
-  name: "UserShippingAddresses",
+  name: 'UserShippingAddresses',
   props: {
     currentAddressId: {
-      type: Number,
-      required: true
+      type: String,
+      required: true,
     },
     setAsDefault: {
       type: Boolean,
-      required: true
+      required: true,
     },
     shippingAddresses: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   components: {
     SfCheckbox,
     SfAddressPicker,
-    UserShippingAddress
   },
   setup(_, { emit }) {
-    const setCurrentAddress = $event => emit("setCurrentAddress", $event);
+    const setCurrentAddress = ($event) => emit('setCurrentAddress', $event);
 
     return {
       setCurrentAddress,
-      userShippingGetters
+      userCheckoutShippingGetters,
     };
-  }
+  },
 };
 </script>
 
 <style lang="scss">
+@import '~@storefront-ui/vue/styles';
+
 .shipping-addresses {
   @include for-desktop {
     display: grid;

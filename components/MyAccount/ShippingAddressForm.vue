@@ -1,269 +1,305 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
+  <ValidationObserver v-slot="{ handleSubmit }" key="add-address">
     <form
-      id="shipping-details-form"
       class="form"
       @submit.prevent="handleSubmit(submitForm)"
+      autocomplete="off"
     >
-      <SfCheckbox
-        data-cy="shipping-details-checkbox_isDefault"
-        v-model="form.isDefault"
-        name="isDefault"
-        label="Set as default"
-        class="form__checkbox-isDefault"
-      />
-      <div class="form__horizontal">
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="shipping-details-input_firstName"
-            v-model="form.firstName"
-            name="firstName"
-            label="First Name"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="shipping-details-input_lastName"
-            v-model="form.lastName"
-            name="lastName"
-            label="Last Name"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-      </div>
       <ValidationProvider
-        rules="required|min:5"
+        rules="required"
         v-slot="{ errors }"
         class="form__element"
       >
-        <SfInput
-          data-cy="shipping-details-input_streetName"
-          v-model="form.streetName"
-          name="streetName"
-          label="Street Name"
-          required
+        <SfSelect
+          data-cy="address_salutation"
+          v-model="form.salutation"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
-        />
+          name="salutation"
+          label="Salutation"
+          class="form__select sf-select--underlined"
+          required
+        >
+          <SfSelectOption
+            v-for="salutation in salutations"
+            :key="salutation"
+            :value="salutation"
+            :name="salutation"
+            >{{ salutation }}</SfSelectOption
+          >
+        </SfSelect>
       </ValidationProvider>
-      <SfInput
-        data-cy="shipping-details-input_apartment"
-        v-model="form.apartment"
-        name="apartment"
-        label="House/Apartment number"
-        required
-        class="form__element"
-      />
+
       <div class="form__horizontal">
         <ValidationProvider
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
           class="form__element"
         >
           <SfInput
-            data-cy="shipping-details-input_city"
-            v-model="form.city"
-            name="city"
-            label="City"
-            required
+            data-cy="address_firstName"
+            v-model="form.firstName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            name="first-name"
+            label="First Name"
+            required
           />
         </ValidationProvider>
+
         <ValidationProvider
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
           class="form__element"
         >
           <SfInput
-            data-cy="shipping-details-input_state"
-            v-model="form.state"
-            name="state"
-            label="State/Province"
-            required
+            data-cy="address_lastName"
+            v-model="form.lastName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            name="last-name"
+            label="Last Name"
+            required
           />
         </ValidationProvider>
       </div>
+
+      <div class="form__horizontal">
+        <SfInput
+          data-cy="address_phone"
+          v-model="form.phone"
+          name="address-phone"
+          label="Phone"
+          class="form__element"
+        />
+
+        <SfInput
+          data-cy="address_company"
+          v-model="form.company"
+          name="company"
+          label="Company"
+          class="form__element"
+        />
+      </div>
+
       <div class="form__horizontal">
         <ValidationProvider
-          rules="required|min:4"
+          rules="required"
           v-slot="{ errors }"
           class="form__element"
         >
           <SfInput
-            data-cy="shipping-details-input_zipCode"
-            v-model="form.postalCode"
-            name="zipCode"
-            label="Zip-code"
-            required
+            data-cy="address_street_name"
+            v-model="form.address1"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            name="street-name"
+            label="Street"
+            required
           />
         </ValidationProvider>
+
         <ValidationProvider
-          :rules="`required|oneOf:${countries.map(c => c.name).join(',')}`"
+          rules="required"
+          v-slot="{ errors }"
+          class="form__element"
+        >
+          <SfInput
+            data-cy="address_street_number"
+            v-model="form.address2"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="street-number"
+            label="Number"
+            required
+          />
+        </ValidationProvider>
+      </div>
+
+      <div class="form__horizontal">
+        <div class="form__element">
+          <SfInput
+            data-cy="address_addition"
+            v-model="form.address3"
+            name="address-addition"
+            label="Addition to address"
+          />
+        </div>
+
+        <ValidationProvider
+          rules="required"
+          v-slot="{ errors }"
+          class="form__element"
+        >
+          <SfInput
+            data-cy="address_zipCode"
+            v-model="form.zipCode"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="zip-code"
+            label="Zip Code"
+            required
+          />
+        </ValidationProvider>
+      </div>
+
+      <div class="form__horizontal">
+        <ValidationProvider
+          rules="required|min:3"
+          v-slot="{ errors }"
+          class="form__element"
+        >
+          <SfInput
+            data-cy="address_city"
+            v-model="form.city"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="city"
+            label="City"
+            required
+          />
+        </ValidationProvider>
+
+        <ValidationProvider
+          rules="required"
           v-slot="{ errors }"
           class="form__element"
         >
           <SfSelect
-            data-cy="shipping-details-select_country"
-            class="form__select sf-select--underlined"
-            :value="form.country"
-            @selected="form.country = $event"
-            name="country"
-            label="Country"
-            required
+            data-cy="address_country"
+            v-model="form.iso2Code"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            name="country"
+            label="Country"
+            class="form__select sf-select--underlined"
+            required
           >
             <SfSelectOption
-              v-for="{ name, label } in countries"
-              :key="name"
-              :value="name"
+              v-for="{ name, code } of countries"
+              :key="code"
+              :value="code"
+              :name="name"
+              >{{ name }}</SfSelectOption
             >
-              {{ label }}
-            </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
       </div>
-      <ValidationProvider
-        rules="required|min:8"
-        v-slot="{ errors }"
-        class="form__element"
-      >
-        <SfInput
-          data-cy="shipping-details-input_phoneNumber"
-          v-model="form.phone"
-          name="phone"
-          label="Phone number"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
+
+      <div class="form__horizontal">
+        <SfCheckbox
+          v-model="form.isDefaultShipping"
+          name="default-shipping-address"
+          label="Is default shipping address"
+          class="form__element"
         />
-      </ValidationProvider>
-      <SfButton data-cy="shipping-details-btn_update" class="form__button">
-        {{ isNew ? "Add the address" : "Update the address" }}
+
+        <SfCheckbox
+          v-model="form.isDefaultBilling"
+          name="default-billing-address"
+          label="Is default billing address"
+          class="form__element"
+        />
+      </div>
+
+      <SfButton
+        data-cy="shipping-details-btn_update"
+        type="submit"
+        class="form__button"
+        :disabled="loading"
+      >
+        {{ isNew ? 'ADD' : 'CHANGE' }} THE ADDRESS
       </SfButton>
     </form>
   </ValidationObserver>
 </template>
 
 <script>
-import {
-  SfInput,
-  SfButton,
-  SfSelect,
-  SfCheckbox
-} from '@storefront-ui/vue';
-import { required, min, oneOf } from 'vee-validate/dist/rules';
+import { SfInput, SfButton, SfCheckbox, SfSelect } from '@storefront-ui/vue';
+import { ref } from '@vue/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive } from '@vue/composition-api';
-
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-
-extend('min', {
-  ...min,
-  message: 'The field should have at least {length} characters'
-});
-
-extend('oneOf', {
-  ...oneOf,
-  message: 'Invalid country'
-});
+import { useUserShipping } from '@spryker-vsf/composables';
+import { getCountries, getCountryCodes } from '~/helpers/user-address';
 
 export default {
   name: 'ShippingAddressForm',
-
   components: {
     SfInput,
     SfButton,
-    SfSelect,
     SfCheckbox,
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    SfSelect,
   },
-
   props: {
     address: {
       type: Object,
       default: () => ({
-        id: undefined,
-        firstName: '',
-        lastName: '',
-        streetName: '',
-        apartment: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: '',
-        phone: '',
-        isDefault: false
-      })
+        attributes: {
+          isDefaultShipping: false,
+          isDefaultBilling: false,
+        },
+      }),
     },
     isNew: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
+  setup({ address }, { emit }) {
+    const { loading } = useUserShipping();
 
-  setup(props, { emit }) {
-    const form = reactive({
-      id: props.address.id,
-      firstName: props.address.firstName,
-      lastName: props.address.lastName,
-      streetName: props.address.streetName,
-      apartment: props.address.apartment,
-      city: props.address.city,
-      state: props.address.state,
-      postalCode: props.address.postalCode,
-      country: props.address.country,
-      phone: props.address.phone,
-      isDefault: props.address.isDefault
+    const salutations = ref(['Mr', 'Ms', 'Mrs', 'Dr']);
+    const attributes = ref(address.attributes);
+    const countries = ref(getCountries());
+    const codes = getCountryCodes();
+
+    async function onComplete(data) {
+      console.debug('ShippingAddressForm :: onComplete', data);
+    }
+
+    async function onError(error) {
+      console.debug('ShippingAddressForm :: onError', error);
+    }
+
+    extend('min', {
+      validate(value, args) {
+        return value.length >= args.length;
+      },
+      params: ['length'],
     });
 
-    const submitForm = () => {
+    function submitForm() {
       emit('submit', {
-        form,
-        onComplete: () => {},
-        // TODO: Handle Error
-        onError: () => {}
+        form: {
+          id: address.id,
+          attributes: {
+            ...attributes.value,
+            country: codes[attributes.value.iso2Code],
+          },
+        },
+        onComplete,
+        onError,
       });
-    };
+    }
 
     return {
-      form,
+      salutations,
+      countries,
       submitForm,
-      countries: []
+      loading,
+      form: attributes,
     };
-  }
+  },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .form {
   &__element {
     display: block;
     margin: var(--spacer-xl) 0;
   }
-
   &__select {
     display: flex;
     align-items: center;
@@ -275,24 +311,20 @@ export default {
       font-weight: var(--font-weight--normal);
     }
   }
-
   &__button {
     display: block;
   }
-
   &__horizontal {
     @include for-desktop {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
     }
-
     .form__element {
       @include for-desktop {
         flex: 1;
         margin-right: var(--spacer-lg);
       }
-
       &:last-child {
         margin-right: 0;
       }

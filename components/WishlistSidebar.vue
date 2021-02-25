@@ -35,35 +35,41 @@
                 :title="wishlistGetters.getItemName(product)"
                 :regular-price="
                   wishlistGetters.getFormattedPrice(
-                    wishlistGetters.getItemPrice(product).regular
+                    wishlistGetters.getItemPrice(product).regular,
                   )
                 "
                 :special-price="
                   wishlistGetters.getFormattedPrice(
-                    wishlistGetters.getItemPrice(product).special
+                    wishlistGetters.getItemPrice(product).special,
                   )
                 "
                 :stock="99999"
                 image-width="180"
                 image-height="200"
-                @click:remove="removeFromWishlist(product)"
+                @click:remove="removeItem({ product })"
                 class="collected-product"
               >
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
-                      v-for="(attribute,
-                      key) in wishlistGetters.getItemAttributes(product, [
-                        'color',
-                        'size'
-                      ])"
-                      :key="key"
-                      :name="key"
-                      :value="attribute"
+                      v-for="attribute in wishlistGetters.getItemAttributes(
+                        product,
+                      )"
+                      :key="attribute.value"
+                      :name="attribute.label"
+                      :value="attribute.value"
                     />
                   </div>
                 </template>
                 <template #input="{}">&nbsp;</template>
+                <template #actions>
+                  <SfButton
+                    class="sf-button--text desktop-only"
+                    @click="addItem({ product, quantity: 1 })"
+                  >
+                    Add to the cart
+                  </SfButton>
+                </template>
               </SfCollectedProduct>
             </transition-group>
           </div>
@@ -114,19 +120,20 @@ import {
   SfIcon,
   SfProperty,
   SfPrice,
-  SfCollectedProduct
-} from "@storefront-ui/vue";
-import { computed } from "@vue/composition-api";
+  SfCollectedProduct,
+} from '@storefront-ui/vue';
+import { computed } from '@vue/composition-api';
 import {
   useWishlist,
   useUser,
-  wishlistGetters
-} from "@spryker-vsf/composables";
-import { onSSR } from "@vue-storefront/core";
-import { useUiState } from "~/composables";
+  useCart,
+  wishlistGetters,
+} from '@spryker-vsf/composables';
+import { onSSR } from '@vue-storefront/core';
+import { useUiState } from '~/composables';
 
 export default {
-  name: "Wishlist",
+  name: 'Wishlist',
   components: {
     SfSidebar,
     SfButton,
@@ -134,33 +141,31 @@ export default {
     SfIcon,
     SfProperty,
     SfPrice,
-    SfCollectedProduct
+    SfCollectedProduct,
   },
   setup() {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
-    const { wishlist, removeFromWishlist, loadWishlist } = useWishlist();
+    const { wishlist, removeItem } = useWishlist();
     const { isAuthenticated } = useUser();
+    const { addItem } = useCart();
     const products = computed(() => wishlistGetters.getItems(wishlist.value));
     const totals = computed(() => wishlistGetters.getTotals(wishlist.value));
     const totalItems = computed(() =>
-      wishlistGetters.getTotalItems(wishlist.value)
+      wishlistGetters.getTotalItems(wishlist.value),
     );
-
-    onSSR(async () => {
-      await loadWishlist();
-    });
 
     return {
       isAuthenticated,
       products,
-      removeFromWishlist,
+      removeItem,
       isWishlistSidebarOpen,
       toggleWishlistSidebar,
       totals,
       totalItems,
-      wishlistGetters
+      wishlistGetters,
+      addItem,
     };
-  }
+  },
 };
 </script>
 

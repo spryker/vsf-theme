@@ -4,14 +4,14 @@
       class="banner"
       title="Thank you for your order!"
       :image="{
-        mobile: '/thank-you/bannerM.png',
-        desktop: '/thank-you/bannerD.png',
+        mobile: '/thankyou/bannerM.png',
+        desktop: '/thankyou/bannerD.png',
       }"
     >
       <template #description>
         <div class="banner__order-number">
-          <span>Order No.</span>
-          <strong>{{ order.number }}</strong>
+          <span class="banner__order-title">Order No.:</span>
+          <strong>{{ checkoutOrder.orderReference }}</strong>
         </div>
       </template>
     </SfCallToAction>
@@ -35,15 +35,12 @@
             title="Primary contacts for any questions"
           />
           <div class="contact">
-            <p class="contact__name">{{ address.name }}</p>
-            <p class="contact__street">{{ address.street }}</p>
-            <p class="contact__city">{{ address.city }}</p>
-            <p class="contact__email">{{ address.email }}</p>
+            <p class="contact__name">{{ companyDetails.name }}</p>
+            <p class="contact__street">{{ companyDetails.street }}</p>
+            <p class="contact__city">{{ companyDetails.city }}</p>
+            <p class="contact__email">{{ companyDetails.email }}</p>
           </div>
         </div>
-        <SfButton class="order__notifications-button button-size"
-          >Allow order notifications</SfButton
-        >
       </div>
       <div class="additional-info">
         <div>
@@ -69,36 +66,47 @@
           </p>
           <SfButton
             class="feedback-button color-secondary sf-button--full-width button-size"
-            >Send my feedback</SfButton
           >
+            Send my feedback
+          </SfButton>
         </div>
       </div>
     </section>
-    <nuxt-link to="/" class="sf-button back-button color-primary button-size">Go back to shop</nuxt-link>
+    <NuxtLink to="/">
+      <SfButton class="back-button color-secondary button-size">
+        Go back to shop
+      </SfButton>
+    </NuxtLink>
   </div>
 </template>
 
 <script>
 import { SfHeading, SfButton, SfCallToAction } from '@storefront-ui/vue';
+import { ref } from '@vue/composition-api';
+import { useCheckoutOrder } from '@spryker-vsf/composables';
+
 export default {
   components: {
     SfHeading,
     SfButton,
-    SfCallToAction
+    SfCallToAction,
   },
   setup(props, context) {
+    context.emit('changeStep', 4);
+
+    const companyDetails = ref({
+      name: 'Spryker Systems GmbH',
+      street: 'Julie-Wolfthorn-Strasse 1',
+      city: '10115 Berlin, Germany',
+      email: 'info@spryker.com',
+    });
+    const { checkoutOrder } = useCheckoutOrder();
+
     return {
-      address: {
-        name: 'Company Headquarter',
-        street: 'St. Main 17, 53-534',
-        city: 'Wroclaw, Poland',
-        email: 'demo@vuestorefront.io'
-      },
-      order: {
-        number: `#${context.root.$route.query.order}`
-      }
+      companyDetails,
+      checkoutOrder,
     };
-  }
+  },
 };
 </script>
 
@@ -106,7 +114,7 @@ export default {
 #thank-you {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     padding: 0 var(--spacer-sm);
     margin: 0 auto;
   }
@@ -145,6 +153,9 @@ export default {
       flex-direction: row;
       font-size: var(--font-size--normal);
     }
+  }
+  &__order-title {
+    padding-right: var(--spacer-xs);
   }
 }
 .section {
@@ -252,9 +263,6 @@ export default {
   margin: 0 auto var(--spacer-sm) auto;
   @include for-desktop {
     margin: var(--spacer-xl) auto;
-    &:hover {
-      color: var(--c-white);
-    }
   }
 }
 .button-size {
