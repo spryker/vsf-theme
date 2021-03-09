@@ -68,11 +68,13 @@ export default {
       }
     ],
     ["@vue-storefront/nuxt-theme"],
+    "@spryker-vsf/catalog-search-suggestions/nuxt",
     [
       "@spryker-vsf/composables/nuxt",
       {
         axiosConfig: {
-          baseURL: "http://glue.de.spryker.local"
+          //baseURL: "http://glue.de.spryker.local"
+          baseURL: "https://glue.de.aldi-us-staging.cloud.spryker.toys/"
         },
         currency: {
           default: "EUR",

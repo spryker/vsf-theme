@@ -140,11 +140,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch } from '@vue/composition-api';
 import { useUiState } from '~/composables';
-import {
-  useCheckoutShipping,
-  useUser,
-  useCart,
-} from '@spryker-vsf/composables';
+import { useCheckoutShipping, useUser } from '@spryker-vsf/composables';
 import { useVSFContext } from '@vue-storefront/core';
 import { getSalutation } from '~/helpers/user';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
@@ -164,7 +160,6 @@ export default {
   },
   setup(_, context) {
     context.emit('changeStep', 0);
-    const { cart } = useCart();
     const { toggleModal } = useUiState();
     const { personalDetails } = useCheckoutShipping('checkout');
     const { isAuthenticated } = useUser();
@@ -176,7 +171,7 @@ export default {
       },
     } = useVSFContext();
 
-    watch(cart, () => {
+    watch(isAuthenticated, () => {
       if (isAuthenticated.value && sprykerAuth.getCartId()) {
         context.emit('nextStep');
       }

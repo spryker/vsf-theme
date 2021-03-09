@@ -4,9 +4,6 @@
     @click:cart="toggleCartSidebar"
     @click:wishlist="toggleWishlistSidebar"
     @click:account="handleAccountClick"
-    @enter:search="changeSearchTerm"
-    @change:search="(p) => (term = p)"
-    :searchValue="term"
     :cartItemsQty="cartTotalItems"
     :accountIcon="accountIcon"
     :wishlistIcon="isAuthenticated ? 'heart' : false"
@@ -26,6 +23,54 @@
           class="sf-header__logo-image"
         />
       </nuxt-link>
+    </template>
+    <template #search>
+      <div class="sf-search-bar searchbar">
+        <input
+          class="sf-search-bar__input searchbar_hint"
+          readonly="readonly"
+          :value="searchCompletion === term ? '' : searchCompletion"
+        />
+        <input
+          class="sf-search-bar__input searchbar_input"
+          type="search"
+          placeholder="Search"
+          v-model="term"
+          @keyup.enter="changeSearchTerm($event.target.value), clearTerm()"
+          @keydown.tab.prevent="term = searchCompletion || term"
+          @keyup.esc="clearTerm"
+          @blur="clearTerm"
+        />
+        <div
+          v-if="getAbstractProducts(suggestions).length > 0"
+          class="searchbar_suggestions"
+          @mouseenter="blurLock = true"
+          @mouseleave="blurLock = false"
+        >
+          <div
+            class="searchbar_suggestions-product"
+            v-for="product in getAbstractProducts(suggestions)"
+            :key="getAbstractProductSku(product)"
+            @click="goto(getAbstractProductUrl(product))"
+          >
+            <div class="searchbar_suggestions-product-image">
+              <img :src="getAbstractProductSmallImage(product)" />
+            </div>
+            <div class="searchbar_suggestions-product-info">
+              <p class="searchbar_suggestions-product-title">
+                {{ getAbstractProductName(product) }}
+              </p>
+              <p class="searchbar_suggestions-product-price">
+                {{
+                  productGetters.getFormattedPrice(
+                    getAbstractProductPrice(product)
+                  )
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </template>
     <template #navigation>
       <SfHeaderNavigation
@@ -75,21 +120,27 @@ import {
   SfMegaMenu,
   SfList,
   SfLink,
-} from '@storefront-ui/vue';
-import { useUiState, useUiHelpers } from '~/composables';
+  SfSearchBar
+} from "@storefront-ui/vue";
+import { useUiState, useUiHelpers } from "~/composables";
 import {
   useCart,
   useWishlist,
   useUser,
-  cartGetters,
   useCategory,
-} from '@spryker-vsf/composables';
-import { computed, ref } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
-import LocaleSelector from './LocaleSelector';
+  cartGetters,
+  productGetters
+} from "@spryker-vsf/composables";
+import {
+  useCatalogSearchSuggestions,
+  catalogSearchSuggestionsGetters as suggestionsGetters
+} from "@spryker-vsf/catalog-search-suggestions";
+import { computed, ref, watch } from "@vue/composition-api";
+import { onSSR } from "@vue-storefront/core";
+import LocaleSelector from "./LocaleSelector";
 
 export default {
-  name: 'AppHeader',
+  name: "AppHeader",
   components: {
     SfHeader,
     SfImage,
@@ -97,12 +148,17 @@ export default {
     SfMegaMenu,
     SfList,
     SfLink,
+    SfSearchBar
   },
-  setup(_, { root: { $router, $route } }) {
+  setup(_, context) {
+    const {
+      root: { $router }
+    } = context;
+    console.debug("context", context);
     const {
       toggleCartSidebar,
       toggleWishlistSidebar,
-      toggleModal,
+      toggleModal
     } = useUiState();
     const { changeSearchTerm, getFacetsFromURL } = useUiHelpers();
     const { isAuthenticated, load: loadUser } = useUser();
@@ -110,8 +166,36 @@ export default {
     const { load: loadWishlist } = useWishlist();
     const term = ref(getFacetsFromURL().term);
     const { categories, search: searchCategories } = useCategory(
-      'category-tree',
+      "category-tree"
     );
+
+    const {
+      suggestions,
+      search: searchSuggestions,
+      loading: suggestionsLoading
+    } = useCatalogSearchSuggestions();
+
+    const blurLock = ref(false);
+
+    watch(term, () => {
+      searchSuggestions(term.value);
+    });
+
+    function clearTerm() {
+      !blurLock.value && (term.value = "");
+    }
+
+    function goto(path) {
+      blurLock.value = false;
+      clearTerm();
+      $router.push(path);
+    }
+
+    const searchCompletion = computed(function() {
+      return suggestionsLoading.value
+        ? ""
+        : suggestionsGetters.getCompletion(suggestions.value, term.value);
+    });
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -119,13 +203,13 @@ export default {
     });
 
     const accountIcon = computed(() =>
-      isAuthenticated.value ? 'profile_fill' : 'profile',
+      isAuthenticated.value ? "profile_fill" : "profile"
     );
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
-        return $router.push('/my-account');
+        return $router.push("/my-account");
       }
 
       toggleModal();
@@ -149,15 +233,22 @@ export default {
       changeSearchTerm,
       categories,
       term,
-      currentCategory: '',
+      currentCategory: "",
       isVisible: false,
+      clearTerm,
+      suggestions,
+      productGetters,
+      searchCompletion,
+      blurLock,
+      goto,
+      ...suggestionsGetters
     };
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '~@storefront-ui/vue/styles';
+@import "~@storefront-ui/vue/styles";
 
 .sf-header {
   position: relative;
@@ -173,5 +264,65 @@ export default {
 
 .nav-item {
   --header-navigation-item-margin: 0 var(--spacer-base);
+}
+
+.searchbar {
+  position: relative;
+  &_input {
+    z-index: 2;
+  }
+  &_hint {
+    position: absolute;
+    border-color: transparent;
+    color: var(--_c-gray-accent-darken);
+    z-index: 1;
+  }
+  &_suggestions {
+    width: 320px;
+    max-height: 50vh;
+    box-sizing: border-box;
+    position: absolute;
+    background-color: white;
+    right: 0;
+    padding: 30px;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
+    top: 50px;
+    overflow: auto;
+
+    &-product {
+      display: flex;
+      align-items: center;
+      padding-bottom: 30px;
+      cursor: pointer;
+
+      &:hover &-title,
+      &:hover &-price {
+        color: var(--_c-green-primary);
+      }
+
+      &-info {
+        padding-left: 30px;
+      }
+
+      &-title,
+      &-price {
+        margin: 0;
+      }
+
+      &-price {
+        color: var(--_c-gray-primary-lighten);
+      }
+
+      &-image {
+        height: 50px;
+
+        & > img {
+          object-fit: contain;
+          width: 50px;
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 </style>
