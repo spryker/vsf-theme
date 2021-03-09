@@ -81,12 +81,23 @@
               }}</SfLink></SfTableData
             >
             <SfTableData>{{ orderGetters.getItemQty(item) }}</SfTableData>
-            <SfTableData>{{
-              orderGetters.getFormattedPriceExtended(
-                orderGetters.getItemPrice(item),
-                orderGetters.getOrderCurrency(currentOrder),
-              )
-            }}</SfTableData>
+            <SfTableData>
+              <SfPrice
+                class="sf-product-card__price"
+                :regular="
+                  orderGetters.getFormattedPriceExtended(
+                    orderGetters.getItemPriceExtended(item).regular,
+                    orderGetters.getOrderCurrency(currentOrder),
+                  )
+                "
+                :special="
+                  orderGetters.getFormattedPriceExtended(
+                    orderGetters.getItemPriceExtended(item).special,
+                    orderGetters.getOrderCurrency(currentOrder),
+                  )
+                "
+              />
+            </SfTableData>
           </SfTableRow>
         </SfTable>
       </div>
@@ -181,6 +192,7 @@ import {
   SfProperty,
   SfLink,
   SfLoader,
+  SfPrice,
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
 import { useUserOrders, orderGetters } from '@spryker-vsf/composables';
@@ -195,6 +207,7 @@ export default {
     SfProperty,
     SfLink,
     SfLoader,
+    SfPrice,
   },
   setup() {
     const { orders, search, loading } = useUserOrders();
