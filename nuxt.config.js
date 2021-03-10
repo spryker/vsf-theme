@@ -68,6 +68,7 @@ export default {
       }
     ],
     ["@vue-storefront/nuxt-theme"],
+    "@spryker-vsf/catalog-search-suggestions/nuxt",
     [
       "@spryker-vsf/composables/nuxt",
       {
