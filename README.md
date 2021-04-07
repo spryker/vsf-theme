@@ -8,9 +8,10 @@ This project is based on [NuxtJs](https://nuxtjs.org/docs/2.x/get-started/instal
 
 Primary documentation for the JavaScript frontend technologies can be found here:
 
-- VueJs 2: https://vuejs.org/v2/guide/
+- Spryker VueStorefront: https://spryker-vsf-docs.web.app/
+- VueStorefront: https://docs.vuestorefront.io/v2/
 - NuxtJS: https://nuxtjs.org/docs/2.x/get-started/installation
-- VSFN: https://docs-next.vuestorefront.io/
+- VueJs 2: https://vuejs.org/v2/guide/
 
 ## Installation
 
