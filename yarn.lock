@@ -2424,11 +2424,6 @@
     "@vue-storefront/core" "^2.2.1"
     axios "^0.21.0"
 
-"@spryker-vsf/catalog-search-suggestions@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/catalog-search-suggestions/-/catalog-search-suggestions-0.1.0.tgz#6d2f3633d36f308862376e6142dfdbefe95f8be7"
-  integrity sha512-vsNES7ulNS6CaTGhM6T2a+Z3lWn7Zi+SkcIGjkNkn0UIFqOMqFNEWj99bYVZTl6W9wE2YgnEwVhK9r5WFWQoLQ==
-
 "@spryker-vsf/composables@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.1.1.tgz#8823f199cb1a2c5e29fca1ca15ef69ad6314a838"
