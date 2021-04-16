@@ -10,6 +10,7 @@ const state = reactive({
   isModalOpen: false,
   isCategoryGridView: true,
   isFilterSidebarOpen: false,
+  isMobileMenuOpen: false,
 });
 
 const useUiState = () => {
@@ -38,17 +39,28 @@ const useUiState = () => {
     state.isFilterSidebarOpen = !state.isFilterSidebarOpen;
   };
 
+  const isMobileMenuOpen = computed(() => state.isMobileMenuOpen);
+  const toggleMobileMenu = () => {
+    state.isMobileMenuOpen = !state.isMobileMenuOpen;
+  };
+  const closeMobileMenu = () => {
+    state.isMobileMenuOpen = false;
+  };
+
   return {
     isCartSidebarOpen,
     isWishlistSidebarOpen,
     isModalOpen,
     isCategoryGridView,
     isFilterSidebarOpen,
+    isMobileMenuOpen,
     toggleCartSidebar,
     toggleWishlistSidebar,
     toggleModal,
     toggleCategoryGridView,
     toggleFilterSidebar,
+    toggleMobileMenu,
+    closeMobileMenu,
   };
 };
 
