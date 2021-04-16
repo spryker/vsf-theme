@@ -61,6 +61,27 @@
           </SfMegaMenu>
         </SfHeaderNavigationItem>
       </SfHeaderNavigation>
+
+      <SfMegaMenu class="mobile-menu" :visible="isMobileMenuOpen">
+        <SfMegaMenuColumn
+          v-for="(category, index) in categories"
+          :key="index"
+          :title="category.label"
+        >
+          <SfList>
+            <SfListItem
+              v-for="(subcategory, childIndex) in category.items"
+              :key="childIndex"
+            >
+              <SfMenuItem
+                :label="subcategory.label"
+                :link="subcategory.url"
+                @click.native="closeMobileMenu"
+              />
+            </SfListItem>
+          </SfList>
+        </SfMegaMenuColumn>
+      </SfMegaMenu>
     </template>
     <template #aside>
       <LocaleSelector class="smartphone-only" />
@@ -75,6 +96,7 @@ import {
   SfMegaMenu,
   SfList,
   SfLink,
+  SfMenuItem,
 } from '@storefront-ui/vue';
 import { useUiState, useUiHelpers } from '~/composables';
 import {
@@ -84,7 +106,7 @@ import {
   useCategory,
   cartGetters,
 } from '@spryker-vsf/composables';
-import { computed, ref } from '@vue/composition-api';
+import { computed, ref, watch } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import LocaleSelector from './LocaleSelector';
 
@@ -97,12 +119,15 @@ export default {
     SfMegaMenu,
     SfList,
     SfLink,
+    SfMenuItem,
   },
   setup(_, { root: { $router } }) {
     const {
       toggleCartSidebar,
       toggleWishlistSidebar,
       toggleModal,
+      closeMobileMenu,
+      isMobileMenuOpen,
     } = useUiState();
     const { changeSearchTerm, getFacetsFromURL } = useUiHelpers();
     const { isAuthenticated, load: loadUser } = useUser();
@@ -112,6 +137,11 @@ export default {
     const { categories, search: searchCategories } = useCategory(
       'category-tree',
     );
+
+    watch(isMobileMenuOpen, () => {
+      const overflow = isMobileMenuOpen.value ? 'hidden' : '';
+      Object.assign(document.documentElement.style, { overflow });
+    });
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -151,6 +181,8 @@ export default {
       term,
       currentCategory: '',
       isVisible: false,
+      isMobileMenuOpen,
+      closeMobileMenu,
     };
   },
 };
@@ -173,5 +205,18 @@ export default {
 
 .nav-item {
   --header-navigation-item-margin: 0 var(--spacer-base);
+}
+
+.mobile-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  overflow: auto;
+  height: 100%;
+
+  .nuxt-link-active {
+    font-weight: bold;
+  }
 }
 </style>

@@ -14,6 +14,7 @@
       icon="menu"
       size="20px"
       label="Menu"
+      @click="toggleMobileMenu"
     />
     <SfBottomNavigationItem
       data-cy="bottom-navigation-url_wishlist"
@@ -51,27 +52,28 @@
 </template>
 
 <script>
-import { SfBottomNavigation, SfIcon, SfCircleIcon } from "@storefront-ui/vue";
-import { useUiState } from "~/composables";
-import { useUser } from "@spryker-vsf/composables";
+import { SfBottomNavigation, SfIcon, SfCircleIcon } from '@storefront-ui/vue';
+import { useUiState } from '~/composables';
+import { useUser } from '@spryker-vsf/composables';
 
 export default {
   components: {
     SfBottomNavigation,
     SfIcon,
-    SfCircleIcon
+    SfCircleIcon,
   },
   setup(props, { root }) {
     const {
       toggleCartSidebar,
       toggleWishlistSidebar,
-      toggleLoginModal
+      toggleLoginModal,
+      toggleMobileMenu,
     } = useUiState();
     const { isAuthenticated } = useUser();
 
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
-        return root.$router.push("/my-account");
+        return root.$router.push('/my-account');
       }
       toggleLoginModal();
     };
@@ -79,8 +81,9 @@ export default {
     return {
       toggleWishlistSidebar,
       toggleCartSidebar,
-      handleAccountClick
+      handleAccountClick,
+      toggleMobileMenu,
     };
-  }
+  },
 };
 </script>
