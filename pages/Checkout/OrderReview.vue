@@ -316,8 +316,6 @@ export default {
   setup(props, context) {
     context.emit('showReview');
     context.emit('changeStep', 3);
-    const billingSameAsShipping = ref(false);
-    const terms = ref(false);
     const {
       cart,
       removeItem,
@@ -325,6 +323,11 @@ export default {
       loading: cartLoading,
       load: loadCart,
     } = useCart();
+    if (!cart.value?.products?.length) {
+      context.root.$router.push('/');
+    }
+    const billingSameAsShipping = ref(false);
+    const terms = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const vouchers = computed(() => cartGetters.getCoupons(cart.value));

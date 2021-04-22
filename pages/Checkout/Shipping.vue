@@ -244,7 +244,7 @@
                 Go back
               </SfButton>
             </NuxtLink>
-
+            {{ canContinueToPayment }}
             <SfButton
               data-cy="shipping-btn_continue"
               class="form__action-button"
@@ -286,6 +286,7 @@ import {
   userCheckoutShippingGetters,
   useCheckoutShipping,
   userGetters,
+  useCart,
 } from '@spryker-vsf/composables';
 import { ref, onMounted, computed } from '@vue/composition-api';
 import { getCountries, getCountryCodes } from '~/helpers/user-address';
@@ -309,7 +310,12 @@ export default {
   },
 
   setup(_, context) {
-    context.emit('changeStep', 1);
+    context.emit('changeStep', 0);
+    const { cart } = useCart();
+    if (!cart.value?.products?.length) {
+      context.root.$router.push('/');
+    }
+
     const {
       shippingDetails,
       chosenShippingMethod,

@@ -447,6 +447,7 @@ import {
   useCheckoutShipping,
   useCheckoutBilling,
   userCheckoutBillingGetters,
+  useCart,
 } from '@spryker-vsf/composables';
 
 export default {
@@ -466,6 +467,11 @@ export default {
   },
   setup(props, context) {
     context.emit('changeStep', 2);
+    const { cart } = useCart();
+    if (!cart.value?.products?.length) {
+      context.root.$router.push('/');
+    }
+    
     const { shippingDetails } = useCheckoutShipping('checkout');
     const {
       load: loadBilling,
