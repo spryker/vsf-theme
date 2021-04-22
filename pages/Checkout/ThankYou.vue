@@ -83,7 +83,7 @@
 <script>
 import { SfHeading, SfButton, SfCallToAction } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
-import { useCheckoutOrder } from '@spryker-vsf/composables';
+import { useCart, useCheckoutOrder } from '@spryker-vsf/composables';
 
 export default {
   components: {
@@ -93,6 +93,10 @@ export default {
   },
   setup(props, context) {
     context.emit('changeStep', 4);
+    const { cart } = useCart();
+    if (!cart.value?.products?.length) {
+      context.root.$router.push('/');
+    }
 
     const companyDetails = ref({
       name: 'Spryker Systems GmbH',

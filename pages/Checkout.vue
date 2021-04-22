@@ -2,20 +2,16 @@
   <div id="checkout">
     <div class="checkout">
       <div class="checkout__main">
-        <SfSteps
-          :active="currentStepIndex"
-          @change="handleStepClick"
-          v-if="!isThankYou"
-          :class="{
-            checkout__steps: true,
-            'checkout__steps-auth': isAuthenticated
-          }"
-        >
-          <SfStep v-for="(step, key) in STEPS" :key="key" :name="step">
-            <nuxt-child />
+        <SfSteps :active="currentStep" v-if="currentStep < 4" class="checkout__steps">
+          <SfStep v-for="(step, index) in STEPS" :key="step.name" :name="step.label">
+            <nuxt-child
+              @showReview="handleShowReview"
+              @changeStep="updateStep($event)"
+              @nextStep="handleNextStep(index + 1)"
+            />
           </SfStep>
         </SfSteps>
-        <nuxt-child v-else />
+        <nuxt-child v-else @changeStep="updateStep($event)" />
       </div>
       <div class="checkout__aside desktop-only" v-if="!isThankYou">
         <transition name="fade">
@@ -27,18 +23,21 @@
   </div>
 </template>
 <script>
-import { SfSteps, SfButton } from "@storefront-ui/vue";
-import CartPreview from "~/components/Checkout/CartPreview";
-import OrderReview from "~/components/Checkout/OrderReview";
-import { ref, computed } from "@vue/composition-api";
-import { useUser } from "@spryker-vsf/composables";
+import { SfSteps, SfButton } from '@storefront-ui/vue';
+import CartPreview from '~/components/checkout/CartPreview';
+import OrderReview from '~/components/checkout/OrderReview';
+import { ref } from '@vue/composition-api';
 
-const STEPS = {
-  "personal-details": "Personal Details",
-  shipping: "Shipping",
-  payment: "Payment",
-  "order-review": "Review"
-};
+const STEPS = [
+  { name: 'personal-details',
+    label: 'Personal Details' },
+  { name: 'shipping',
+    label: 'Shipping' },
+  { name: 'payment',
+    label: 'Payment' },
+  { name: 'order-review',
+    label: 'Review' }
+];
 
 export default {
   name: "Checkout",
@@ -49,29 +48,28 @@ export default {
     OrderReview
   },
   setup(props, context) {
-    const currentStep = computed(() =>
-      context.root.$route.path.split("/").pop()
-    );
-    const { isAuthenticated } = useUser();
     const showCartPreview = ref(true);
-    const currentStepIndex = computed(() =>
-      Object.keys(STEPS).findIndex(s => s === currentStep.value)
-    );
-    const isThankYou = computed(() => currentStep.value === "thank-you");
+    const currentStep = ref(0);
 
-    const handleStepClick = stepIndex => {
-      const key = Object.keys(STEPS)[stepIndex];
-      context.root.$router.push(`/checkout/${key}`);
+    const handleShowReview = () => {
+      showCartPreview.value = false;
+    };
+
+    const updateStep = (next) => {
+      currentStep.value = next;
+    };
+
+    const handleNextStep = (nextStep) => {
+      context.root.$router.push(nextStep < 4 ? STEPS[nextStep].name : 'thank-you');
     };
 
     return {
-      handleStepClick,
       STEPS,
-      currentStepIndex,
-      isThankYou,
+      handleNextStep,
       currentStep,
-      showCartPreview,
-      isAuthenticated
+      updateStep,
+      handleShowReview,
+      showCartPreview
     };
   }
 };
