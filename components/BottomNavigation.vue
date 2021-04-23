@@ -14,6 +14,7 @@
       icon="menu"
       size="20px"
       label="Menu"
+      @click="toggleMobileMenu"
     />
     <SfBottomNavigationItem
       data-cy="bottom-navigation-url_wishlist"
@@ -65,7 +66,8 @@ export default {
     const {
       toggleCartSidebar,
       toggleWishlistSidebar,
-      toggleLoginModal
+      toggleLoginModal,
+      toggleMobileMenu,
     } = useUiState();
     const { isAuthenticated } = useUser();
 
@@ -79,7 +81,8 @@ export default {
     return {
       toggleWishlistSidebar,
       toggleCartSidebar,
-      handleAccountClick
+      handleAccountClick,
+      toggleMobileMenu,
     };
   }
 };
