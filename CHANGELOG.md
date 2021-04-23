@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
+## [0.1.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2-dev.1...@spryker-vsf/theme@0.1.2) (2021-04-23)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.2-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.2...@spryker-vsf/theme@0.1.2-dev.1) (2021-04-23)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.2-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.2...@spryker-vsf/theme@0.1.2-dev.0) (2021-04-22)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.1...@spryker-vsf/theme@0.2.0-dev.2) (2021-04-21)
+
+
+### Bug Fixes
+
+* **theme:** added a check if there are items in the cart ([ebd3ec7](https://github.com/spryker/vsf-monorepo/commit/ebd3ec7027643b5099cc50b752c485c49c69fe4a))
+
+
+
+# [0.2.0-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.0...@spryker-vsf/theme@0.2.0-dev.1) (2021-04-21)
+
+
+### Bug Fixes
+
+* **theme:** added store option in config ([8892bd6](https://github.com/spryker/vsf-monorepo/commit/8892bd6c0c968ca02131846b193f7ef57f3c1b43))
+
+
+
+
+
+# [0.2.0-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.1-dev.5...@spryker-vsf/theme@0.2.0-dev.0) (2021-04-16)
+
+
+### Features
+
+* **theme:** add mobile menu ([b12f69a](https://github.com/spryker/vsf-monorepo/commit/b12f69a8e94b6df03f84569752a34d1d7278f785))
+
+
+
+
+
+## [0.1.1-dev.5](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.1-dev.4...@spryker-vsf/theme@0.1.1-dev.5) (2021-04-06)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
 ## [0.1.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.1-dev.4...@spryker-vsf/theme@0.1.1) (2021-03-10)
 
 **Note:** Version bump only for package @spryker-vsf/theme
