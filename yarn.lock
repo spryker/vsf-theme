@@ -2416,20 +2416,20 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@spryker-vsf/api@^0.2.1-dev.1":
-  version "0.2.1-dev.1"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.2.1-dev.1.tgz#4494cec0ac0bd68091b75da285e3f225ee0fdfe5"
-  integrity sha512-rit/5DLyCfWE1E5uew/47e71x7LrcNOaj6Xg0404V29AqnZaLHR1R4BKLvvAxF9VwMKWnbn461c1q0xBMG7YnA==
+"@spryker-vsf/api@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.2.1.tgz#4c3328ce81206e8d5a1af42b759f073e2f9aec7a"
+  integrity sha512-0P3Fxo7DUv0BDkzjmWZt3Df0UJOTC4siyFpU4koHka8f+P1FWxi8RGBFwf0FDOZslueaQW/n2f45br2XA0o/dA==
   dependencies:
     "@vue-storefront/core" "^2.2.1"
     axios "^0.21.0"
 
-"@spryker-vsf/composables@^0.1.2-dev.1":
-  version "0.1.2-dev.1"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.1.2-dev.1.tgz#fbb448320606d531a4af5362f43b119a01204276"
-  integrity sha512-ICapHqNacVkv0uWJztOvAREnNVmZaZ2ACp6qvpkJuV/Ll1Jf2YjU7iKkfWxqADtsvbKEGLCGyAtxBsl5M4CeZw==
+"@spryker-vsf/composables@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.1.2.tgz#1990feec48ed7b1b990e831ff2fac984befbfe11"
+  integrity sha512-Icur7ZeSVn/XZTqGh73TuC0w5KyzFM071vwn/82EERvaM4UL8dJKpXTEnbANQpUcKsnWTu6UdPkuUnm/eN3xIA==
   dependencies:
-    "@spryker-vsf/api" "^0.2.1-dev.1"
+    "@spryker-vsf/api" "^0.2.1"
     "@vue-storefront/core" "^2.2.1"
     lodash "^4.17.20"
 
