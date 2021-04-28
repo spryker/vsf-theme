@@ -2,8 +2,16 @@
   <div id="checkout">
     <div class="checkout">
       <div class="checkout__main">
-        <SfSteps :active="currentStep" v-if="currentStep < 4" class="checkout__steps">
-          <SfStep v-for="(step, index) in STEPS" :key="step.name" :name="step.label">
+        <SfSteps
+          :active="currentStep"
+          v-if="currentStep < 4"
+          class="checkout__steps"
+        >
+          <SfStep
+            v-for="(step, index) in STEPS"
+            :key="step.name"
+            :name="step.label"
+          >
             <nuxt-child
               @showReview="handleShowReview"
               @changeStep="updateStep($event)"
@@ -24,28 +32,24 @@
 </template>
 <script>
 import { SfSteps, SfButton } from '@storefront-ui/vue';
-import CartPreview from '~/components/checkout/CartPreview';
-import OrderReview from '~/components/checkout/OrderReview';
+import CartPreview from '~/components/Checkout/CartPreview';
+import OrderReview from '~/components/Checkout/OrderReview';
 import { ref } from '@vue/composition-api';
 
 const STEPS = [
-  { name: 'personal-details',
-    label: 'Personal Details' },
-  { name: 'shipping',
-    label: 'Shipping' },
-  { name: 'payment',
-    label: 'Payment' },
-  { name: 'order-review',
-    label: 'Review' }
+  { name: 'personal-details', label: 'Personal Details' },
+  { name: 'shipping', label: 'Shipping' },
+  { name: 'payment', label: 'Payment' },
+  { name: 'order-review', label: 'Review' },
 ];
 
 export default {
-  name: "Checkout",
+  name: 'Checkout',
   components: {
     SfButton,
     SfSteps,
     CartPreview,
-    OrderReview
+    OrderReview,
   },
   setup(props, context) {
     const showCartPreview = ref(true);
@@ -55,12 +59,14 @@ export default {
       showCartPreview.value = false;
     };
 
-    const updateStep = (next) => {
+    const updateStep = next => {
       currentStep.value = next;
     };
 
-    const handleNextStep = (nextStep) => {
-      context.root.$router.push(nextStep < 4 ? STEPS[nextStep].name : 'thank-you');
+    const handleNextStep = nextStep => {
+      context.root.$router.push(
+        nextStep < 4 ? STEPS[nextStep].name : 'thank-you',
+      );
     };
 
     return {
@@ -69,9 +75,9 @@ export default {
       currentStep,
       updateStep,
       handleShowReview,
-      showCartPreview
+      showCartPreview,
     };
-  }
+  },
 };
 </script>
 
