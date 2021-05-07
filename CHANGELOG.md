@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.1...@spryker-vsf/theme@0.1.3-dev.2) (2021-05-07)
+
+
+### Bug Fixes
+
+* **theme:** fixed item deletion ([f269851](https://github.com/spryker/vsf-monorepo/commit/f2698517ab914e1dc0f9a5b0ea6720d4fdbfff6c))
+
+
+
+
+
+## [0.1.3-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.0...@spryker-vsf/theme@0.1.3-dev.1) (2021-05-07)
+
+
+### Bug Fixes
+
+* **theme:** fixed the display of discounts ([7704a55](https://github.com/spryker/vsf-monorepo/commit/7704a5514873136bad943f60501dcb0bb6865f47))
+
+
+
+
+
+## [0.1.3-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-next.0...@spryker-vsf/theme@0.1.3-dev.0) (2021-05-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2...@spryker-vsf/theme@0.1.3-next.0) (2021-05-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
 
 ## [0.1.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2-dev.1...@spryker-vsf/theme@0.1.2) (2021-04-23)
 
