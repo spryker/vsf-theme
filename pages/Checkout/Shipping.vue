@@ -244,7 +244,6 @@
                 Go back
               </SfButton>
             </NuxtLink>
-            {{ canContinueToPayment }}
             <SfButton
               data-cy="shipping-btn_continue"
               class="form__action-button"
@@ -310,7 +309,7 @@ export default {
   },
 
   setup(_, context) {
-    context.emit('changeStep', 0);
+    context.emit('changeStep', 1);
     const { cart } = useCart();
     if (!cart.value?.products?.length) {
       context.root.$router.push('/');

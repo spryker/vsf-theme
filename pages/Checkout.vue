@@ -34,7 +34,7 @@
 import { SfSteps, SfButton } from '@storefront-ui/vue';
 import CartPreview from '~/components/Checkout/CartPreview';
 import OrderReview from '~/components/Checkout/OrderReview';
-import { ref } from '@vue/composition-api';
+import { ref, computed } from '@vue/composition-api';
 
 const STEPS = [
   { name: 'personal-details', label: 'Personal Details' },
@@ -59,6 +59,8 @@ export default {
       showCartPreview.value = false;
     };
 
+    const isThankYou = computed(() => currentStep.value === "thank-you");
+
     const updateStep = next => {
       currentStep.value = next;
     };
@@ -72,6 +74,7 @@ export default {
     return {
       STEPS,
       handleNextStep,
+      isThankYou,
       currentStep,
       updateStep,
       handleShowReview,

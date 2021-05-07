@@ -53,18 +53,21 @@
           </template>
         </SfProperty>
       </template>
-      <SfProperty
-        v-if="totals.special > 0"
-        :value="`${cartGetters.getFormattedPrice(totals.special)}`"
-        class="sf-property--full-width sf-property--small property special-price"
-      />
-      <SfProperty
-        name="Total"
-        :value="`${cartGetters.getFormattedPrice(
-          totals.total + shippingPrice,
-        )}`"
-        class="sf-property--full-width sf-property--large property-total"
-      />
+      <template v-if="discounts.length">
+        <SfProperty
+          name="Discount"
+          v-for="discount in discounts"
+          :key="discount.id"
+          :value="`- ${cartGetters.getFormattedPrice(discount.value)}`"
+          class="sf-property--full-width sf-property--small property"
+        >
+          <template #name>
+            <span class="sf-property__name">
+              Discount ({{ discount.name }})
+            </span>
+          </template>
+        </SfProperty>
+      </template>
       <template v-if="giftCards.length">
         <SfProperty
           name="Gift Card"
@@ -84,14 +87,19 @@
             </span>
           </template>
         </SfProperty>
-        <SfProperty
-          name="Price to pay"
-          :value="`${cartGetters.getFormattedPrice(
-            totals.priceToPay + shippingPrice,
-          )}`"
-          class="sf-property--full-width sf-property--large property-total"
-        />
       </template>
+      <SfProperty
+        v-if="totals.special > 0"
+        :value="`${cartGetters.getFormattedPrice(totals.special)}`"
+        class="sf-property--full-width sf-property--small property special-price"
+      />
+      <SfProperty
+        name="Total"
+        :value="`${cartGetters.getFormattedPrice(
+          totals.total + shippingPrice,
+        )}`"
+        class="sf-property--full-width sf-property--large property-total"
+      />
       <VoucherCardForm />
     </div>
     <div class="highlighted">

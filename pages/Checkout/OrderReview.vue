@@ -168,7 +168,7 @@
                   color="#BEBFC4"
                   role="button"
                   class="button"
-                  @click="removeCartItem(product)"
+                  @click="removeCartItem({ product })"
                 />
               </SfTableData>
             </SfTableRow>
@@ -350,8 +350,8 @@ export default {
       },
     } = useVSFContext();
 
-    const removeCartItem = async (product) => {
-      await removeItem(product);
+    const removeCartItem = async (params) => {
+      await removeItem(params);
 
       if (!products.value.length) {
         context.root.$router.push('/');
