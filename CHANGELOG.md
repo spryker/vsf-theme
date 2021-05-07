@@ -12,6 +12,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+
+
 ## [0.1.3-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.0...@spryker-vsf/theme@0.1.3-dev.1) (2021-05-07)
 
 
@@ -21,9 +23,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+
+
 ## [0.1.3-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-next.0...@spryker-vsf/theme@0.1.3-dev.0) (2021-05-07)
 
 **Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2...@spryker-vsf/theme@0.1.3-next.0) (2021-05-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
 
 
 ## [0.1.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2-dev.1...@spryker-vsf/theme@0.1.2) (2021-04-23)
