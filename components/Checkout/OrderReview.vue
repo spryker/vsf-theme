@@ -1,77 +1,83 @@
 <template>
-  <div>
-    <div class="highlighted">
-      <SfHeading
-        :level="3"
-        title="Order review"
-        class="sf-heading--left sf-heading--no-underline title"
-      />
+  <div class="highlighted">
+    <SfHeading
+      :level="3"
+      title="Order review"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+
+    <section>
       <div class="highlighted__header">
         <h3 class="highlighted__title">Personal details</h3>
-        <NuxtLink to="/checkout/personal-details">
-          <SfButton
-            data-cy="order-review-btn_personal-edit"
-            class="sf-button--text"
-            v-if="!isAuthenticated"
-            >Edit
-          </SfButton>
-        </NuxtLink>
+        <SfButton
+          data-cy="order-review-btn_personal-edit"
+          class="sf-button--text"
+          v-if="!isAuthenticated"
+          @click="$emit('edit', 'personal-details')"
+          >Edit
+        </SfButton>
       </div>
       <p class="content">
         {{ personalDetails.salutation }}. {{ personalDetails.firstName }}
         {{ personalDetails.lastName }}<br />
       </p>
       <p class="content">{{ personalDetails.email }}</p>
+    </section>
 
+    <section>
       <div class="highlighted__header">
         <h3 class="highlighted__title">Shipping details</h3>
-        <NuxtLink to="/checkout/shipping">
-          <SfButton
-            data-cy="order-review-btn_shipping-edit"
-            class="sf-button--text"
-            >Edit</SfButton
-          >
-        </NuxtLink>
+        <SfButton
+          data-cy="order-review-btn_shipping-edit"
+          class="sf-button--text"
+          @click="$emit('edit', 'shipping')"
+          >Edit</SfButton
+        >
       </div>
+
       <p class="content">
-        <span class="content__label"
-          >Shipment method: {{ chosenShippingMethod.name }}</span
+        <span class="content__label">Shipment method: {{ shippingName }}</span
         ><br />
-        {{ shippingDetails.address1 }} {{ shippingDetails.address2 }},
-        {{ shippingDetails.zipCode }}<br />
+        {{ shippingDetails.address1 }}
+        {{ shippingDetails.address2 }}, {{ shippingDetails.zipCode }}<br />
         {{ shippingDetails.city }}, {{ shippingDetails.country }}
       </p>
-      <p class="content">{{ shippingDetails.phoneNumber }}</p>
+      <p class="content">{{ shippingDetails.phone }}</p>
+    </section>
 
+    <section>
       <div class="highlighted__header">
         <h3 class="highlighted__title">Billing details</h3>
-        <NuxtLink to="/checkout/payment">
-          <SfButton
-            data-cy="order-review-btn_billing-edit"
-            class="sf-button--text"
-            @click="$emit('changeStep', 2)"
-            >Edit</SfButton
-          >
-        </NuxtLink>
+        <SfButton
+          data-cy="order-review-btn_billing-edit"
+          class="sf-button--text"
+          @click="$emit('edit', 'billing')"
+          >Edit</SfButton
+        >
       </div>
-      <p class="content">
-        <span class="content__label"
-          >Payment method: {{ chosenPaymentDetails.paymentMethodName }}</span
-        ><br />
-        {{ billingDetails.address1 }} {{ billingDetails.address2 }},
-        {{ billingDetails.zipCode }}<br />
-        {{ billingDetails.city }}, {{ billingDetails.country }}
+      <p v-if="billingSameAsShipping" class="content">
+        Same as shipping address
       </p>
-      <p class="content">{{ billingDetails.phoneNumber }}</p>
-    </div>
+      <template v-else>
+        <p class="content">
+          {{ billingDetails.address1 }}
+          {{ billingDetails.address2 }}, {{ billingDetails.zipCode }}<br />
+          {{ billingDetails.city }}, {{ billingDetails.country }}
+        </p>
+        <p class="content">{{ billingDetails.phone }}</p>
+      </template>
+    </section>
   </div>
 </template>
 <script>
 import { SfHeading, SfButton } from '@storefront-ui/vue';
+import { computed, inject } from '@vue/composition-api';
 import {
-  useCheckoutBilling,
-  useCheckoutShipping,
+  useShipping,
+  useShippingProvider,
+  useBilling,
   useUser,
+  shippingProviderGetters,
 } from '@spryker-vsf/composables';
 
 export default {
@@ -82,23 +88,27 @@ export default {
   },
 
   setup() {
-    const { billingDetails, chosenPaymentDetails } = useCheckoutBilling(
-      'checkout',
+    const { user, isAuthenticated } = useUser();
+    const { shipping: shippingDetails } = useShipping();
+    const { billing: billingDetails } = useBilling();
+
+    const personalDetails = inject('checkoutPersonalDetails');
+    const billingSameAsShipping = inject('checkoutBillingSameAsShipping');
+    const shippingProvider = useShippingProvider();
+
+    const shippingName = computed(() =>
+      shippingProviderGetters.getSelectedMethodName(
+        shippingProvider.state.value,
+      ),
     );
-    const {
-      shippingDetails,
-      chosenShippingMethod,
-      personalDetails,
-    } = useCheckoutShipping('checkout');
-    const { isAuthenticated } = useUser();
 
     return {
+      isAuthenticated,
       personalDetails,
       shippingDetails,
-      chosenShippingMethod,
-      chosenPaymentDetails,
+      shippingName,
       billingDetails,
-      isAuthenticated,
+      billingSameAsShipping,
     };
   },
 };

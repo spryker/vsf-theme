@@ -3,12 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.1.3-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.1...@spryker-vsf/theme@0.1.3-dev.2) (2021-05-07)
+## [0.1.3-dev.5](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.4...@spryker-vsf/theme@0.1.3-dev.5) (2021-05-25)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.4](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.3...@spryker-vsf/theme@0.1.3-dev.4) (2021-05-20)
 
 
 ### Bug Fixes
 
-* **theme:** fixed item deletion ([f269851](https://github.com/spryker/vsf-monorepo/commit/f2698517ab914e1dc0f9a5b0ea6720d4fdbfff6c))
+* **theme:** fix login modal appearing ([a2a376b](https://github.com/spryker/vsf-monorepo/commit/a2a376b7d1baeb14da124e8a976993d3c781f79f))
+* **theme:** load Raleway font only once ([65098d0](https://github.com/spryker/vsf-monorepo/commit/65098d01182294cb8fb2b65a829b30a58dc89645))
+* **theme:** v-model typo ([91597fc](https://github.com/spryker/vsf-monorepo/commit/91597fcedca0e524e90054e9f0df412304b3931e))
+
+
+
+
+
+## [0.1.3-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.2...@spryker-vsf/theme@0.1.3-dev.3) (2021-05-12)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.2...@spryker-vsf/theme@0.1.3) (2021-05-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
 
 
 

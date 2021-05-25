@@ -11,7 +11,7 @@
       <template #description>
         <div class="banner__order-number">
           <span class="banner__order-title">Order No.:</span>
-          <strong>{{ checkoutOrder.orderReference }}</strong>
+          <strong>{{ orderReference }}</strong>
         </div>
       </template>
     </SfCallToAction>
@@ -82,8 +82,8 @@
 
 <script>
 import { SfHeading, SfButton, SfCallToAction } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
-import { useCart, useCheckoutOrder } from '@spryker-vsf/composables';
+import { computed, onBeforeMount } from '@vue/composition-api';
+import { useMakeOrder } from '@spryker-vsf/composables';
 
 export default {
   components: {
@@ -92,23 +92,26 @@ export default {
     SfCallToAction,
   },
   setup(props, context) {
-    context.emit('changeStep', 4);
-    const { cart } = useCart();
-    if (!cart.value?.products?.length) {
-      context.root.$router.push('/');
-    }
+    const { order } = useMakeOrder();
 
-    const companyDetails = ref({
-      name: 'Spryker Systems GmbH',
-      street: 'Julie-Wolfthorn-Strasse 1',
-      city: '10115 Berlin, Germany',
-      email: 'info@spryker.com',
+    onBeforeMount(() => {
+      if (!order.value) {
+        context.root.$router.push('/');
+      }
     });
-    const { checkoutOrder } = useCheckoutOrder();
+
+    const orderReference = computed(
+      () => order.value?.orderReference ?? context.root.$route.query.order,
+    );
 
     return {
-      companyDetails,
-      checkoutOrder,
+      companyDetails: {
+        name: 'Spryker Systems GmbH',
+        street: 'Julie-Wolfthorn-Strasse 1',
+        city: '10115 Berlin, Germany',
+        email: 'info@spryker.com',
+      },
+      orderReference,
     };
   },
 };

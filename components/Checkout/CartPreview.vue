@@ -23,15 +23,16 @@
         ]"
       />
       <SfProperty
-        name="Tax"
-        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
-        :class="['sf-property--full-width', 'sf-property--large']"
-      />
-      <SfProperty
         name="Shipping"
         v-if="shippingPrice"
         :value="`${cartGetters.getFormattedPrice(shippingPrice)}`"
-        class="sf-property--full-width sf-property--large property"
+        class="sf-property--full-width sf-property--large"
+      />
+      <SfProperty
+        v-if="totals.tax"
+        name="Tax"
+        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
+        class="sf-property--full-width sf-property--large"
       />
       <template v-if="vouchers.length">
         <SfProperty
@@ -129,8 +130,8 @@ import {
   useCart,
   checkoutGetters,
   cartGetters,
-  userCheckoutShippingGetters,
-  useCheckoutShipping,
+  shippingProviderGetters,
+  useShippingProvider,
 } from '@spryker-vsf/composables';
 import VoucherCardForm from './VoucherCardForm';
 
@@ -147,7 +148,7 @@ export default {
     VoucherCardForm,
   },
   setup() {
-    const { chosenShippingMethod } = useCheckoutShipping('checkout');
+    const { state: shippingProvider } = useShippingProvider();
     const {
       cart,
       removeItem,
@@ -160,7 +161,7 @@ export default {
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const shippingPrice = computed(
       () =>
-        userCheckoutShippingGetters.getMethodPrice(chosenShippingMethod.value)
+        shippingProviderGetters.getSelectedMethodPrice(shippingProvider.value)
           .regular,
     );
     const totals = computed(() => cartGetters.getTotals(cart.value));
@@ -175,7 +176,6 @@ export default {
       vouchers,
       giftCards,
       products,
-      chosenShippingMethod,
       totals,
       removeItem,
       updateQuantity,

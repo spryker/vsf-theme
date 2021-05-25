@@ -185,6 +185,7 @@
       </div>
     </div>
     <RelatedProducts
+      v-if="relatedProducts.length"
       :products="relatedProducts"
       :loading="relatedLoading"
       title="Match it with"
@@ -340,6 +341,7 @@ export default {
         mobile: { url: img.small },
         desktop: { url: img.normal },
         big: { url: img.big },
+        alt: 'gallery',
       })),
     );
 

@@ -294,16 +294,12 @@ export default {
     padding: 0 var(--spacer-base);
   }
   &__image {
-    --image-width: 13.1875rem;
-    margin: 0 0 var(--spacer-xl) 7.5rem;
+    width: 18.125rem;
+    height: 12.3125rem;
+    margin-left: 50%;
     @include for-desktop {
-      --image-width: 23.3125rem;
-      margin: 0 0 var(--spacer-2xl) 7.5rem;
+      margin-left: 45%;
     }
-  }
-  @include for-desktop {
-    --heading-title-font-size: var(--font-size--xl);
-    --heading-title-margin: 0 0 var(--spacer-sm) 0;
   }
 }
 .collected-product-list {

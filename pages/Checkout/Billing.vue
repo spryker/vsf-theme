@@ -1,10 +1,12 @@
 <template>
-  <AddressStep type="shipping" />
+  <div>
+    <AddressStep type="billing" />
+  </div>
 </template>
 <script>
 import AddressStep from '@/components/Checkout/AddressStep';
 export default {
-  name: 'Shipping',
+  name: 'Billing',
   components: {
     AddressStep,
   },

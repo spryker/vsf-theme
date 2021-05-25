@@ -23,6 +23,7 @@
           rules="required"
           v-slot="{ errors }"
           class="form__element"
+          slim
         >
           <SfSelect
             data-cy="personal-details-input_salutation"
@@ -48,6 +49,7 @@
           rules="required"
           v-slot="{ errors }"
           class="form__element form__element--half"
+          slim
         >
           <SfInput
             data-cy="personal-details-input_firstName"
@@ -64,6 +66,7 @@
           rules="required"
           v-slot="{ errors }"
           class="form__element form__element--half form__element--half-even"
+          slim
         >
           <SfInput
             data-cy="personal-details-input_lastName"
@@ -80,6 +83,7 @@
           rules="required|email"
           v-slot="{ errors }"
           class="form__element"
+          slim
         >
           <SfInput
             data-cy="personal-details-input_email"
@@ -105,19 +109,10 @@
         </div>
 
         <div class="form__action">
-          <NuxtLink to="/">
-            <SfButton
-              data-cy="personal-details-btn_go-back"
-              class="color-secondary form__back-button"
-            >
-              Go back
-            </SfButton>
-          </NuxtLink>
-
           <SfButton
             data-cy="personal-details-btn_continue"
             class="form__action-button"
-            @click="$emit('nextStep')"
+            @click="goToShipping"
             :disabled="invalid"
           >
             Continue to shipping
@@ -138,14 +133,10 @@ import {
   SfCharacteristic,
   SfSelect,
 } from '@storefront-ui/vue';
-import { ref, watch } from '@vue/composition-api';
+import { ref, watch, onBeforeMount } from '@vue/composition-api';
 import { useUiState } from '~/composables';
-import {
-  useCart,
-  useCheckoutShipping,
-  useUser,
-} from '@spryker-vsf/composables';
-import { useVSFContext } from '@vue-storefront/core';
+import { useCustomerPersonalDetails } from '@spryker-vsf/composables';
+import { useVSFContext, onSSR } from '@vue-storefront/core';
 import { getSalutation } from '~/helpers/user';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
@@ -163,15 +154,14 @@ export default {
     SfSelect,
   },
   setup(_, context) {
-    context.emit('changeStep', 0);
-    const { cart } = useCart();
-    if (!cart.value?.products?.length) {
-      context.root.$router.push('/');
-    }
-
     const { toggleModal } = useUiState();
-    const { personalDetails } = useCheckoutShipping('checkout');
-    const { isAuthenticated } = useUser();
+
+    const {
+      state: persistedPersonalDetails,
+      load: loadCustomer,
+      save: saveCustomer,
+    } = useCustomerPersonalDetails();
+
     const accountBenefits = ref(false);
     const salutations = ref(['', ...getSalutation()]);
     const {
@@ -180,11 +170,25 @@ export default {
       },
     } = useVSFContext();
 
-    watch(isAuthenticated, () => {
-      if (isAuthenticated.value && sprykerAuth.getCartId()) {
-        context.emit('nextStep');
+    const personalDetails = ref({});
+    const syncPersonalDetails = () => {
+      const { value } = persistedPersonalDetails;
+      if (value) {
+        personalDetails.value = { ...value };
       }
+    };
+
+    syncPersonalDetails();
+    watch(persistedPersonalDetails, syncPersonalDetails);
+
+    onSSR(async () => {
+      await loadCustomer();
     });
+
+    const goToShipping = async () => {
+      await saveCustomer(personalDetails.value);
+      context.root.$router.push('/checkout/shipping');
+    };
 
     return {
       personalDetails,
@@ -197,6 +201,7 @@ export default {
       ],
       salutations,
       toggleModal,
+      goToShipping,
     };
   },
 };
@@ -252,7 +257,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin: 0 0 var(--spacer-sm);
+    margin: 0 0 var(--spacer-xl);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -285,14 +290,25 @@ export default {
     }
   }
   &__action-button {
+    width: 100%;
     margin: 0 0 var(--spacer-sm) 0;
     @include for-desktop {
       margin: 0;
+      width: 25rem;
     }
   }
   &__back-button {
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
+    }
+  }
+  &__select {
+    ::v-deep .sf-select__dropdown {
+      font-size: var(--font-size--lg);
+      margin: 0;
+      color: var(--c-text);
+      font-family: var(--font-family--secondary);
+      font-weight: var(--font-weight--normal);
     }
   }
   &__button {

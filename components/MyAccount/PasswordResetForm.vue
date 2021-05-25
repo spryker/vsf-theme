@@ -104,7 +104,8 @@ export default {
 
     const onSubmit = async () => {
       setFormErrors([], {});
-      await changePassword(passwordForm.value);
+      const { currentPassword, newPassword } = passwordForm.value;
+      await changePassword({ current: currentPassword, new: newPassword });
       if (error.value.changePassword) {
         const { tag, value } = error.value.changePassword;
         tag === 'validate'

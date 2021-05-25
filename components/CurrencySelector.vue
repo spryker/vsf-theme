@@ -50,13 +50,6 @@ export default {
     SfCharacteristic,
   },
   setup(props, context) {
-    const {
-      $vsf: {
-        $spryker: {
-          config: { localisation, currencies, defaultCurrency },
-        },
-      },
-    } = context.root;
     const { currency, load, setCurrency } = useCurrency();
     const isCurModalOpen = ref(false);
 

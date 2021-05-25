@@ -5,7 +5,7 @@
     @click:wishlist="toggleWishlistSidebar"
     @click:account="handleAccountClick"
     @enter:search="changeSearchTerm"
-    @change:search="(p) => (term = p)"
+    @change:search="p => (term = p)"
     :searchValue="term"
     :cartItemsQty="cartTotalItems"
     :accountIcon="accountIcon"

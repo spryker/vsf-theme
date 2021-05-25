@@ -372,7 +372,7 @@ export default {
     const th = useUiHelpers();
     const uiState = useUiState();
     const { isAuthenticated } = useUser();
-    const { cart, addItem: addToCart, isOnCart } = useCart();
+    const { cart, addItem: addToCart, isInCart } = useCart();
     const { addItem: addToWishlist } = useWishlist();
     const { result, search, loading } = useFacet(
       th.getFacetsFromURL().categorySlug,
@@ -419,7 +419,7 @@ export default {
         return;
       }
 
-      isOnCart({ product: product.concreteProducts[0] });
+      isInCart({ product: product.concreteProducts[0] });
     };
 
     const isAddToCartVisible = (product) => {

@@ -90,16 +90,18 @@
         </div>
         <div v-else class="empty-wishlist" key="empty-wishlist">
           <div class="empty-wishlist__banner">
-            <img
-              src="@storefront-ui/shared/icons/empty_cart.svg"
-              alt
-              class="empty-wishlist__icon"
+            <SfImage
+              alt="Empty bag"
+              class="empty-wishlist__image"
+              src="/icons/empty-cart.svg"
             />
-            <h3 class="empty-wishlist__label">Your bag is empty</h3>
-            <p class="empty-wishlist__description">
-              Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in.
-            </p>
+            <SfHeading
+              title="Your bag is empty"
+              :level="2"
+              class="empty-cart__heading"
+              description="Looks like you haven’t added any items to the bag yet. Start
+              shopping to fill it in."
+            />
           </div>
           <SfButton
             data-cy="wishlist-sidebar-btn_start-shopping"
@@ -121,6 +123,7 @@ import {
   SfProperty,
   SfPrice,
   SfCollectedProduct,
+  SfImage,
 } from '@storefront-ui/vue';
 import { computed } from '@vue/composition-api';
 import {
@@ -129,7 +132,6 @@ import {
   useCart,
   wishlistGetters,
 } from '@spryker-vsf/composables';
-import { onSSR } from '@vue-storefront/core';
 import { useUiState } from '~/composables';
 
 export default {
@@ -142,6 +144,7 @@ export default {
     SfProperty,
     SfPrice,
     SfCollectedProduct,
+    SfImage,
   },
   setup() {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
@@ -198,8 +201,13 @@ export default {
   }
 }
 .empty-wishlist {
+  --heading-description-margin: 0 0 var(--spacer-xl) 0;
+  --heading-title-margin: 0 0 var(--spacer-xl) 0;
+  --heading-title-color: var(--c-primary);
+  --heading-title-font-weight: var(--font-weight--semibold);
   display: flex;
   flex: 1;
+  align-items: center;
   flex-direction: column;
   &__banner {
     flex: 1;
@@ -208,23 +216,10 @@ export default {
     justify-content: center;
     flex-direction: column;
   }
-  &__label,
-  &__description {
-    text-align: center;
+  &__heading {
+    padding: 0 var(--spacer-base);
   }
-  &__label {
-    margin: var(--spacer-2xl) 0 0 0;
-    font: var(--font-weight--normal) var(--font-size--xl) / 1.6
-      var(--font-family--secondary);
-    color: var(--c-primary);
-  }
-  &__description {
-    margin: var(--spacer-sm) 0 0 0;
-    font: var(--font-weight--normal) var(--font-size--base) / 1.6
-      var(--font-family--primary);
-    color: var(--c-link);
-  }
-  &__icon {
+  &__image {
     width: 18.125rem;
     height: 12.3125rem;
     margin-left: 50%;
