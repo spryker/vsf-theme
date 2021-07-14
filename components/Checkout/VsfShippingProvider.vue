@@ -1,6 +1,9 @@
 <template>
   <div class="shipping-providers">
     <SfRadio
+      :data-cy="`svsf-vsfShippingProvider-shippingMethods-radio-${shippingProviderGetters.getMethodId(
+        method,
+      )}`"
       v-for="method in shippingMethods"
       :key="shippingProviderGetters.getMethodId(method)"
       :label="shippingProviderGetters.getMethodName(method)"
@@ -25,6 +28,7 @@
     </SfRadio>
 
     <SfButton
+      data-cy="svsf-vsfShippingProvider-next-button"
       :disabled="!selectedMethod"
       type="button"
       @click="onSubmitMethodHandler"
@@ -35,6 +39,7 @@
 
     <NuxtLink v-if="!isAuthenticated" to="/checkout/personal-details">
       <SfButton
+        data-cy="svsf-vsfShippingProvider-back-button"
         class="smartphone-only sf-button sf-button--underlined form__action-button form__back-button"
       >
         {{ $t('Go back') }}
@@ -46,7 +51,6 @@
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref, onBeforeMount, onMounted, watch } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
 import {
   useUser,
   useShippingProvider,

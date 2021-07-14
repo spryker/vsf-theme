@@ -1,6 +1,7 @@
 <template>
   <div>
     <SfNotification
+      data-cy="svsf-shippingDetailsSection-error-message"
       :visible="!!shippingErrorMessage"
       :message="shippingErrorMessage"
       type="danger"
@@ -14,20 +15,24 @@
 
     <transition name="fade">
       <SfTabs
+        data-cy="svsf-shippingDetailsSection-contactDetails-tabs"
         v-if="edittingAddress"
         key="edit-address"
         :open-tab="1"
         class="tab-orphan"
       >
         <SfTab
-          data-cy="shipping-details-tab_change"
-          :title="isNewAddress ? 'Add the address' : 'Update the address'"
+          data-cy="svsf-shippingDetailsSection-contactDetails-tab"
+          :title="
+            isNewAddress ? $t('Add the address') : $t('Update the address')
+          "
         >
-          <p class="message">
+          <p data-cy="svsf-" class="message">
             {{ $t('Contact details updated') }}
           </p>
 
           <ShippingAddressForm
+            data-cy="svsf-shippingDetailsSection-shippingAddressForm"
             :address="activeAddress"
             :isNew="isNewAddress"
             @submit="saveAddress"
@@ -35,8 +40,17 @@
         </SfTab>
       </SfTabs>
 
-      <SfTabs v-else :open-tab="1" key="address-list" class="tab-orphan">
-        <SfTab data-cy="shipping-details-tab_details" title="Shipping details">
+      <SfTabs
+        data-cy="svsf-shippingDetailsSection-shippingDetails-tabs"
+        v-else
+        :open-tab="1"
+        key="address-list"
+        class="tab-orphan"
+      >
+        <SfTab
+          data-cy="svsf-shippingDetailsSection-shippingDetails-tab"
+          :title="$t('Shipping details')"
+        >
           <p class="message">
             {{ $t('Manage shipping addresses') }}
           </p>
@@ -48,12 +62,15 @@
             >
               <div class="shipping__content">
                 <div class="shipping__address">
-                  <UserShippingAddress :address="address" />
+                  <UserShippingAddress
+                    data-cy="svsf-shippingDetailsSection-userShippingAddress"
+                    :address="address"
+                  />
                 </div>
               </div>
               <div class="shipping__actions">
                 <SfIcon
-                  data-cy="shipping-details-icon_delete"
+                  data-cy="svsf-shippingDetailsSection-cross-icon"
                   icon="cross"
                   color="gray"
                   size="14px"
@@ -62,14 +79,14 @@
                   @click="removeAddress(address)"
                 />
                 <SfButton
-                  data-cy="shipping-details-btn_change"
+                  data-cy="svsf-shippingDetailsSection-change-button"
                   @click="changeAddress(address)"
                 >
                   {{ $t('Change') }}
                 </SfButton>
 
                 <SfButton
-                  data-cy="shipping-details-btn_delete"
+                  data-cy="svsf-shippingDetailsSection-remove-button"
                   class="color-light shipping__button-delete desktop-only"
                   @click="removeAddress(address)"
                 >
@@ -79,7 +96,7 @@
             </div>
           </transition-group>
           <SfButton
-            data-cy="shipping-details-btn_add"
+            data-cy="svsf-shippingDetailsSection-newAddress-button"
             class="action-button"
             @click="changeAddress()"
           >

@@ -3,6 +3,7 @@
     <div class="checkout">
       <div class="checkout__main">
         <SfSteps
+          data-cy="svsf-checkoutSection-steps"
           v-if="!isThankYou"
           :active="currentStepIndex"
           :class="{
@@ -10,7 +11,12 @@
           }"
           @change="handleStepClick"
         >
-          <SfStep v-for="(step, key) in STEPS" :key="key" :name="step">
+          <SfStep
+            :data-cy="`svsf-checkoutSection-step-${key}`"
+            v-for="(step, key) in STEPS"
+            :key="key"
+            :name="step"
+          >
             <nuxt-child @edit="handleEditClick" />
           </SfStep>
         </SfSteps>
@@ -18,8 +24,16 @@
       </div>
       <div v-if="!isThankYou" class="checkout__aside desktop-only">
         <transition name="fade">
-          <CartPreview v-if="!isPayment" key="order-summary" />
-          <OrderReview v-else @edit="handleEditClick" />
+          <CartPreview
+            data-cy="svsf-checkoutSection-cartPreview"
+            v-if="!isPayment"
+            key="order-summary"
+          />
+          <OrderReview
+            data-cy="svsf-checkoutSection-orderReview"
+            v-else
+            @edit="handleEditClick"
+          />
         </transition>
       </div>
     </div>
@@ -29,8 +43,13 @@
 import { SfSteps, SfButton } from '@storefront-ui/vue';
 import CartPreview from '~/components/Checkout/CartPreview';
 import OrderReview from '~/components/Checkout/OrderReview';
-import { computed, ref, watch, provide } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
+import {
+  computed,
+  ref,
+  watch,
+  provide,
+  onBeforeMount,
+} from '@vue/composition-api';
 import {
   useShipping,
   useBilling,
@@ -87,7 +106,7 @@ export default {
     ];
 
     const isPersonalDetailsCompleted = computed(() => {
-      if (!firstLodingDone.value) {
+      if (!firstLodingDone.value || !personalDetails.value) {
         return true;
       }
 
@@ -101,7 +120,7 @@ export default {
       );
     });
     const isShippingCompleted = computed(() => {
-      if (!firstLodingDone.value) {
+      if (!firstLodingDone.value || !shippingAddress.value) {
         return true;
       }
 
@@ -117,7 +136,7 @@ export default {
       return isMethodFulfilled && isAddressesFulfilled;
     });
     const isBillingCompleted = computed(() => {
-      if (!firstLodingDone.value) {
+      if (!firstLodingDone.value || !billingAddress.value) {
         return true;
       }
 
@@ -264,7 +283,7 @@ export default {
     };
 
     if (!isThankYou.value) {
-      onSSR(async () => {
+      onBeforeMount(async () => {
         await Promise.all(checkoutLoadComposables.map((load) => load()));
       });
 

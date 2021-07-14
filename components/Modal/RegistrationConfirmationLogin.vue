@@ -1,10 +1,14 @@
 <template>
   <div>
     <div class="message-header">
-      <p class="message-header_title">Your registration is complete</p>
-      <p class="message-header_description">Please login to your account</p>
+      <p class="message-header_title">
+        {{ $t('Your registration is complete') }}
+      </p>
+      <p class="message-header_description">
+        {{ $t('Please login to your account') }}
+      </p>
     </div>
-    <Login />
+    <Login data-cy="svsf-registrationConfirmationLoginPopUp-loginPopUp" />
   </div>
 </template>
 <script>

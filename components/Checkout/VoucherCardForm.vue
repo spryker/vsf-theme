@@ -1,12 +1,16 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
-    <form class="form" @submit.prevent="handleSubmit(voucherCardSubmit)">
+    <form
+      data-cy="svsf-voucherCardForm-form"
+      class="form"
+      @submit.prevent="handleSubmit(voucherCardSubmit)"
+    >
       <ValidationProvider class="form__element form__element--input">
         <SfInput
-          data-cy="login-input_firstName"
+          data-cy="svsf-voucherCardForm-voucherCardCode-input"
           v-model="voucherCardCode"
           name="first-name"
-          placeholder="Voucher/Gift Card"
+          :placeholder="$t('Voucher/Gift Card')"
           :valid="!voucherErrorMessage"
           :errorMessage="voucherErrorMessage"
           class="form__input"
@@ -14,12 +18,12 @@
       </ValidationProvider>
       <div class="form__element">
         <SfButton
-          data-cy="voucher-card-btn_submit"
+          data-cy="svsf-voucherCardForm-submit-button"
           type="submit"
           class="form__button"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Admit</div>
+            <div>{{ $t('Admit') }}</div>
           </SfLoader>
         </SfButton>
       </div>

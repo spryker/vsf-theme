@@ -1,6 +1,7 @@
 <template>
   <div>
     <SfNotification
+      data-cy="svsf-myProfileSection-seccess-message"
       :visible="visible"
       :message="notificationMessage"
       type="success"
@@ -8,42 +9,60 @@
       @click:close="visible = false"
     >
       <template #icon>
-        <SfIcon icon="check" color="white" />
+        <SfIcon
+          data-cy="svsf-myProfileSection-check-icon"
+          icon="check"
+          color="white"
+        />
       </template>
     </SfNotification>
 
-    <SfTabs :open-tab="1">
-      <!-- Personal data update -->
-      <SfTab data-cy="my-profile-tab_personal-data" title="Personal data">
+    <SfTabs data-cy="svsf-myProfileSection-tabs" :open-tab="1">
+      <SfTab
+        data-cy="svsf-myProfileSection-personalData-tab"
+        :title="$t('Personal data')"
+      >
         <p class="message">
-          Feel free to edit any of your details below so your account is always
-          up to date
+          {{
+            $t(`Feel free to edit any of your details below so your account is always
+          up to date`)
+          }}
         </p>
 
         <ProfileUpdateForm
+          data-cy="svsf-myProfileSection-profileUpdateForm"
           @successDataSubmit="successDataSubmit"
           @submit="updatePersonalData"
         />
 
         <p class="notice">
-          At Brand name, we attach great importance to privacy issues and are
+          {{
+            $t(`At Brand name, we attach great importance to privacy issues and are
           committed to protecting the personal data of our users. Learn more
-          about how we care and use your personal data in the
-          <a href="">Privacy Policy.</a>
+          about how we care and use your personal data in the`)
+          }}
+          <a href="">{{ $t('Privacy Policy.') }}</a>
         </p>
       </SfTab>
 
-      <!-- Password reset -->
-      <SfTab data-cy="my-profile-tab_password-change" title="Password change">
+      <SfTab
+        data-cy="svsf-myProfileSection-passwordResetForm-tab"
+        title="Password change"
+      >
         <p class="message">
-          If you want to change the password to access your account, enter the
-          following information:<br />Your current email address is
-          <span class="message__label">{{
-            userGetters.getEmailAddress(user)
-          }}</span>
+          {{
+            $t(`If you want to change the password to access your account, enter the
+          following information:`)
+          }}<br />{{ $t('Your current email address is') }}
+          <span
+            data-cy="svsf-myProfileSection-seccess-message"
+            class="message__label"
+            >{{ userGetters.getEmailAddress(user) }}</span
+          >
         </p>
 
         <PasswordResetForm
+          data-cy="svsf-myProfileSection-passwordResetForm"
           @successDataSubmit="successDataSubmit"
           @submit="updatePassword"
         />

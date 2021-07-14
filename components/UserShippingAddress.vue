@@ -1,7 +1,9 @@
 <template>
   <div :class="{ 'default-address': isDefault(address) }">
     <p class="name">{{ getFirstName(address) }} {{ getLastName(address) }}</p>
-    <p v-if="getCompanyName(address)">{{ getCompanyName(address) }}</p>
+    <p v-if="getCompanyName(address)">
+      {{ getCompanyName(address) }}
+    </p>
     <p>{{ getStreetName(address) }} {{ getStreetNumber(address) }}</p>
     <p>
       {{ getPostCode(address) }} {{ getCity(address) }},

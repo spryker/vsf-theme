@@ -1,48 +1,67 @@
 <template>
   <div id="my-account">
     <SfBreadcrumbs
+      data-cy="svsf-myAccount-breadcrumbs"
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
     />
     <SfContentPages
-      data-cy="my-account_content-pages"
-      title="My Account"
+      data-cy="svsf-myAccount-content-pages"
+      :title="$t('My Account')"
       :active="activePage"
       class="my-account"
       @click:change="changeActivePage"
     >
-      <SfContentCategory title="Personal Details">
-        <SfContentPage data-cy="my-account-page_my-profile" title="My profile">
-          <MyProfile />
-        </SfContentPage>
-        <SfContentPage data-cy="my-account-page_addresses" title="Addresses">
-          <ShippingDetails />
+      <SfContentCategory
+        data-cy="svsf-myAccount-content-category"
+        :title="$t('Personal Details')"
+      >
+        <SfContentPage
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('My profile')"
+        >
+          <MyProfile data-cy="svsf-myAccount-myProfile" />
         </SfContentPage>
         <SfContentPage
-          data-cy="my-account-page_loyalty-card"
-          title="Loyalty card"
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('Addresses')"
         >
-          <LoyaltyCard />
+          <ShippingDetails data-cy="svsf-myAccount-shippingDetails" />
         </SfContentPage>
         <SfContentPage
-          data-cy="my-account-page_my-newsletter"
-          title="My newsletter"
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('Loyalty card')"
         >
-          <MyNewsletter />
+          <LoyaltyCard data-cy="svsf-myAccount-loyaltyCard" />
+        </SfContentPage>
+        <SfContentPage
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('My newsletter')"
+        >
+          <MyNewsletter data-cy="svsf-myAccount-myNewsletter" />
         </SfContentPage>
       </SfContentCategory>
-      <SfContentCategory title="Order details">
+      <SfContentCategory
+        data-cy="svsf-myAccount-content-page"
+        :title="$t('Order details')"
+      >
         <SfContentPage
-          data-cy="my-account-page_order-history"
-          title="Order history"
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('Order history')"
         >
-          <OrderHistory />
+          <OrderHistory data-cy="svsf-myAccount-orderHistory" />
         </SfContentPage>
-        <SfContentPage data-cy="my-account-page_my-reviews" title="My reviews">
-          <MyReviews />
+        <SfContentPage
+          data-cy="svsf-myAccount-content-page"
+          :title="$t('My reviews')"
+        >
+          <MyReviews data-cy="svsf-myAccount-myReviews" />
         </SfContentPage>
       </SfContentCategory>
-      <SfContentPage data-cy="my-account-page_log-out" title="Log out" />
+      <SfContentPage
+        data-cy="svsf-myAccount-content-page"
+        :title="$t('Log out')"
+      />
     </SfContentPages>
   </div>
 </template>

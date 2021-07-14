@@ -74,6 +74,10 @@ export default {
         i18n: {
           useNuxtI18nModule: true,
         },
+        storage: {
+          type: 'browser',
+          storageType: 'local',
+        },
 
         /**
          * confirmRegistration

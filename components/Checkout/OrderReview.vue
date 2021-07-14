@@ -1,46 +1,66 @@
 <template>
   <div class="highlighted">
     <SfHeading
+      data-cy="svsf-ordeReview-heading"
       :level="3"
-      title="Order review"
+      :title="$t('Order review')"
       class="sf-heading--left sf-heading--no-underline title"
     />
 
     <section>
       <div class="highlighted__header">
-        <h3 class="highlighted__title">Personal details</h3>
+        <h3 class="highlighted__title">{{ $t('Personal details') }}</h3>
         <SfButton
-          data-cy="order-review-btn_personal-edit"
+          data-cy="svsf-ordeReview-personalDetailsEdit-button"
           class="sf-button--text"
           v-if="!isAuthenticated"
           @click="$emit('edit', 'personal-details')"
-          >Edit
+          >{{ $t('Edit') }}
         </SfButton>
       </div>
       <p class="content">
-        {{ personalDetails.salutation }}. {{ personalDetails.firstName }}
-        {{ personalDetails.lastName }}<br />
+        <span data-cy="svsf-ordeReview-personalDetails-salutation-text"
+          >{{ personalDetails.salutation }}.
+        </span>
+        <span data-cy="svsf-ordeReview-personalDetails-firstName-text">
+          {{ personalDetails.firstName }}
+        </span>
+        <span data-cy="svsf-ordeReview-personalDetails-lastName-text">
+          {{ personalDetails.lastName }} </span
+        ><br />
       </p>
       <p class="content">{{ personalDetails.email }}</p>
     </section>
 
     <section>
       <div class="highlighted__header">
-        <h3 class="highlighted__title">Shipping details</h3>
+        <h3 class="highlighted__title">{{ $t('Shipping details') }}</h3>
         <SfButton
-          data-cy="order-review-btn_shipping-edit"
+          data-cy="svsf-ordeReview-shippingEdit-button"
           class="sf-button--text"
           @click="$emit('edit', 'shipping')"
-          >Edit</SfButton
+          >{{ $t('Edit') }}</SfButton
         >
       </div>
 
       <p class="content">
         <span class="content__label">Shipment method: {{ shippingName }}</span
         ><br />
-        {{ shippingDetails.address1 }}
-        {{ shippingDetails.address2 }}, {{ shippingDetails.zipCode }}<br />
-        {{ shippingDetails.city }}, {{ shippingDetails.country }}
+        <span data-cy="svsf-ordeReview-shippingDetails-address1-text">
+          {{ shippingDetails.address1 }}
+        </span>
+        <span data-cy="svsf-ordeReview-shippingDetails-address2-text">
+          {{ shippingDetails.address2 }},
+        </span>
+        <span data-cy="svsf-ordeReview-shippingDetails-zipCode-text">
+          {{ shippingDetails.zipCode }} </span
+        ><br />
+        <span data-cy="svsf-ordeReview-shippingDetails-city-text">
+          {{ shippingDetails.city }},
+        </span>
+        <span data-cy="svsf-ordeReview-shippingDetails-country-text">
+          {{ shippingDetails.country }}
+        </span>
       </p>
       <p class="content">{{ shippingDetails.phone }}</p>
     </section>
@@ -49,22 +69,36 @@
       <div class="highlighted__header">
         <h3 class="highlighted__title">Billing details</h3>
         <SfButton
-          data-cy="order-review-btn_billing-edit"
+          data-cy="svsf-ordeReview-paymentEdit-button"
           class="sf-button--text"
           @click="$emit('edit', 'billing')"
-          >Edit</SfButton
+          >{{ $t('Edit') }}</SfButton
         >
       </div>
       <p v-if="billingSameAsShipping" class="content">
-        Same as shipping address
+        {{ $t('Same as shipping address') }}
       </p>
       <template v-else>
         <p class="content">
-          {{ billingDetails.address1 }}
-          {{ billingDetails.address2 }}, {{ billingDetails.zipCode }}<br />
-          {{ billingDetails.city }}, {{ billingDetails.country }}
+          <span data-cy="svsf-ordeReview-billingDetails-address1-text">
+            {{ billingDetails.address1 }}
+          </span>
+          <span data-cy="svsf-ordeReview-billingDetails-address2-text">
+            {{ billingDetails.address2 }},
+          </span>
+          <span data-cy="svsf-ordeReview-billingDetails-zipCode-text">
+            {{ billingDetails.zipCode }} </span
+          ><br />
+          <span data-cy="svsf-ordeReview-billingDetails-city-text">
+            {{ billingDetails.city }},
+          </span>
+          <span data-cy="svsf-ordeReview-billingDetails-country-text">
+            {{ billingDetails.country }}
+          </span>
         </p>
-        <p class="content">{{ billingDetails.phone }}</p>
+        <p class="content" data-cy="svsf-ordeReview-billingDetails-phone-text">
+          {{ billingDetails.phone }}
+        </p>
       </template>
     </section>
   </div>

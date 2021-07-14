@@ -1,20 +1,23 @@
 <template>
   <ValidationObserver v-slot="{ invalid }">
     <SfHeading
+      data-cy="svsf-addressStepForm-heading"
       :level="3"
       :title="type === 'shipping' ? $t('Shipping') : $t('Billing')"
       class="sf-heading--left sf-heading--no-underline title"
     />
 
     <SfCheckbox
+      data-cy="svsf-addressStepForm-sameAsShipping-checkbox"
       v-if="type === 'billing'"
       v-model="sameAsShipping"
-      label="Copy address data from shipping"
+      :label="$t('Copy address data from shipping')"
       name="copyShippingAddress"
       class="form__element form__action-button--margin-bottom"
     />
 
     <UserCheckoutAddresses
+      data-cy="svsf-addressStepForm-userCheckoutAddresses-list"
       v-if="!sameAsShipping && isAuthenticated && hasSavedShippingAddress"
       v-model="setAsDefault"
       :currentAddressId="currentAddressId"
@@ -31,10 +34,10 @@
         slim
       >
         <SfSelect
-          data-cy="shipping-details-input_salutation"
+          data-cy="svsf-addressStepForm-salutation-select"
           v-model="newAddreess.salutation"
           name="salutation"
-          label="Salutation"
+          :label="$t('Salutation')"
           class="form__select sf-select--underlined"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -57,8 +60,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-firstName-input"
           v-model="newAddreess.firstName"
-          label="First name"
+          :label="$t('First name')"
           name="firstName"
           class="form__element form__element--half"
           required
@@ -74,8 +78,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-lastName-input"
           v-model="newAddreess.lastName"
-          label="Last name"
+          :label="$t('Last name')"
           name="lastName"
           class="form__element form__element--half form__element--half-even"
           required
@@ -91,8 +96,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-address1-input"
           v-model="newAddreess.address1"
-          label="Street name"
+          :label="$t('Street name')"
           name="address1"
           class="form__element form__element--half"
           required
@@ -108,8 +114,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-address2-input"
           v-model="newAddreess.address2"
-          label="House/Apartment number"
+          :label="$t('House/Apartment number')"
           name="address2"
           class="form__element form__element--half form__element--half-even"
           required
@@ -125,8 +132,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-city-input"
           v-model="newAddreess.city"
-          label="City"
+          :label="$t('City')"
           name="city"
           class="form__element form__element--half"
           required
@@ -137,8 +145,9 @@
       </ValidationProvider>
       <ValidationProvider name="state" slim>
         <SfInput
+          data-cy="svsf-addressStepForm-state-input"
           v-model="newAddreess.state"
-          label="State/Province"
+          :label="$t('State/Province')"
           name="state"
           class="form__element form__element--half form__element--half-even"
           @input="changeShipmentProviderStatus"
@@ -151,8 +160,9 @@
         slim
       >
         <SfSelect
+          data-cy="svsf-addressStepForm-country-select"
           v-model="newAddreess.iso2Code"
-          label="Country"
+          :label="$t('Country')"
           name="country"
           class="form__element form__element--half form__select sf-select--underlined"
           required
@@ -177,8 +187,9 @@
         slim
       >
         <SfInput
+          data-cy="svsf-addressStepForm-zipCode-input"
           v-model="newAddreess.zipCode"
-          label="Zip-code"
+          :label="$t('Zip-code')"
           name="zipCode"
           class="form__element form__element--half form__element--half-even"
           required
@@ -188,14 +199,16 @@
         />
       </ValidationProvider>
       <SfInput
+        data-cy="svsf-addressStepForm-phone-input"
         v-model="newAddreess.phone"
-        label="Phone number"
+        :label="$t('Phone number')"
         name="phone"
         class="form__element form__element--half"
         @input="changeShipmentProviderStatus"
       />
     </div>
     <SfButton
+      data-cy="svsf-addressStepForm-newAddress-button"
       v-if="!sameAsShipping && !canAddNewAddress && hasSavedShippingAddress"
       class="color-light form__action-button form__action-button--add-address"
       @click="handleAddNewAddressBtnClick"
@@ -206,6 +219,7 @@
       <div class="form">
         <div class="form__action">
           <SfButton
+            data-cy="svsf-addressStepForm-shippingMerhods-button"
             :disabled="
               invalid ||
               (isAuthenticated && !canAddNewAddress && !currentAddressId)
@@ -218,12 +232,14 @@
         </div>
       </div>
       <VsfShippingProvider
+        data-cy="svsf-addressStepForm-vsfShippingProvider-list"
         v-show="canMoveToShipmentProvider"
         @submit="$router.push('/checkout/billing')"
       />
     </template>
     <template v-else-if="type === 'billing'">
       <SfButton
+        data-cy="svsf-addressStepForm-moveToPayment-button"
         :disabled="
           invalid || (isAuthenticated && !canAddNewAddress && !currentAddressId)
         "
@@ -234,6 +250,7 @@
       </SfButton>
       <NuxtLink to="/checkout/shipping">
         <SfButton
+          data-cy="svsf-addressStepForm-back-button"
           class="sf-button form__action-button sf-button--underlined form__back-button smartphone-only"
         >
           {{ $t('Go back') }}
@@ -255,10 +272,9 @@ import {
   ref,
   watch,
   computed,
-  onBeforeMount,
   onMounted,
+  onBeforeMount,
 } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
 import {
   useShipping,
   useBilling,
@@ -339,13 +355,6 @@ export default {
     const canAddNewAddress = ref(true);
     const canMoveToShipmentProvider = ref(false);
     const codes = getCountryCodes();
-
-    onSSR(async () => {
-      await load();
-      if (isAuthenticated) {
-        await loadUserShipping();
-      }
-    });
 
     const adjustDetails = (address) => ({
       ...address,
@@ -467,7 +476,15 @@ export default {
       }
     });
 
-    onMounted(() => {
+    onBeforeMount(async () => {
+      await load();
+
+      if (isAuthenticated) {
+        await loadUserShipping();
+      }
+    });
+
+    onMounted(async () => {
       setData(address.value);
     });
 

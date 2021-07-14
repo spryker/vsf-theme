@@ -1,16 +1,21 @@
 <template>
   <div class="confirmation-header">
-    <p class="confirmation-header_title">Please complete your registration</p>
+    <p class="confirmation-header_title">
+      {{ $t('Please complete your registration') }}
+    </p>
     <p class="confirmation-header_description">
-      Please check your inbox and click the confirm button to complete your
-      registration.
+      {{
+        $t(
+          'Please check your inbox and click the confirm button to complete your registration.',
+        )
+      }}
     </p>
     <SfButton
-      data-cy="registration-confirmation_accept"
+      data-cy="svsf-registrationConfirmationRequiredPopUp-accept-button"
       class="sf-button"
       @click="acceptPrompt"
     >
-      OK
+      {{ $t('OK') }}
     </SfButton>
   </div>
 </template>

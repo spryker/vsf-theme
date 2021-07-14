@@ -2,18 +2,19 @@
   <div>
     <div class="log-in desktop-only">
       <SfButton
-        data-cy="personal-details-btn_login"
+        data-cy="svsf-checkoutPersonalDetailsSection-sign-button"
         class="log-in__button color-secondary"
         @click="toggleModal()"
-        >Sign in / sign up
+        >{{ $t('Sign in / sign up') }}
       </SfButton>
 
-      <p class="log-in__info">or fill the details below:</p>
+      <p class="log-in__info">{{ $t('or fill the details below:') }}</p>
     </div>
 
     <SfHeading
+      data-cy="svsf-checkoutPersonalDetailsSection-heading"
       :level="3"
-      title="Personal details"
+      :title="$t('Personal details')"
       class="sf-heading--left sf-heading--no-underline title"
     />
 
@@ -26,10 +27,10 @@
           slim
         >
           <SfSelect
-            data-cy="personal-details-input_salutation"
+            data-cy="svsf-checkoutPersonalDetailsSection-salutation-select"
             v-model="personalDetails.salutation"
             name="salutation"
-            label="Salutation"
+            :label="$t('Salutation')"
             class="form__select sf-select--underlined"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
@@ -52,9 +53,9 @@
           slim
         >
           <SfInput
-            data-cy="personal-details-input_firstName"
+            data-cy="svsf-checkoutPersonalDetailsSection-firstName-input"
             v-model="personalDetails.firstName"
-            label="First name"
+            :label="$t('First name')"
             name="firstName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
@@ -69,9 +70,9 @@
           slim
         >
           <SfInput
-            data-cy="personal-details-input_lastName"
+            data-cy="svsf-checkoutPersonalDetailsSection-lastName-input"
             v-model="personalDetails.lastName"
-            label="Last name"
+            :label="$t('Last name')"
             name="lastName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
@@ -86,9 +87,9 @@
           slim
         >
           <SfInput
-            data-cy="personal-details-input_email"
+            data-cy="svsf-checkoutPersonalDetailsSection-email-input"
             v-model="personalDetails.email"
-            label="Your email"
+            :label="$t('Your email')"
             name="email"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
@@ -99,6 +100,7 @@
         <div class="info">
           <p class="info__heading">Enjoy these perks with your free account!</p>
           <SfCharacteristic
+            data-cy="svsf-checkoutPersonalDetailsSection-characteristics"
             v-for="(characteristic, key) in characteristics"
             :key="key"
             :description="characteristic.description"
@@ -110,12 +112,12 @@
 
         <div class="form__action">
           <SfButton
-            data-cy="personal-details-btn_continue"
+            data-cy="svsf-checkoutPersonalDetailsSection-continue-button"
             class="form__action-button"
             @click="goToShipping"
             :disabled="invalid"
           >
-            Continue to shipping
+            {{ $t('Continue to shipping') }}
           </SfButton>
         </div>
       </div>
@@ -136,7 +138,7 @@ import {
 import { ref, watch, onBeforeMount } from '@vue/composition-api';
 import { useUiState } from '~/composables';
 import { useCustomerPersonalDetails } from '@spryker-vsf/composables';
-import { useVSFContext, onSSR } from '@vue-storefront/core';
+import { useVSFContext } from '@vue-storefront/core';
 import { getSalutation } from '~/helpers/user';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
@@ -181,7 +183,7 @@ export default {
     syncPersonalDetails();
     watch(persistedPersonalDetails, syncPersonalDetails);
 
-    onSSR(async () => {
+    onBeforeMount(async () => {
       await loadCustomer();
     });
 

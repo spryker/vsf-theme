@@ -7,10 +7,10 @@
         class="form__element"
       >
         <SfSelect
-          data-cy="payment-details-input_cardType"
+          data-cy="vsfn-creditCardForm-cardType-select"
           v-model="paymentDetails['dummyPaymentCreditCard.cardType']"
           name="cardType"
-          label="Card Type"
+          :label="$t('Card Type')"
           class="form__select sf-select--underlined"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -33,9 +33,9 @@
         class="form__element"
       >
         <SfInput
-          data-cy="payment-details-input_cardNumber"
+          data-cy="vsfn-creditCardForm-cardNumber-input"
           v-model="paymentDetails['dummyPaymentCreditCard.cardNumber']"
-          label="Card Number"
+          :label="$t('Card Number')"
           name="cardNumber"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -49,9 +49,9 @@
         class="form__element"
       >
         <SfInput
-          data-cy="payment-details-input_nameOnCard"
+          data-cy="vsfn-creditCardForm-nameOnCard-input"
           v-model="paymentDetails['dummyPaymentCreditCard.nameOnCard']"
-          label="Name on the Card"
+          :label="$t('Name on the Card')"
           name="nameOnCard"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -65,10 +65,10 @@
         class="form__element form__element--half"
       >
         <SfSelect
-          data-cy="payment-details-input_cardExpiresMonth"
+          data-cy="vsfn-creditCardForm-cardExpiresMonth-select"
           v-model="paymentDetails['dummyPaymentCreditCard.cardExpiresMonth']"
           name="cardExpiresMonth"
-          label="Expiration Month"
+          :label="$t('Expiration Month')"
           class="form__select sf-select--underlined"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -91,10 +91,10 @@
         class="form__element form__element--half form__element--half-even"
       >
         <SfSelect
-          data-cy="payment-details-input_cardExpiresYear"
+          data-cy="vsfn-creditCardForm-cardExpiresYear-select"
           v-model="paymentDetails['dummyPaymentCreditCard.cardExpiresYear']"
           name="cardExpiresYear"
-          label="Expiration Year"
+          :label="$t('Expiration Year')"
           class="form__select sf-select--underlined"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -117,9 +117,9 @@
         class="form__element"
       >
         <SfInput
-          data-cy="payment-details-input_cardSecurityCode"
+          data-cy="vsfn-creditCardForm-cardSecurityCode-input"
           v-model="paymentDetails['dummyPaymentCreditCard.cardSecurityCode']"
-          label="Code CVC"
+          :label="$t('Code CVC')"
           name="cardSecurityCode"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -127,10 +127,11 @@
         />
       </ValidationProvider>
       <SfButton
+        data-cy="vsfn-creditCardForm-submit-button"
         :disabled="invalid"
         type="submit"
         @click="$emit('save', paymentDetails)"
-        >Confirm payment method
+        >{{ $t('Confirm payment method') }}
       </SfButton>
     </div>
   </ValidationObserver>

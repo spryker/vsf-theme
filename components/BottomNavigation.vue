@@ -1,8 +1,12 @@
 <template>
   <!-- TODO: create logic with isActive prop for BottomNavigationItems -->
-  <SfBottomNavigation class="smartphone-only">
+  <SfBottomNavigation
+    data-cy="svsf-bottomNavigation-bottom-navigation"
+    class="smartphone-only"
+  >
     <nuxt-link data-cy="bottom-navigation-url_home" to="/">
       <SfBottomNavigationItem
+        data-cy="svsf-bottomNavigation-home-bottom-navigation-item"
         :class="$route.path == '/' ? 'sf-bottom-navigation__item--active' : ''"
         icon="home"
         size="20px"
@@ -10,21 +14,21 @@
       />
     </nuxt-link>
     <SfBottomNavigationItem
-      data-cy="bottom-navigation-url_menu"
+      data-cy="svsf-bottomNavigation-menu-bottom-navigation-item"
       icon="menu"
       size="20px"
       label="Menu"
       @click="toggleMobileMenu"
     />
     <SfBottomNavigationItem
-      data-cy="bottom-navigation-url_wishlist"
+      data-cy="svsf-bottomNavigation-wishlist-bottom-navigation-item"
       icon="heart"
       size="20px"
       label="Wishlist"
       @click="toggleWishlistSidebar"
     />
     <SfBottomNavigationItem
-      data-cy="bottom-navigation-url_account"
+      data-cy="svsf-bottomNavigation-account-bottom-navigation-item"
       icon="profile"
       size="20px"
       label="Account"
@@ -32,7 +36,7 @@
     />
     <!-- TODO: add logic for label - if on Home then Basket, if on PDC then AddToCart etc. -->
     <SfBottomNavigationItem
-      data-cy="bottom-navigation-url_add-to-cart"
+      data-cy="svsf-bottomNavigation-cart-bottom-navigation-item"
       label="Basket"
       icon="add_to_cart"
       @click="toggleCartSidebar"
@@ -40,6 +44,7 @@
       <template #icon>
         <SfCircleIcon aria-label="Add to cart">
           <SfIcon
+            data-cy="svsf-bottomNavigation-cart-icon"
             icon="add_to_cart"
             color="white"
             size="25px"

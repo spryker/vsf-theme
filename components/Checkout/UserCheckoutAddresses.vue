@@ -1,11 +1,15 @@
 <template>
   <div>
     <SfAddressPicker
+      data-cy="svsf-userCheckoutAddresses-shippingAddresses-picker"
       :selected="currentAddressId"
       @change="setCurrentAddress($event)"
       class="shipping-addresses"
     >
       <SfAddress
+        :data-cy="`svsf-userCheckoutAddresses-address-${userShippingGetters.getId(
+          shippingAddress,
+        )}`"
         class="shipping-addresses__address"
         v-for="shippingAddress in shippingAddresses"
         :key="userShippingGetters.getId(shippingAddress)"
@@ -15,6 +19,7 @@
       </SfAddress>
     </SfAddressPicker>
     <SfCheckbox
+      data-cy="svsf-userCheckoutAddresses-setAsDefault-checkbox"
       :selected="value"
       @change="$emit('input', $event)"
       name="setAsDefault"

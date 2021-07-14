@@ -1,22 +1,22 @@
 <template>
-  <SfTopBar>
+  <SfTopBar data-cy="svsf-topBar-bar">
     <template #left>
-      <SfButton data-cy="top-bar-btn_faq" class="sf-button--text"
-        >Help & FAQs</SfButton
-      >
+      <SfButton data-cy="svsf-topBar-help-button" class="sf-button--text">{{
+        $t('Help & FAQs')
+      }}</SfButton>
     </template>
     <template #center>
-      <p>Download our application.</p>
+      <p>{{ $t('Download our application.') }}</p>
       <SfButton
-        data-cy="top-bar-btn_more"
+        data-cy="svsf-topBar-more-button"
         class="topbar__button sf-button--text"
-        >Find out more</SfButton
+        >{{ $t('Find out more') }}</SfButton
       >
     </template>
     <template #right>
       <div class="right-wrapper" v-if="!routerHelpers.isCheckout($route.path)">
-        <CurrencySelector />
-        <LocaleSelector />
+        <CurrencySelector data-cy="svsf-topBar-currencySelector" />
+        <LocaleSelector data-cy="svsf-topBar-localeSelector" />
       </div>
     </template>
   </SfTopBar>

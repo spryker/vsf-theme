@@ -1,18 +1,14 @@
 <template>
   <div class="payment">
     <SfHeading
+      data-cy="svsf-vsfPaymentProvider-heading"
       :level="3"
       :title="$t('Payment methods')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <!-- <p>
-        <b
-          >Please implement vendor specific VsfPaymentProvider component in
-          'components/Checkout' directory</b
-        >
-      </p> -->
 
     <SfRadio
+      :data-cy="`svsf-vsfPaymentProvider-paymentMethods-radio-${index}`"
       v-for="(method, index) in paymentMethods.list"
       :key="index"
       :label="paymentProviderGetters.getMethodName(method)"
@@ -28,8 +24,16 @@
       </div>
     </SfRadio>
 
-    <CreditCardFormMock v-show="isCreditCard" @save="savePaymentDetails" />
-    <InvoiceFormMock v-show="isInvoice" @save="savePaymentDetails" />
+    <CreditCardFormMock
+      data-cy="svsf-vsfPaymentProvider-creditCard-form"
+      v-show="isCreditCard"
+      @save="savePaymentDetails"
+    />
+    <InvoiceFormMock
+      data-cy="svsf-vsfPaymentProvider-invoice-form"
+      v-show="isInvoice"
+      @save="savePaymentDetails"
+    />
   </div>
 </template>
 
@@ -46,7 +50,6 @@ import {
   usePaymentProvider,
   paymentProviderGetters,
 } from '@spryker-vsf/composables';
-import { onSSR } from '@vue-storefront/core';
 import CreditCardFormMock from '@/components/Checkout/CreditCardFormMock';
 import InvoiceFormMock from '@/components/Checkout/InvoiceFormMock';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';

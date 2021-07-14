@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AddressStep type="billing" />
+    <AddressStep data-cy="svsf-wishlistSidebar-addressStep" type="billing" />
   </div>
 </template>
 <script>

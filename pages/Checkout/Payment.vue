@@ -20,10 +20,10 @@
           </div>
           <SfButton
             v-if="!isAuthenticated"
-            data-cy="order-review-btn_personal-edit"
+            data-cy="svsf-checkoutPaymentSection-personalEdit-button"
             class="sf-button--text color-secondary accordion__edit"
             @click="$emit('edit', 'personal-details')"
-            >Edit</SfButton
+            >{{ $t('Edit') }}</SfButton
           >
         </div>
       </SfAccordionItem>
@@ -41,7 +41,7 @@
             <p class="content">{{ shippingDetails.phone }}</p>
           </div>
           <SfButton
-            data-cy="order-review-btn_shippin-edit"
+            data-cy="svsf-checkoutPaymentSection-shippingEdit-button"
             class="sf-button--text color-secondary accordion__edit"
             @click="$emit('edit', 'shipping')"
             >Edit</SfButton
@@ -52,7 +52,7 @@
         <div class="accordion__item">
           <div class="accordion__content">
             <p v-if="billingSameAsShipping" class="content">
-              Same as shipping address
+              {{ $t('Same as shipping address') }}
             </p>
             <template v-else>
               <p class="content">
@@ -65,16 +65,19 @@
             </template>
           </div>
           <SfButton
-            data-cy="order-review-btn_billing-edit"
+            data-cy="svsf-checkoutPaymentSection-billingEdit-button"
             class="sf-button--text color-secondary accordion__edit"
             @click="$emit('edit', 'billing')"
-            >Edit</SfButton
+            >{{ $t('Edit') }}</SfButton
           >
         </div>
       </SfAccordionItem>
     </SfAccordion>
 
-    <SfTable class="sf-table--bordered table desktop-only">
+    <SfTable
+      data-cy="svsf-checkoutPaymentSection-overview-table"
+      class="sf-table--bordered table desktop-only"
+    >
       <SfTableHeading class="table__row">
         <SfTableHeader class="table__header table__image">{{
           $t('Item')
@@ -135,7 +138,7 @@
             class="product-price"
           />
           <SfIcon
-            data-cy="order-review-icon_remove-from-cart"
+            data-cy="svsf-checkoutPaymentSection-removeFromCart-icon"
             icon="cross"
             size="xxs"
             color="#BEBFC4"
@@ -150,18 +153,21 @@
       <div class="summary__group">
         <div class="summary__total">
           <SfProperty
-            name="Subtotal"
+            data-cy="svsf-checkoutPaymentSection-subtotal-property-list"
+            :name="$t('Subtotal')"
             :value="cartGetters.getFormattedPrice(totals.subtotal)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Shipping"
+            data-cy="svsf-checkoutPaymentSection-shipping-property-list"
+            :name="$t('Shipping')"
             :value="cartGetters.getFormattedPrice(shippingPrice)"
             class="sf-property--full-width property"
           />
           <SfProperty
+            data-cy="svsf-checkoutPaymentSection-tax-property-list"
             v-if="totals.tax"
-            name="Tax"
+            :name="$t('Tax')"
             :value="cartGetters.getFormattedPrice(totals.tax)"
             class="sf-property--full-width property"
           />
@@ -169,7 +175,8 @@
 
         <template v-if="vouchers.length">
           <SfProperty
-            name="Voucher"
+            data-cy="svsf-checkoutPaymentSection-voucher-property-list"
+            :name="$t('Voucher')"
             v-for="voucher in vouchers"
             :key="voucher.id"
             :value="`- ${cartGetters.getFormattedPrice(voucher.value)}`"
@@ -177,14 +184,15 @@
           >
             <template #name>
               <span class="sf-property__name">
-                Voucher ({{ voucher.name }})
+                {{ $t('Voucher') }} ({{ voucher.name }})
               </span>
             </template>
           </SfProperty>
         </template>
         <template v-if="giftCards.length">
           <SfProperty
-            name="Gift Card"
+            data-cy="svsf-checkoutPaymentSection-giftCard-property-list"
+            :name="$t('Gift Card')"
             v-for="giftCard in giftCards"
             :key="giftCard.id"
             :value="`- ${cartGetters.getFormattedPrice(giftCard.value)}`"
@@ -201,16 +209,25 @@
         <SfDivider class="divider" />
 
         <SfProperty
-          name="Total price"
+          data-cy="svsf-checkoutPaymentSection-totalPrice-property-list"
+          :name="$t('Total price')"
           :value="totalPrice"
           class="sf-property--full-width sf-property--large summary__property-total"
         />
 
-        <VsfPaymentProvider @status="isPaymentReady = $event" />
+        <VsfPaymentProvider
+          data-cy="svsf-checkoutPaymentSection-vsfPaymentProvider"
+          @status="isPaymentReady = $event"
+        />
 
         <SfDivider class="divider payment-divider" />
 
-        <SfCheckbox v-model="terms" name="terms" class="summary__terms">
+        <SfCheckbox
+          data-cy="svsf-checkoutPaymentSection-terms-checkbox"
+          v-model="terms"
+          name="terms"
+          class="summary__terms"
+        >
           <template #label>
             <div class="sf-checkbox__label">
               {{ $t('I agree to') }}
@@ -221,6 +238,7 @@
 
         <div class="summary__action">
           <SfButton
+            data-cy="svsf-checkoutPaymentSection-makeOrder-button"
             :disabled="
               loading ||
               !isPaymentReady ||
@@ -234,8 +252,8 @@
           </SfButton>
           <NuxtLink to="/checkout/billing">
             <SfButton
+              data-cy="svsf-checkoutPaymentSection-back-button"
               class="smartphone-only sf-button sf-button--underlined summary__back-button"
-              data-cy="order-review-btn_summary-back"
             >
               {{ $t('Go back') }}
             </SfButton>
@@ -260,8 +278,7 @@ import {
   SfAccordion,
   SfLink,
 } from '@storefront-ui/vue';
-import { onSSR } from '@vue-storefront/core';
-import { ref, computed, inject } from '@vue/composition-api';
+import { ref, computed, inject, onBeforeMount } from '@vue/composition-api';
 import {
   useUser,
   useCustomerPersonalDetails,
@@ -313,7 +330,7 @@ export default {
       paymentProvider,
     ];
 
-    onSSR(async () => {
+    onBeforeMount(async () => {
       await Promise.all([
         loadCart(),
         ...checkoutDataComposables.map((composable) => composable.load()),

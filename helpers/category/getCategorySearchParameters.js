@@ -1,8 +1,6 @@
 export const getCategorySearchParameters = (context) => {
-  const { params } = context.root.$route;
-  const lastSlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
+  const { path } = context.root.$route;
+  const slug = path.replace(/^\/c\//, '');
 
-  return {
-    slug: lastSlug
-  };
+  return { slug };
 };

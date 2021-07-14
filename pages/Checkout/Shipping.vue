@@ -1,5 +1,5 @@
 <template>
-  <AddressStep type="shipping" />
+  <AddressStep data-cy="svsf-wishlistSidebar-addressStep" type="shipping" />
 </template>
 <script>
 import AddressStep from '@/components/Checkout/AddressStep';

@@ -7,9 +7,9 @@
         class="form__element"
       >
         <SfInput
-          data-cy="payment-details-input_dateOfBirth"
+          data-cy="vsfn-invoiceForm-dateOfBirth-input"
           v-model="paymentDetails['dummyPaymentInvoice.dateOfBirth']"
-          label="Date of Birth"
+          :label="$t('Date of Birth')"
           name="dateOfBirth"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
@@ -17,10 +17,11 @@
         />
       </ValidationProvider>
       <SfButton
+        data-cy="vsfn-invoiceForm-submit-button"
         :disabled="invalid"
         type="submit"
         @click="$emit('save', paymentDetails)"
-        >Confirm payment method
+        >{{ $t('Confirm payment method') }}
       </SfButton>
     </div>
   </ValidationObserver>

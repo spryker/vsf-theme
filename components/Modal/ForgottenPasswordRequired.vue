@@ -1,15 +1,17 @@
 <template>
   <div class="confirmation-header">
-    <p class="confirmation-header_title">Please reset your password</p>
+    <p class="confirmation-header_title">
+      {{ $t('Please reset your password') }}
+    </p>
     <p class="confirmation-header_description">
-      Please check your inbox to complete your password reset.
+      {{ $t('Please check your inbox to complete your password reset.') }}
     </p>
     <SfButton
-      data-cy="password-reset_accept"
+      data-cy="svsf-forgottenPasswordRequired-PopUp-accept-button"
       class="sf-button"
       @click="acceptPrompt"
     >
-      OK
+      {{ $t('OK') }}
     </SfButton>
   </div>
 </template>

@@ -1,8 +1,9 @@
 <template>
   <div id="thank-you">
     <SfCallToAction
+      data-cy="svsf-thankYouSection-callToAction"
       class="banner"
-      title="Thank you for your order!"
+      :title="$t('Thank you for your order!')"
       :image="{
         mobile: '/thankyou/bannerM.png',
         desktop: '/thankyou/bannerD.png',
@@ -10,7 +11,7 @@
     >
       <template #description>
         <div class="banner__order-number">
-          <span class="banner__order-title">Order No.:</span>
+          <span class="banner__order-title">{{ $t('Order No.:') }}</span>
           <strong>{{ orderReference }}</strong>
         </div>
       </template>
@@ -18,18 +19,22 @@
     <section class="section">
       <div class="order">
         <SfHeading
-          title="Your Purchase"
+          data-cy="svsf-thankYouSection-purchase-heading"
+          :title="$t('Your Purchase')"
           class="order__heading heading sf-heading--left"
           :level="3"
         />
         <p class="order__paragraph paragraph">
-          You have successfully placed the order. You can check status of your
+          {{
+            $t(`You have successfully placed the order. You can check status of your
           order by using our delivery status feature. You will receive an order
           confirmation e-mail with details of your order and a link to track its
-          progress.
+          progress.`)
+          }}
         </p>
         <div class="order__contact">
           <SfHeading
+            data-cy="svsf-thankYouSection-companyDetails-heading"
             :level="6"
             class="heading sf-heading--left sf-heading--no-underline"
             title="Primary contacts for any questions"
@@ -45,36 +50,48 @@
       <div class="additional-info">
         <div>
           <SfHeading
-            title="Your Account"
+            data-cy="svsf-thankYouSection-account-heading"
+            :title="$t('Your Account')"
             class="heading sf-heading--left"
             :level="3"
           />
           <p class="paragraph">
-            You can log to your account using e-mail and password defined
+            {{
+              $t(`You can log to your account using e-mail and password defined
             earlier. On your account you can edit your profile data, check
-            history of transactions, edit subscription to newsletter.
+            history of transactions, edit subscription to newsletter.`)
+            }}
           </p>
         </div>
         <div>
           <SfHeading
-            title="What can we improve"
+            data-cy="svsf-thankYouSection-improve-heading"
+            :title="$t('What can we improve')"
             class="heading sf-heading--left"
             :level="3"
           />
           <p class="paragraph">
-            Your feedback is important to us. Let us know what we could improve.
+            {{
+              $t(
+                'Your feedback is important to us. Let us know what we could improve.',
+              )
+            }}
           </p>
           <SfButton
+            data-cy="svsf-thankYouSection-feedback-button"
             class="feedback-button color-secondary sf-button--full-width button-size"
           >
-            Send my feedback
+            {{ $t('Send my feedback') }}
           </SfButton>
         </div>
       </div>
     </section>
     <NuxtLink to="/">
-      <SfButton class="back-button color-secondary button-size">
-        Go back to shop
+      <SfButton
+        data-cy="svsf-thankYouSection-back-button"
+        class="back-button color-secondary button-size"
+      >
+        {{ $t('Go back to shop') }}
       </SfButton>
     </NuxtLink>
   </div>

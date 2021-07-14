@@ -3,6 +3,7 @@
     <div class="filters desktop-only">
       <template v-for="facet in facets">
         <SfHeading
+          data-cy="svsf-filters-heading"
           :level="4"
           :title="facet.label"
           class="filters__title sf-heading--left"
@@ -14,9 +15,9 @@
           :key="`${facet.id}-colors`"
         >
           <SfColor
+            :data-cy="`svsf-filters-color-${facet.id}-${option.value}`"
             v-for="option in facet.options"
             :key="`${facet.id}-${option.value}`"
-            :data-cy="`category-filter_color_${option.value}`"
             :color="option.value"
             :selected="isFilterSelected(facet, option)"
             class="filters__color"
@@ -25,9 +26,9 @@
         </div>
         <template v-else>
           <SfFilter
+            :data-cy="`svsf-filters-filter-${facet.id}-${option.value}`"
             v-for="option in facet.options"
             :key="`${facet.id}-${option.value}`"
-            :data-cy="`category-filter_${facet.id}_${option.value}`"
             :label="option.value + `${option.count && ` (${option.count})`}`"
             :selected="isFilterSelected(facet, option)"
             class="filters__item"
@@ -36,26 +37,35 @@
         </template>
       </template>
       <div class="filters__buttons">
-        <SfButton @click="applyFilters" class="sf-button--full-width"
-          >Done</SfButton
+        <SfButton
+          data-cy="svsf-filters-done-button"
+          @click="applyFilters"
+          class="sf-button--full-width"
+          >{{ $t('Done') }}</SfButton
         >
         <SfButton
+          data-cy="svsf-filters-clear-button"
           @click="clearFilters"
           class="sf-button--full-width color-light filters__button-clear"
-          >Clear all
+          >{{ $t('Clear all') }}
         </SfButton>
       </div>
     </div>
-    <SfAccordion class="filters smartphone-only">
+    <SfAccordion
+      data-cy="svsf-filters-mobile-accordion"
+      class="filters smartphone-only"
+    >
       <slot name="categories-mobile" />
       <template v-for="facet in facets">
         <SfAccordionItem
+          data-cy="svsf-filters-mobile-accordion-item"
           :key="`filter-title-${facet.id}`"
           :header="facet.label"
           class="filters__accordion-item"
         >
           <SfFilter
             v-for="option in facet.options"
+            :data-cy="`svsf-filters-mobile-option-${option.id}`"
             :key="`${facet.id}-${option.id}`"
             :label="option.id"
             :selected="isFilterSelected(facet, option)"
@@ -224,6 +234,19 @@ export default {
   }
   &__button-clear {
     margin: var(--spacer-xs) 0 0 0;
+  }
+
+  &.smartphone-only {
+    .sf-accordion-item__content {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .list {
+      &__item {
+        padding: 0 var(--spacer-sm);
+      }
+    }
   }
 }
 </style>

@@ -1,18 +1,22 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
-    <form class="form" @submit.prevent="handleSubmit(onSubmit)">
+    <form
+      data-cy="svsf-profileUpdateForm-form"
+      class="form"
+      @submit.prevent="handleSubmit(onSubmit)"
+    >
       <ValidationProvider
         rules="required"
         v-slot="{ errors }"
         class="form__element form__element--salutation"
       >
         <SfSelect
-          data-cy="login-input_salutation"
+          data-cy="svsf-profileUpdateForm-salutation-select"
           v-model="userForm.salutation"
           :valid="!errors[0] && !fieldErrors.salutation"
           :errorMessage="errors[0] || fieldErrors.salutation"
           name="salutation"
-          label="Salutation"
+          :label="$t('Salutation')"
           class="form__select sf-select--underlined"
         >
           <SfSelectOption
@@ -30,12 +34,12 @@
         class="form__element form__element--first-name form__element--first-name-even"
       >
         <SfInput
-          data-cy="login-input_firstName"
+          data-cy="svsf-profileUpdateForm-firstName-input"
           v-model="userForm.firstName"
           :valid="!errors[0] && !fieldErrors.firstName"
           :errorMessage="errors[0] || fieldErrors.firstName"
           name="first-name"
-          label="First Name"
+          :label="$t('First Name')"
         />
       </ValidationProvider>
       <ValidationProvider
@@ -44,12 +48,12 @@
         class="form__element form__element--last-name form__element--last-name-even"
       >
         <SfInput
-          data-cy="login-input_lastName"
+          data-cy="svsf-profileUpdateForm-lastName-input"
           v-model="userForm.lastName"
           :valid="!errors[0] && !fieldErrors.lastName"
           :errorMessage="errors[0] || fieldErrors.lastName"
           name="last-name"
-          label="Last Name"
+          :label="$t('Last Name')"
         />
       </ValidationProvider>
       <ValidationProvider
@@ -58,27 +62,31 @@
         class="form__element"
       >
         <SfInput
-          data-cy="login-input_email"
+          data-cy="svsf-profileUpdateForm-email-input"
           v-model="userForm.email"
           :valid="!errors[0] && !fieldErrors.email"
           :errorMessage="errors[0]"
           name="email"
-          label="Your email"
+          :label="$t('Your email')"
         />
       </ValidationProvider>
       <div class="form__element">
         <SfButton
-          data-cy="login-btn_submit"
+          data-cy="svsf-profileUpdateForm-submit-button"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Update an account</div>
+            <div>{{ $t('Update an account') }}</div>
           </SfLoader>
         </SfButton>
 
-        <div class="error-log" v-if="formErrors.length > 0">
+        <div
+          data-cy="svsf-profileUpdateForm-error-message"
+          class="error-log"
+          v-if="formErrors.length > 0"
+        >
           <p v-for="error in formErrors" :key="error">
             {{ error }}
           </p>

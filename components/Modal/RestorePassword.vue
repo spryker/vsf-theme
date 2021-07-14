@@ -1,15 +1,19 @@
 <template>
   <div>
     <ValidationObserver v-slot="{ handleSubmit }" key="forgoteen-password">
-      <form class="form" @submit.prevent="handleSubmit(handleRestorePassword)">
+      <form
+        data-cy="svsf-restorePasswordPopUp-form"
+        class="form"
+        @submit.prevent="handleSubmit(handleRestorePassword)"
+      >
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="restore-password-input_password"
+            data-cy="svsf-restorePasswordPopUp-password-input"
             v-model="form.password"
             :valid="!errors[0] && !restoreErrors.field.password"
             :errorMessage="errors[0] || restoreErrors.field.password"
             name="password"
-            label="Password"
+            :label="$t('Password')"
             type="password"
             class="form__element"
             required
@@ -17,40 +21,44 @@
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="restore-password-input_confirm-password"
+            data-cy="svsf-restorePasswordPopUp-confirmPassword-input"
             v-model="form.confirmPassword"
             :valid="!errors[0] && !restoreErrors.field.confirmPassword"
             :errorMessage="errors[0] || restoreErrors.field.confirmPassword"
             name="confirm-password"
-            label="Confirm password"
+            :label="$t('Confirm password')"
             type="password"
             class="form__element"
             required
           />
         </ValidationProvider>
-        <div class="error-log" v-if="restoreErrors.form.length > 0">
+        <div
+          data-cy="svsf-restorePasswordPopUp-error-message"
+          class="error-log"
+          v-if="restoreErrors.form.length > 0"
+        >
           <p v-for="(error, index) in restoreErrors.form" :key="index">
             {{ error }}
           </p>
         </div>
         <SfButton
-          data-cy="restore-password-btn_submit"
+          data-cy="svsf-restorePasswordPopUp-submit-button"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Set new password</div>
+            <div>{{ $t('Set new password') }}</div>
           </SfLoader>
         </SfButton>
       </form>
     </ValidationObserver>
     <div class="bottom">
       <SfButton
-        data-cy="login-btn_sign-up"
+        data-cy="svsf-restorePasswordPopUp-cancel-button"
         class="sf-button--text"
         @click="cancelRestore"
-        >Cancel</SfButton
+        >{{ $t('Cancel') }}</SfButton
       >
     </div>
   </div>
