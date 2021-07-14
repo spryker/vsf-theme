@@ -1,24 +1,46 @@
 <template>
-  <SfModal :visible="isModalOpen" class="modal" @close="toggleModal">
+  <SfModal
+    data-cy="svsf-modal-popUp"
+    :visible="isModalOpen"
+    class="modal"
+    @close="toggleModal"
+  >
     <template #modal-bar>
       <SfBar
+        data-cy="svsf-modal-mobile-bar"
         class="sf-modal__bar smartphone-only"
         :close="true"
-        :title="isLogin ? 'Log in' : 'Sign in'"
+        :title="isLogin ? $t('Log in') : $t('Sign in')"
         @click:close="toggleModal"
       />
     </template>
     <transition name="sf-fade" mode="out-in">
-      <Login v-if="isLogin" />
-      <Registration v-if="isRegistration" />
-      <RegistrationConfirmationLogin v-if="isRegistrationConfirmationLogin" />
+      <Login data-cy="svsf-modal-login" v-if="isLogin" />
+      <Registration data-cy="svsf-modal-registration" v-if="isRegistration" />
+      <RegistrationConfirmationLogin
+        data-cy="svsf-modal-registrationConfirmationLogin"
+        v-if="isRegistrationConfirmationLogin"
+      />
       <RegistrationConfirmationRequired
+        data-cy="svsf-modal-registrationConfirmationRequired"
         v-if="isRegistrationConfirmationRequired"
       />
-      <ForgottenPassword v-if="isForgottenPassword" />
-      <ForgottenPasswordRequired v-if="isForgottenPasswordRequired" />
-      <RestorePassword v-if="isRestorePassword" />
-      <RestorePasswordLogin v-if="isRestorePasswordLogin" />
+      <ForgottenPassword
+        data-cy="svsf-modal-forgottenPassword"
+        v-if="isForgottenPassword"
+      />
+      <ForgottenPasswordRequired
+        data-cy="svsf-modal-forgottenPasswordRequired"
+        v-if="isForgottenPasswordRequired"
+      />
+      <RestorePassword
+        data-cy="svsf-modal-restorePassword"
+        v-if="isRestorePassword"
+      />
+      <RestorePasswordLogin
+        data-cy="svsf-modal-restorePasswordLogin"
+        v-if="isRestorePasswordLogin"
+      />
     </transition>
   </SfModal>
 </template>

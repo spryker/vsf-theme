@@ -1,6 +1,7 @@
 <template>
   <div id="product">
     <SfNotification
+      data-cy="svsf-productSection-error-message"
       :visible="!!cartErrorMessage"
       :message="cartErrorMessage"
       type="danger"
@@ -12,25 +13,36 @@
       </template>
     </SfNotification>
     <SfBreadcrumbs
+      data-cy="svsf-productSection-error-message"
       class="breadcrumbs desktop-only"
       :breadcrumbs="productGetters.getProductBreadcrumbs(products)"
     />
     <div class="product">
       <!-- TODO: replace example images with the getter, wait for SfGallery fix by SFUI team: https://github.com/DivanteLtd/storefront-ui/issues/1074 -->
-      <SfGallery class="product__gallery" :images="productGallery" />
+      <SfGallery
+        data-cy="svsf-productSection-error-message"
+        class="product__gallery"
+        :images="productGallery"
+      />
       <div class="product__info">
         <div class="product__header">
           <SfHeading
+            data-cy="svsf-productSection-heading"
             :title="productGetters.getName(product)"
             :level="3"
             class="sf-heading--no-underline sf-heading--left"
           />
           <template v-for="label in productGetters.getBadgeLabels(products)">
-            <SfBadge :class="label.frontEndReference" :key="label.value">{{
-              label.value
-            }}</SfBadge>
+            <SfBadge
+              data-cy="svsf-productSection-badge"
+              :class="label.frontEndReference"
+              :key="label.value"
+            >
+              {{ label.value }}
+            </SfBadge>
           </template>
           <SfIcon
+            data-cy="svsf-productSection-drag-icon"
             icon="drag"
             size="xl"
             color="gray-secondary"
@@ -39,6 +51,7 @@
         </div>
         <div class="product__price-and-rating">
           <SfPrice
+            data-cy="svsf-productSection-price"
             :regular="
               productGetters.getFormattedPrice(
                 productGetters.getPrice(product).regular,
@@ -52,16 +65,20 @@
           />
           <div>
             <div class="product__rating">
-              <SfRating :score="averageRating" :max="5" />
+              <SfRating
+                data-cy="svsf-productSection-rating"
+                :score="averageRating"
+                :max="5"
+              />
               <a v-if="!!totalReviews" href="#" class="product__count">
                 ({{ totalReviews }})
               </a>
             </div>
             <SfButton
-              data-cy="product-btn_read-all"
+              data-cy="svsf-productSection-readAllReviews-button"
               class="sf-button--text desktop-only"
             >
-              Read all reviews
+              {{ $t('Read all reviews') }}
             </SfButton>
           </div>
         </div>
@@ -69,18 +86,12 @@
           <p class="product__description desktop-only">
             {{ productGetters.getDescription(product) }}
           </p>
-          <SfButton
-            data-cy="product-btn_size-guide"
-            class="sf-button--text desktop-only product__guide"
-          >
-            Size guide
-          </SfButton>
           <template v-for="(optionValue, optionName) in options">
             <template v-if="optionName === 'color'">
               <div class="product__colors desktop-only" :key="optionName">
                 <p class="product__color-label">{{ optionValue.title }}:</p>
                 <SfColor
-                  data-cy="product-color_update"
+                  data-cy="svsf-productSection-color"
                   v-for="(color, i) in optionValue.options"
                   :key="i"
                   :color="color.value"
@@ -91,9 +102,10 @@
             </template>
             <template v-else>
               <SfSelect
+                data-cy="svsf-productSection-filter-select"
                 :value="configuration[optionName]"
                 @input="(option) => updateFilter({ [optionName]: option })"
-                placeholder="Choose an option"
+                :placeholder="$t('Choose an option')"
                 :label="optionValue.title"
                 class="sf-select--underlined"
                 :required="true"
@@ -111,15 +123,15 @@
           </template>
           <template v-if="Object.keys(configuration).length">
             <SfButton
-              data-cy="product-btn_reset-attributes"
+              data-cy="svsf-productSection-resetAttributes-buutton"
               class="sf-button--text"
               @click="resetAttributes()"
             >
-              Reset attributes
+              {{ $t('Reset attributes') }}
             </SfButton>
           </template>
           <SfAddToCart
-            data-cy="product-cart_add"
+            data-cy="svsf-productSection-addToCart"
             :stock="productGetters.getStock(product)"
             v-model="qty"
             :disabled="loading || !isProductConfigured"
@@ -127,25 +139,35 @@
             @click="addItemToCart({ product, quantity: parseInt(qty) })"
             class="product__add-to-cart"
           />
-          <SfButton
+          <!--
+
+            /**
+             * Disabled due to notification system absence
+             * ...
+             */
+
+            <SfButton
+            data-cy="svsf-productSection-saveLater-button"
             v-if="isAuthenticated"
-            data-cy="product-btn_save-later"
             class="sf-button--text desktop-only product__save"
             :disabled="loading || !isProductConfigured"
             @click="addToWishlist({ product })"
           >
-            Save for later
+            {{ $t('Save for later') }}
           </SfButton>
-          <SfButton
-            data-cy="product-btn_add-to-compare"
-            class="sf-button--text desktop-only product__compare"
-          >
-            Add to compare
-          </SfButton>
+          -->
         </div>
-        <SfTabs :openTab="1" class="product__tabs">
-          <SfTab data-cy="product-tab_description" title="Description">
+        <SfTabs
+          data-cy="svsf-productSection-tabs"
+          :openTab="1"
+          class="product__tabs"
+        >
+          <SfTab
+            data-cy="svsf-productSection-properties-tab"
+            :title="$t('Description')"
+          >
             <SfProperty
+              data-cy="svsf-productSection-properties-property-list"
               v-for="(property, i) in properties"
               :key="i"
               :name="property.name"
@@ -153,14 +175,21 @@
               class="product__property"
             >
               <template v-if="property.name === 'Category'" #value>
-                <SfButton class="product__property__button sf-button--text">
+                <SfButton
+                  data-cy="svsf-productSection-property-button"
+                  class="product__property__button sf-button--text"
+                >
                   {{ property.value }}
                 </SfButton>
               </template>
             </SfProperty>
           </SfTab>
-          <SfTab title="Read review" data-cy="product-tab_reviews">
+          <SfTab
+            :title="$t('Read review')"
+            data-cy="svsf-productSection-review-tab"
+          >
             <SfReview
+              data-cy="svsf-productSection-review"
               v-for="review in reviews"
               :key="reviewGetters.getReviewId(review)"
               :author="reviewGetters.getReviewAuthor(review)"
@@ -175,42 +204,47 @@
             />
           </SfTab>
           <SfTab
-            title="Additional Information"
-            data-cy="product-tab_additional"
+            data-cy="svsf-productSection-additional-tab"
+            :title="$t('Additional Information')"
             class="product__additional-info"
           >
-            <div>Additional Information</div>
+            <div>{{ $t('Additional Information') }}</div>
           </SfTab>
         </SfTabs>
       </div>
     </div>
     <RelatedProducts
+      data-cy="svsf-productSection-relatedProducts"
+      v-if="relatedProducts.length"
       :products="relatedProducts"
       :loading="relatedLoading"
-      title="Match it with"
+      :title="$t('Match it with')"
     />
-    <InstagramFeed />
+    <InstagramFeed data-cy="svsf-productSection-instagramFeed" />
     <SfBanner
+      data-cy="svsf-productSection-banner"
       image="/homepage/bannerD.png"
-      subtitle="Fashion to Take Away"
-      title="Download our application to your mobile"
+      :subtitle="$t('Fashion to Take Away')"
+      :title="$t('Download our application to your mobile')"
       class="sf-banner--left desktop-only banner-app"
     >
       <template #call-to-action>
         <div class="banner-app__call-to-action">
           <SfImage
+            data-cy="svsf-productSection-google-image"
             class="banner-app__image"
             src="/homepage/google.png"
             :width="191"
             :height="51"
-            alt="Google Play"
+            :alt="$t('Google Play')"
           />
           <SfImage
+            data-cy="svsf-productSection-store-image"
             class="banner-app__image"
             src="/homepage/apple.png"
             :width="174"
             :height="57"
-            alt="App Store"
+            :alt="$t('App Store')"
           />
         </div>
       </template>
@@ -259,7 +293,7 @@ export default {
   setup(props, context) {
     const qty = ref(1);
     const { id } = context.root.$route.params;
-    const { products, search } = useProduct('products');
+    const { products, search } = useProduct(`product-${id}`);
     const { isCartSidebarOpen } = useUiState();
 
     const {
@@ -340,6 +374,7 @@ export default {
         mobile: { url: img.small },
         desktop: { url: img.normal },
         big: { url: img.big },
+        alt: 'gallery',
       })),
     );
 
@@ -591,8 +626,16 @@ export default {
   }
   &__gallery {
     flex: 1;
+    ::v-deep .sf-image {
+      object-fit: contain;
+      @include for-mobile {
+        width: 100%;
+        height: auto;
+      }
+    }
   }
 }
+
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
 }

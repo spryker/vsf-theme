@@ -1,26 +1,32 @@
 <template>
-  <SfTabs :open-tab="1">
-    <SfTab data-cy="order-history-tab_my-orders" title="My orders">
+  <SfTabs data-cy="svsf-orderHistorySection-orders-tabs" :open-tab="1">
+    <SfTab
+      data-cy="svsf-orderHistorySection-orders-tab"
+      :title="$t('My orders')"
+    >
       <div v-if="currentOrder">
         <SfButton
-          data-cy="order-history-btn_orders"
+          data-cy="svsf-orderHistorySection-allOrders-button"
           class="sf-button--text all-orders"
           @click="showOrdersList()"
-          >All Orders</SfButton
+          >{{ $t('All Orders') }}</SfButton
         >
         <div class="highlighted highlighted--total">
           <SfProperty
-            name="Order ID"
+            data-cy="svsf-orderHistorySection-orderId-property"
+            :name="$t('Order ID')"
             :value="orderGetters.getId(currentOrder)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Date"
+            data-cy="svsf-orderHistorySection-date-property"
+            :name="$t('Date')"
             :value="getDate(currentOrder)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Status"
+            data-cy="svsf-orderHistorySection-status-property"
+            :name="$t('Status')"
             v-for="(status, index) in orderGetters.getOrderStatusExtended(
               currentOrder,
             )"
@@ -29,7 +35,8 @@
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Total"
+            data-cy="svsf-orderHistorySection-total-property"
+            :name="$t('Total')"
             :value="
               orderGetters.getFormattedPriceExtended(
                 orderGetters.getPrice(currentOrder),
@@ -42,6 +49,7 @@
 
         <div class="highlighted highlighted--total">
           <SfProperty
+            data-cy="svsf-orderHistorySection-payment-property"
             v-for="payment in currentOrder.attributes.payments"
             :name="payment.paymentProvider"
             :key="payment.paymentMethod + '-' + payment.amount"
@@ -55,34 +63,68 @@
           />
         </div>
 
-        <SfTable class="products">
+        <SfTable
+          data-cy="svsf-orderHistorySection-table-products"
+          class="products"
+        >
           <SfTableHeading>
-            <SfTableHeader>Image</SfTableHeader>
-            <SfTableHeader class="products__name">Product</SfTableHeader>
-            <SfTableHeader>Quantity</SfTableHeader>
-            <SfTableHeader>Price</SfTableHeader>
+            <SfTableHeader
+              data-cy="svsf-orderHistorySection-table-heading-image"
+            >
+              {{ $t('Image') }}
+            </SfTableHeader>
+            <SfTableHeader
+              data-cy="svsf-orderHistorySection-table-heading-product"
+              class="products__name"
+            >
+              {{ $t('Product') }}
+            </SfTableHeader>
+            <SfTableHeader
+              data-cy="svsf-orderHistorySection-table-heading-quantity"
+            >
+              {{ $t('Quantity') }}
+            </SfTableHeader>
+            <SfTableHeader
+              data-cy="svsf-orderHistorySection-table-heading-price"
+            >
+              {{ $t('Price') }}
+            </SfTableHeader>
           </SfTableHeading>
           <SfTableRow
+            :data-cy="`svsf-orderHistorySection-table-row-${i}`"
             v-for="(item, i) in orderGetters.getItems(currentOrder)"
             :key="i"
           >
-            <SfTableData>
-              <SfLink :link="orderGetters.getItemLink(item)">
+            <SfTableData data-cy="svsf-orderHistorySection-table-cell-images">
+              <SfLink
+                data-cy="svsf-orderHistorySection-product-link"
+                :link="orderGetters.getItemLink(item)"
+              >
                 <img
+                  data-cy="svsf-orderHistorySection-product-image"
                   class="product__image"
                   :src="orderGetters.getItemImage(item)"
                   :alt="orderGetters.getItemName(item)"
                 />
               </SfLink>
             </SfTableData>
-            <SfTableData class="products__name"
-              ><SfLink :link="orderGetters.getItemLink(item)">{{
-                orderGetters.getItemName(item)
-              }}</SfLink></SfTableData
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-name"
+              class="products__name"
             >
-            <SfTableData>{{ orderGetters.getItemQty(item) }}</SfTableData>
-            <SfTableData>
+              <SfLink
+                data-cy="svsf-orderHistorySection-product-link"
+                :link="orderGetters.getItemLink(item)"
+              >
+                {{ orderGetters.getItemName(item) }}
+              </SfLink>
+            </SfTableData>
+            <SfTableData data-cy="svsf-orderHistorySection-table-cell-quantity">
+              {{ orderGetters.getItemQty(item) }}
+            </SfTableData>
+            <SfTableData data-cy="svsf-orderHistorySection-table-cell-price">
               <SfPrice
+                data-cy="svsf-orderHistorySection-product-price"
                 class="sf-product-card__price"
                 :regular="
                   orderGetters.getFormattedPriceExtended(
@@ -103,48 +145,78 @@
       </div>
       <div v-else>
         <p class="message">
-          Check the details and status of your orders in the online store. You
-          can also cancel your order or request a return.
+          {{
+            $t(`Check the details and status of your orders in the online store. You
+          can also cancel your order or request a return.`)
+          }}
         </p>
         <SfLoader :class="{ loader: loading }" :loading="loading">
           <div v-if="orders.length === 0" class="no-orders">
-            <p class="no-orders__title">You currently have no orders</p>
+            <p class="no-orders__title">
+              {{ $t('You currently have no orders') }}
+            </p>
             <SfButton
-              data-cy="order-history-btn_start"
+              data-cy="svsf-orderHistorySection-startShopping-button"
               class="no-orders__button"
-              >Start shopping</SfButton
+              >{{ $t('Start shopping') }}</SfButton
             >
           </div>
         </SfLoader>
-        <SfTable v-if="orders.length && !loading" class="orders">
+        <SfTable
+          data-cy="svsf-orderHistorySection-table-orders"
+          v-if="orders.length && !loading"
+          class="orders"
+        >
           <SfTableHeading>
             <SfTableHeader
+              :data-cy="`svsf-orderHistorySection-table-header-orders-${tableHeader}`"
               v-for="tableHeader in tableHeaders"
               :key="tableHeader"
               >{{ tableHeader }}</SfTableHeader
             >
             <SfTableHeader class="orders__element--right">
-              <span class="smartphone-only">Download</span>
+              <span class="smartphone-only">{{ $t('Download') }}</span>
               <SfButton
-                data-cy="order-history-btn_download-all"
+                data-cy="svsf-orderHistorySection-orders-download-button"
                 class="desktop-only sf-button--text orders__download-all"
                 @click="downloadOrders()"
               >
-                Download all
+                {{ $t('Download all') }}
               </SfButton>
             </SfTableHeader>
           </SfTableHeading>
-          <SfTableRow v-for="order in orders" :key="orderGetters.getId(order)">
-            <SfTableData>{{ orderGetters.getId(order) }}</SfTableData>
-            <SfTableData>{{ getDate(order) }}</SfTableData>
-            <SfTableData>{{
-              orderGetters.getFormattedPriceExtended(
-                orderGetters.getPrice(order),
-                orderGetters.getOrderCurrency(order),
-              )
-            }}</SfTableData>
-            <SfTableData>
+          <SfTableRow
+            :data-cy="`svsf-orderHistorySection-table-row-orders-${orderGetters.getId(
+              order,
+            )}`"
+            v-for="order in orders"
+            :key="orderGetters.getId(order)"
+          >
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-orders-id"
+            >
+              {{ orderGetters.getId(order) }}</SfTableData
+            >
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-orders-date"
+            >
+              {{ getDate(order) }}</SfTableData
+            >
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-orders-price"
+            >
+              {{
+                orderGetters.getFormattedPriceExtended(
+                  orderGetters.getPrice(order),
+                  orderGetters.getOrderCurrency(order),
+                )
+              }}
+            </SfTableData>
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-orders-status"
+            >
               <div
+                :data-cy="`svsf-orderHistorySection-orders-status-text-${index}`"
                 :class="getStatusTextClass(order)"
                 v-for="(status, index) in orderGetters.getOrderStatusExtended(
                   order,
@@ -154,31 +226,38 @@
                 {{ status }}
               </div>
             </SfTableData>
-            <SfTableData class="orders__view orders__element--right">
+            <SfTableData
+              data-cy="svsf-orderHistorySection-table-cell-orders-actions"
+              class="orders__view orders__element--right"
+            >
               <SfButton
-                data-cy="order-history-btn_download"
+                data-cy="svsf-orderHistorySection-order-download-button"
                 class="sf-button--text smartphone-only"
                 @click="downloadOrder(order)"
-                >Download</SfButton
+                >{{ $t('Download') }}</SfButton
               >
               <SfButton
-                data-cy="order-history-btn_view"
+                data-cy="svsf-orderHistorySection-order-details-button"
                 class="sf-button--text desktop-only"
                 @click="showOrderDetails(order)"
-                >View details</SfButton
+                >{{ $t('View details') }}</SfButton
               >
             </SfTableData>
           </SfTableRow>
         </SfTable>
       </div>
     </SfTab>
-    <SfTab data-cy="order-history-tab_returns" title="Returns">
+    <SfTab :title="$t('Returns')">
       <p class="message">
-        This feature is not implemented yet! Please take a look at<br />
-        <SfLink class="message__link" href="#"
+        {{ $t('This feature is not implemented yet! Please take a look at')
+        }}<br />
+        <SfLink
+          data-cy="svsf-orderHistorySection-issues-link"
+          class="message__link"
+          href="#"
           >https://github.com/DivanteLtd/vue-storefront/issues</SfLink
         >
-        for our Roadmap!
+        {{ $t('for our Roadmap!') }}
       </p>
     </SfTab>
   </SfTabs>

@@ -3,6 +3,313 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-next.1...@spryker-vsf/theme@0.2.0) (2021-07-14)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-next.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-next.0...@spryker-vsf/theme@0.2.0-next.1) (2021-07-13)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.15...@spryker-vsf/theme@0.2.0-next.0) (2021-07-12)
+
+
+### Bug Fixes
+
+* **theme:** fallback syntax of the API env variable ([f377fe4](https://github.com/spryker/vsf-monorepo/commit/f377fe4b2c8c6f8ac19397791726b43e68bce3e8))
+* **theme:** fix changelogs ([4b5e7c2](https://github.com/spryker/vsf-monorepo/commit/4b5e7c2e69c26386f56f68cf5fe5a5413111f967))
+* **theme:** use env variable for API url ([4ded6bc](https://github.com/spryker/vsf-monorepo/commit/4ded6bc9cf3e815c88bdfffb54d02a7d752b706b))
+
+
+
+
+
+
+# [0.2.0-dev.15](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.14...@spryker-vsf/theme@0.2.0-dev.15) (2021-07-09)
+
+
+### Bug Fixes
+
+* **theme:** fix nuxt config ([89984ef](https://github.com/spryker/vsf-monorepo/commit/89984ef34b13b3fbfc8578932f8cdb36d49c3e0b))
+
+
+
+
+
+# [0.2.0-dev.14](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.13...@spryker-vsf/theme@0.2.0-dev.14) (2021-07-09)
+
+
+### Bug Fixes
+
+* **theme:** "save for later" button on PDP ([ac2e0e3](https://github.com/spryker/vsf-monorepo/commit/ac2e0e374f108b7713f1c9a4ecc0eb5bc23ce370))
+* **theme:** make image flexible on mobile ([7ed50bb](https://github.com/spryker/vsf-monorepo/commit/7ed50bbf54a32e3a4a10cfa3e4261aa8f5ef3d39))
+* **theme:** minor fix ([b8fbdc6](https://github.com/spryker/vsf-monorepo/commit/b8fbdc6c34b13972558ec2a9eb16d615dfd3bcb9))
+
+
+
+
+
+# [0.2.0-dev.13](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.12...@spryker-vsf/theme@0.2.0-dev.13) (2021-07-07)
+
+
+### Bug Fixes
+
+* **theme:** hide heart icon for guest users ([e7a2fa2](https://github.com/spryker/vsf-monorepo/commit/e7a2fa28ea4d7b019a8081ecbed89dfe20d3d866))
+
+
+
+
+
+# [0.2.0-dev.12](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.11...@spryker-vsf/theme@0.2.0-dev.12) (2021-07-07)
+
+
+### Bug Fixes
+
+* **theme:** fix locale selector ([8ee1e6c](https://github.com/spryker/vsf-monorepo/commit/8ee1e6c7f278d2a804d2d99af064d8b1ddf42e8c))
+
+
+
+
+
+# [0.2.0-dev.11](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.10...@spryker-vsf/theme@0.2.0-dev.11) (2021-07-07)
+
+
+### Bug Fixes
+
+* **theme:** remove product from cart on "save for later" action ([cd07514](https://github.com/spryker/vsf-monorepo/commit/cd0751431cc6463decc9719785693d22ab464f2b))
+
+
+
+
+
+# [0.2.0-dev.10](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.9...@spryker-vsf/theme@0.2.0-dev.10) (2021-07-07)
+
+
+### Bug Fixes
+
+* **theme:** fix ui bugs ([2d05650](https://github.com/spryker/vsf-monorepo/commit/2d05650e78a32c264cb14a9016a781799c05483f))
+* **theme:** minor fix ([19be77e](https://github.com/spryker/vsf-monorepo/commit/19be77ebb951dd207b91212a8940cc7bc7605368))
+
+
+
+
+
+# [0.2.0-dev.9](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.8...@spryker-vsf/theme@0.2.0-dev.9) (2021-07-07)
+
+
+### Bug Fixes
+
+* **theme:** correct property name and add input same password validation ([0d77906](https://github.com/spryker/vsf-monorepo/commit/0d7790671784e2f60762dbe1a1e2ede057e34d7a))
+* **theme:** revert accidentally removed v-for directive ([8b156e7](https://github.com/spryker/vsf-monorepo/commit/8b156e7cd24ec4c1a55b35cbf4d3c95bb548e262))
+
+
+
+
+
+# [0.2.0-dev.8](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.7...@spryker-vsf/theme@0.2.0-dev.8) (2021-07-05)
+
+
+### Bug Fixes
+
+* **theme:** use product id as cacheId property ([a2eac57](https://github.com/spryker/vsf-monorepo/commit/a2eac57c1023db36d0d62d044c0e945ab0999fb8))
+
+
+
+
+
+# [0.2.0-dev.7](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.6...@spryker-vsf/theme@0.2.0-dev.7) (2021-07-05)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-dev.6](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.5...@spryker-vsf/theme@0.2.0-dev.6) (2021-07-05)
+
+
+### Bug Fixes
+
+* **theme:** correct heading ([02488f3](https://github.com/spryker/vsf-monorepo/commit/02488f3f3e0fb364d433939ed2d26525bf73b55b))
+
+
+
+
+
+# [0.2.0-dev.5](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.4...@spryker-vsf/theme@0.2.0-dev.5) (2021-07-05)
+
+
+### Bug Fixes
+
+* **theme:** make flex item shrink properly ([c659f3b](https://github.com/spryker/vsf-monorepo/commit/c659f3bafcccb1515929004ed9c2eb8dc46cd320))
+
+
+
+
+
+# [0.2.0-dev.4](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.3...@spryker-vsf/theme@0.2.0-dev.4) (2021-07-02)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.2...@spryker-vsf/theme@0.2.0-dev.3) (2021-06-29)
+
+
+### Bug Fixes
+
+* **theme:** correct condition ([1d5e9f3](https://github.com/spryker/vsf-monorepo/commit/1d5e9f3dc890baeb248ec6a7219240535afc397b))
+
+
+
+
+
+# [0.2.0-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.1...@spryker-vsf/theme@0.2.0-dev.2) (2021-06-23)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.0...@spryker-vsf/theme@0.2.0-dev.1) (2021-06-22)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.2.0-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.11...@spryker-vsf/theme@0.2.0-dev.0) (2021-06-18)
+
+
+### Bug Fixes
+
+* **oidc-client:** config fixes ([64b541a](https://github.com/spryker/vsf-monorepo/commit/64b541a54145ac15057369dec8ea61a27029c407))
+* **oidc-client:** fix config and component ([f000817](https://github.com/spryker/vsf-monorepo/commit/f000817351c0d1ff97c8010678e5ddb04dbad176))
+* **oidc-client:** minor fix ([139eb00](https://github.com/spryker/vsf-monorepo/commit/139eb008443a3a037f0a26c30caaf328c98da8b3))
+* **theme:** fix product image cover. remove unused links ([a82c03e](https://github.com/spryker/vsf-monorepo/commit/a82c03e1a279082f0b677b3c68a2fe34b64bb3e7))
+* **theme:** fix sidebar overflow and paddings ([3328a09](https://github.com/spryker/vsf-monorepo/commit/3328a09654822b8c3af98f586028247456c66194))
+
+
+### Features
+
+* **oidc:** oidc module implementation ([ad4baba](https://github.com/spryker/vsf-monorepo/commit/ad4baba031826932ac29ab2728ba0f8e9b178c3f))
+* **oidc:** redirect for login method, typos fixes ([231c620](https://github.com/spryker/vsf-monorepo/commit/231c62054f694ebb58d14d10f8887d4d490dcbf9))
+* **oidc-client:** init ([e13210c](https://github.com/spryker/vsf-monorepo/commit/e13210c1f83deb98c055eabfd57cfad623f41f85))
+* **theme:** add e2e markers for category, myAccount, product pages ([e34ff47](https://github.com/spryker/vsf-monorepo/commit/e34ff47207ce71495d20b70827466861d59ad115))
+* **theme:** add e2e tags for modals ([66c5b8a](https://github.com/spryker/vsf-monorepo/commit/66c5b8a7bbcad1ef2616a9a549e175c9c2e1df58))
+* **theme:** addd e2e markers for the account page ([f1c2fd8](https://github.com/spryker/vsf-monorepo/commit/f1c2fd81e1306d8064571cd857a95515c4de3e3c))
+* **theme:** tags for e2e tests ([d871e49](https://github.com/spryker/vsf-monorepo/commit/d871e493517f34f8fc50544e35454b1eb88dcb76))
+
+
+
+
+
+## [0.1.4-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3...@spryker-vsf/theme@0.1.4-next.0) (2021-06-07)
+
+* **theme:** fallback syntax of the API env variable ([f377fe4](https://github.com/spryker/vsf-monorepo/commit/f377fe4b2c8c6f8ac19397791726b43e68bce3e8))
+* **theme:** use env variable for API url ([4ded6bc](https://github.com/spryker/vsf-monorepo/commit/4ded6bc9cf3e815c88bdfffb54d02a7d752b706b))
+
+
+
+
+
+## [0.1.3-dev.11](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.10...@spryker-vsf/theme@0.1.3-dev.11) (2021-06-17)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.10](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.9...@spryker-vsf/theme@0.1.3-dev.10) (2021-06-17)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.9](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.8...@spryker-vsf/theme@0.1.3-dev.9) (2021-06-15)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.8](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.7...@spryker-vsf/theme@0.1.3-dev.8) (2021-06-04)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.7](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.6...@spryker-vsf/theme@0.1.3-dev.7) (2021-05-26)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.6](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.5...@spryker-vsf/theme@0.1.3-dev.6) (2021-05-25)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.5](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.4...@spryker-vsf/theme@0.1.3-dev.5) (2021-05-25)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3-dev.4](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.3...@spryker-vsf/theme@0.1.3-dev.4) (2021-05-20)
+
+
+### Bug Fixes
+
+* **theme:** fix login modal appearing ([a2a376b](https://github.com/spryker/vsf-monorepo/commit/a2a376b7d1baeb14da124e8a976993d3c781f79f))
+* **theme:** load Raleway font only once ([65098d0](https://github.com/spryker/vsf-monorepo/commit/65098d01182294cb8fb2b65a829b30a58dc89645))
+* **theme:** v-model typo ([91597fc](https://github.com/spryker/vsf-monorepo/commit/91597fcedca0e524e90054e9f0df412304b3931e))
+
+
+
+
+
+## [0.1.3-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.2...@spryker-vsf/theme@0.1.3-dev.3) (2021-05-12)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.1.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.2...@spryker-vsf/theme@0.1.3) (2021-05-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
 ## [0.1.3-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.3-dev.1...@spryker-vsf/theme@0.1.3-dev.2) (2021-05-07)
 
 
@@ -36,7 +343,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.1.3-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.2...@spryker-vsf/theme@0.1.3-next.0) (2021-05-07)
 
 **Note:** Version bump only for package @spryker-vsf/theme
-
 
 
 
@@ -105,7 +411,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.1.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.1.1-dev.4...@spryker-vsf/theme@0.1.1) (2021-03-10)
 
 **Note:** Version bump only for package @spryker-vsf/theme
-
 
 
 

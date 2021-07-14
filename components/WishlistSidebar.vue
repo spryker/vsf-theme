@@ -1,34 +1,47 @@
 <template>
   <div id="wishlist">
     <SfSidebar
+      data-cy="svsf-wishlistSidebar-sidebar"
       :visible="isWishlistSidebarOpen"
       :button="false"
-      title="My Wishlist"
+      :title="$t('My Wishlist')"
       @close="toggleWishlistSidebar"
       class="sidebar sf-sidebar--right"
     >
       <template #title>
         <div class="heading__wrapper">
-          <SfHeading :level="3" title="My wishlist" class="sf-heading--left" />
+          <SfHeading
+            data-cy="svsf-wishlistSidebar-heading"
+            :level="3"
+            :title="$t('My wishlist')"
+            class="sf-heading--left"
+          />
           <SfButton
-            data-cy="wishlist-sidebar-button_toggle-wishlist"
+            data-cy="svsf-wishlistSidebar-togglePopUp-button"
             class="heading__close-button sf-button--pure"
             aria-label="Wishlist sidebar close button"
             @click="toggleWishlistSidebar"
           >
-            <SfIcon icon="cross" size="14px" color="gray-primary" />
+            <SfIcon
+              data-cy="svsf-wishlistSidebar-togglePopUp-icon"
+              icon="cross"
+              size="14px"
+              color="gray-primary"
+            />
           </SfButton>
         </div>
       </template>
       <transition name="fade" mode="out-in">
         <div v-if="totalItems" class="my-wishlist" key="my-wishlist">
           <div class="my-wishlist__total-items">
-            Total items: <strong>{{ totalItems }}</strong>
+            {{ $t('Total items:') }} <strong>{{ totalItems }}</strong>
           </div>
           <div class="collected-product-list">
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
-                data-cy="collected-product-wishlist-sidebar"
+                :data-cy="`svsf-wishlistSidebar-products-${wishlistGetters.getItemSku(
+                  product,
+                )}`"
                 v-for="product in products"
                 :key="wishlistGetters.getItemSku(product)"
                 :image="wishlistGetters.getItemImage(product)"
@@ -52,6 +65,7 @@
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
+                      :data-cy="`svsf-wishlistSidebar-configuration-property-${attribute.value}`"
                       v-for="attribute in wishlistGetters.getItemAttributes(
                         product,
                       )"
@@ -64,10 +78,11 @@
                 <template #input="{}">&nbsp;</template>
                 <template #actions>
                   <SfButton
+                    data-cy="svsf-wishlistSidebar-addToCart-button"
                     class="sf-button--text desktop-only"
                     @click="addItem({ product, quantity: 1 })"
                   >
-                    Add to the cart
+                    {{ $t('Add to the cart') }}
                   </SfButton>
                 </template>
               </SfCollectedProduct>
@@ -75,10 +90,13 @@
           </div>
           <div class="sidebar-bottom">
             <SfProperty
+              data-cy="svsf-wishlistSidebar-totalPrice-property"
               class="sf-property--full-width my-wishlist__total-price"
             >
               <template #name>
-                <span class="my-wishlist__total-price-label">Total price:</span>
+                <span class="my-wishlist__total-price-label">
+                  {{ $t('Total price:') }}
+                </span>
               </template>
               <template #value>
                 <SfPrice
@@ -90,22 +108,28 @@
         </div>
         <div v-else class="empty-wishlist" key="empty-wishlist">
           <div class="empty-wishlist__banner">
-            <img
-              src="@storefront-ui/shared/icons/empty_cart.svg"
-              alt
-              class="empty-wishlist__icon"
+            <SfImage
+              data-cy="svsf-wishlistSidebar-emptyCart-image"
+              alt="Empty bag"
+              class="empty-wishlist__image"
+              src="/icons/empty-cart.svg"
             />
-            <h3 class="empty-wishlist__label">Your bag is empty</h3>
-            <p class="empty-wishlist__description">
-              Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in.
-            </p>
+            <SfHeading
+              data-cy="svsf-wishlistSidebar-emptyCart-heading"
+              :title="$t('Your bag is empty')"
+              :level="2"
+              class="empty-cart__heading"
+              :description="
+                $t(`Looks like you haven’t added any items to the bag yet. Start
+              shopping to fill it in.`)
+              "
+            />
           </div>
           <SfButton
-            data-cy="wishlist-sidebar-btn_start-shopping"
+            data-cy="svsf-wishlistSidebar-closePopUp-button"
             @click="toggleWishlistSidebar"
             class="sf-button--full-width color-secondary"
-            >Start shopping</SfButton
+            >{{ $t('Start shopping') }}</SfButton
           >
         </div>
       </transition>
@@ -121,6 +145,7 @@ import {
   SfProperty,
   SfPrice,
   SfCollectedProduct,
+  SfImage,
 } from '@storefront-ui/vue';
 import { computed } from '@vue/composition-api';
 import {
@@ -129,7 +154,6 @@ import {
   useCart,
   wishlistGetters,
 } from '@spryker-vsf/composables';
-import { onSSR } from '@vue-storefront/core';
 import { useUiState } from '~/composables';
 
 export default {
@@ -142,6 +166,7 @@ export default {
     SfProperty,
     SfPrice,
     SfCollectedProduct,
+    SfImage,
   },
   setup() {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
@@ -198,8 +223,13 @@ export default {
   }
 }
 .empty-wishlist {
+  --heading-description-margin: 0 0 var(--spacer-xl) 0;
+  --heading-title-margin: 0 0 var(--spacer-xl) 0;
+  --heading-title-color: var(--c-primary);
+  --heading-title-font-weight: var(--font-weight--semibold);
   display: flex;
   flex: 1;
+  align-items: center;
   flex-direction: column;
   &__banner {
     flex: 1;
@@ -208,23 +238,10 @@ export default {
     justify-content: center;
     flex-direction: column;
   }
-  &__label,
-  &__description {
-    text-align: center;
+  &__heading {
+    padding: 0 var(--spacer-base);
   }
-  &__label {
-    margin: var(--spacer-2xl) 0 0 0;
-    font: var(--font-weight--normal) var(--font-size--xl) / 1.6
-      var(--font-family--secondary);
-    color: var(--c-primary);
-  }
-  &__description {
-    margin: var(--spacer-sm) 0 0 0;
-    font: var(--font-weight--normal) var(--font-size--base) / 1.6
-      var(--font-family--primary);
-    color: var(--c-link);
-  }
-  &__icon {
+  &__image {
     width: 18.125rem;
     height: 12.3125rem;
     margin-left: 50%;

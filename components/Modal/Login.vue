@@ -1,64 +1,72 @@
 <template>
   <div>
     <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
-      <form class="form" @submit.prevent="handleSubmit(handleLogin)">
+      <form
+        class="form"
+        data-cy="svsf-loginPopUp-form"
+        @submit.prevent="handleSubmit(handleLogin)"
+      >
         <ValidationProvider rules="required|email" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_email"
+            data-cy="svsf-loginPopUp-email-input"
             v-model="form.username"
             :valid="!errors[0] && loginErrors.form.length === 0"
             :errorMessage="errors[0]"
             name="email"
-            label="Your email"
+            :label="$t('Your email')"
             class="form__element"
             required
           />
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_password"
+            data-cy="svsf-loginPopUp-password-input"
             v-model="form.password"
             :valid="!errors[0] && loginErrors.form.length === 0"
             :errorMessage="errors[0]"
             name="password"
-            label="Password"
+            :label="$t('Password')"
             type="password"
             class="form__element"
             required
           />
         </ValidationProvider>
-        <div class="error-log" v-if="loginErrors.form.length > 0">
+        <div
+          data-cy="svsf-loginPopUp-password-error-message"
+          class="error-log"
+          v-if="loginErrors.form.length > 0"
+        >
           <p v-for="(error, index) in loginErrors.form" :key="index">
             {{ error }}
           </p>
         </div>
         <SfButton
-          data-cy="login-btn_submit"
+          data-cy="svsf-loginPopUp-submit-button"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Login</div>
+            <div>{{ $t('Login') }}</div>
           </SfLoader>
         </SfButton>
       </form>
     </ValidationObserver>
     <div class="action">
       <SfButton
-        data-cy="login-btn_forgot-password"
+        data-cy="svsf-loginPopUp-forgottenPasswordPopUp-button"
         class="sf-button--text"
         @click="toggleForgottenPassword"
-        >Forgotten password?</SfButton
+        >{{ $t('Forgotten password?') }}</SfButton
       >
     </div>
     <div class="bottom">
-      <p class="bottom__paragraph">Don't have an account yet?</p>
+      <p class="bottom__paragraph">{{ $t('Don not have an account yet?') }}</p>
       <SfButton
-        data-cy="login-btn_sign-up"
+        data-cy="svsf-loginPopUp-registrationPopUp-button"
         class="sf-button--text"
         @click="toggleRegistration"
-        >Register today</SfButton
+        >{{ $t('Register today') }}</SfButton
       >
     </div>
   </div>

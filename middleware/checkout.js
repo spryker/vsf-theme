@@ -1,42 +1,41 @@
-const canEnterPersonalDetails = cart =>
-  !cart.customerId && cart.lineItems.length > 0;
+import STEPS from '~/helpers/checkout-steps.js';
 
-const canEnterShipping = cart => cart.customerEmail || cart.customerId;
+export default async ({ $vsf, app }) => {
+  const {
+    api,
+    config: { sprykerAuth },
+  } = $vsf.$spryker;
+  const checkoutPath = '/checkout';
+  const fullPath = app.context.route.fullPath;
+  const currentPath = fullPath.split(`${checkoutPath}/`)[1];
+  const { included } = await (sprykerAuth.getCartId()
+    ? api.getCart({
+        accessToken: sprykerAuth.getAccessToken(),
+        cartId: sprykerAuth.getCartId(),
+      })
+    : api.getGuestCart({
+        anonymousId: sprykerAuth.getAnonymousUserId(),
+        cartId: sprykerAuth.getGuestCartId(),
+      }));
+  const isCartFulfilled = included?.length;
+  const isCoreCheckoutPage =
+    fullPath.endsWith(checkoutPath) || fullPath.endsWith(`${checkoutPath}/`);
+  const personalDetailsPath = 'personal-details';
+  const shippingPath = 'shipping';
 
-const canEnterPayment = cart => cart.shippingInfo && cart.shippingAddress;
+  if (currentPath in STEPS && !isCartFulfilled) {
+    app.context.redirect('/');
+  }
 
-const canEnterReview = cart => Boolean(cart.billingAddress);
+  if (
+    currentPath === personalDetailsPath &&
+    sprykerAuth.getCartId() &&
+    isCartFulfilled
+  ) {
+    app.context.redirect(`${checkoutPath}/${shippingPath}`);
+  }
 
-export default async ({ app }) => {
-  const currentPath = app.context.route.fullPath.split("/checkout/")[1];
-
-  if (!currentPath) return;
-
-  // TODO: Get active cart
-  const activeCart = null;
-
-  if (!activeCart) return;
-
-  switch (currentPath) {
-    case "personal-details":
-      if (!canEnterPersonalDetails(activeCart)) {
-        app.context.redirect("/checkout/shipping");
-      }
-      break;
-    case "shipping":
-      if (!canEnterShipping(activeCart)) {
-        app.context.redirect("/");
-      }
-      break;
-    case "payment":
-      if (!canEnterPayment(activeCart)) {
-        app.context.redirect("/");
-      }
-      break;
-    case "order-review":
-      if (!canEnterReview(activeCart)) {
-        app.context.redirect("/");
-      }
-      break;
+  if (isCoreCheckoutPage) {
+    app.context.redirect(`${checkoutPath}/${personalDetailsPath}`);
   }
 };

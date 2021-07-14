@@ -1,6 +1,7 @@
 <template>
   <div id="category">
     <SfNotification
+      data-cy="svsf-categorySection-error-message"
       :visible="!!cartErrorMessage"
       :message="cartErrorMessage"
       type="danger"
@@ -8,43 +9,54 @@
       @click:close="cartErrorMessage = null"
     >
       <template #icon>
-        <SfIcon icon="error" color="white" />
+        <SfIcon
+          data-cy="svsf-categorySection-error-icon"
+          icon="error"
+          color="white"
+        />
       </template>
     </SfNotification>
     <SfBreadcrumbs
+      data-cy="svsf-categorySection-breadcrumbs"
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
     />
     <div class="navbar section">
       <div class="navbar__aside desktop-only">
-        <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
+        <SfHeading
+          data-cy="svsf-categorySection-categories-heading"
+          :level="3"
+          :title="$t('Categories')"
+          class="navbar__title"
+        />
       </div>
       <div class="navbar__main">
         <SfButton
-          data-cy="category-btn_filters"
+          data-cy="svsf-categorySection-filters-button"
           class="sf-button--text navbar__filters-button"
           aria-label="Filters"
           @click="toggleFilterSidebar"
         >
           <SfIcon
+            data-cy="svsf-categorySection-filter-icon"
             size="18px"
             color="dark-secondary"
             icon="filter"
             class="navbar__filters-icon"
-            data-cy="category-icon_"
           />
           {{ $t('Filters') }}
         </SfButton>
         <div class="navbar__sort desktop-only">
           <span class="navbar__label">{{ $t('Sort by') }}:</span>
           <SfSelect
+            data-cy="svsf-categorySection-sortBy-select"
             class="navbar__select"
             :value="sortBy.selected"
             placeholder="select sorting"
             @input="th.changeSorting"
-            data-cy="category-select_sortBy"
           >
             <SfSelectOption
+              :data-cy="``"
               v-for="option in sortBy.options"
               :key="option.id"
               :value="option.id"
@@ -58,15 +70,17 @@
           <span class="navbar__label desktop-only"
             >{{ $t('Products found') }}:
           </span>
-          <span class="desktop-only">{{ pagination.totalItems }}</span>
-          <span class="navbar__label smartphone-only"
-            >{{ pagination.totalItems }} Items</span
-          >
+          <span class="desktop-only">
+            {{ pagination.totalItems }}
+          </span>
+          <span class="navbar__label smartphone-only">
+            {{ pagination.totalItems }} {{ $t('Items') }}
+          </span>
         </div>
         <div class="navbar__view">
           <span class="navbar__view-label desktop-only">{{ $t('View') }}</span>
           <SfIcon
-            data-cy="category-icon_grid-view"
+            data-cy="svsf-categorySection-tiles-icon"
             class="navbar__view-icon"
             :color="isCategoryGridView ? 'black' : 'dark-secondary'"
             icon="tiles"
@@ -77,7 +91,7 @@
             @click="toggleCategoryGridView"
           />
           <SfIcon
-            data-cy="category-icon_list-view"
+            data-cy="svsf-categorySection-list-icon"
             class="navbar__view-icon"
             :color="!isCategoryGridView ? 'black' : 'dark-secondary'"
             icon="list"
@@ -95,39 +109,48 @@
       <div class="sidebar desktop-only">
         <SfLoader :class="{ loading }" :loading="loading">
           <SfAccordion
+            data-cy="svsf-categorySection-categoryTree-accordion"
             :open="categoryTree.selectedCategories"
             :showChevron="true"
           >
             <SfAccordionItem
+              data-cy="svsf-categorySection-categoryTree-accordion-item"
               v-for="(cat, i) in categoryTree && categoryTree.items"
               :key="i"
               :header="cat.label"
               :isOpen="cat.isCurrent"
             >
-              <SfList class="list">
-                <SfListItem class="list__item">
+              <SfList
+                data-cy="svsf-categorySection-categoryTree-list"
+                class="list"
+              >
+                <SfListItem
+                  data-cy="svsf-categorySection-categoryTree-list-item"
+                  class="list__item"
+                >
                   <SfMenuItem
+                    data-cy="svsf-categorySection-categoryTree-menu-item"
                     :count="cat.count || ''"
-                    :data-cy="`category-link_subcategory_${cat.slug}`"
                     :label="cat.label"
                   >
                     <template #label>
                       <nuxt-link
                         :to="localePath(th.getCatLink(cat))"
                         :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
-                        >All</nuxt-link
+                        >{{ $t('All') }}</nuxt-link
                       >
                     </template>
                   </SfMenuItem>
                 </SfListItem>
                 <SfListItem
+                  data-cy="svsf-categorySection-categoryTree-list-item"
                   class="list__item"
                   v-for="(subCat, j) in cat.items"
                   :key="j"
                 >
                   <SfMenuItem
+                    data-cy="svsf-categorySection-categoryTree-menu-item"
                     :count="subCat.count || ''"
-                    :data-cy="`category-link_subcategory_${subCat.slug}`"
                     :label="subCat.label"
                   >
                     <template #label="{ label }">
@@ -153,7 +176,7 @@
           class="products__grid"
         >
           <SfProductCard
-            data-cy="category-product-card"
+            data-cy="svsf-categorySection-product"
             v-for="(product, i) in products"
             :key="productGetters.getSlug(product)"
             :style="{ '--index': i }"
@@ -207,7 +230,7 @@
           class="products__list"
         >
           <SfProductCardHorizontal
-            data-cy="category-product-cart_wishlist"
+            data-cy="svsf-categorySection-product-horizontal"
             v-for="(product, i) in products"
             :key="productGetters.getSlug(product)"
             :style="{ '--index': i }"
@@ -226,6 +249,12 @@
             "
             :max-rating="5"
             :score-rating="3"
+            :wishlistIcon="
+              productGetters.getProductConcretes(product).length === 1 &&
+              isAuthenticated
+                ? 'heart'
+                : false
+            "
             :is-on-wishlist="false"
             class="products__product-card-horizontal"
             @click:wishlist="addToWishlist(product)"
@@ -239,8 +268,8 @@
           />
         </transition-group>
         <SfPagination
+          data-cy="svsf-categorySection-pagination"
           v-if="!loading"
-          data-cy="category-pagination"
           v-show="pagination.totalPages > 1"
           class="products__pagination"
           :current="pagination.currentPage"
@@ -252,8 +281,11 @@
           v-show="pagination.totalPages > 1"
           class="products__pagination__options desktop-only"
         >
-          <span class="products__pagination__label">Show on page:</span>
+          <span class="products__pagination__label">{{
+            $t('Show on page:')
+          }}</span>
           <SfSelect
+            data-cy="svsf-categorySection-itemsPerPage-select"
             class="products__items-per-page"
             :value="String(pagination.itemsPerPage)"
             @input="th.changeItemsPerPage"
@@ -272,49 +304,72 @@
       </div>
     </div>
     <SfSidebar
+      data-cy="svsf-categorySection-filtersSidebar-sidebar"
+      class="sidebar"
       :visible="isFilterSidebarOpen"
-      title="Filters"
+      :title="$t('Filters')"
       @close="toggleFilterSidebar"
     >
-      <Filters :facets="facets">
+      <Filters
+        data-cy="svsf-categorySection-filtersSidebar-filters"
+        :facets="facets"
+      >
         <template #categories-mobile>
-          <SfAccordionItem header="Category" class="filters__accordion-item">
-            <SfAccordion class="categories">
+          <SfAccordionItem
+            data-cy="svsf-categorySection-filtersSidebar-accordion-item"
+            :header="$t('Category')"
+            class="filters__accordion-item"
+          >
+            <SfAccordion
+              data-cy="svsf-categorySection-filtersSidebar-category-accordion"
+              class="categories"
+            >
               <SfAccordionItem
+                :data-cy="`svsf-categorySection-filtersSidebar-category-accordion-item-${cat.slug}`"
                 v-for="cat in categoryTree && categoryTree.items"
                 :key="`category-${cat.slug}`"
                 :header="cat.label"
               >
-                <SfList class="list">
-                  <SfListItem class="list__item">
+                <SfList
+                  data-cy="svsf-categorySection-filtersSidebar-list"
+                  class="list"
+                >
+                  <SfListItem
+                    data-cy="svsf-categorySection-filtersSidebar-list-item-label"
+                    class="list__item"
+                  >
                     <SfMenuItem
+                      data-cy="svsf-categorySection-filtersSidebar-menu-item-label"
                       :count="cat.coun || ''"
-                      :data-cy="`category-link_subcategory_${cat.slug}`"
                       :label="cat.label"
                       icon=""
                     >
                       <template #label>
                         <nuxt-link
+                          data-cy="svsf-categorySection-filtersSidebar-category-link"
                           :to="localePath(th.getCatLink(cat))"
                           :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
-                          >All</nuxt-link
                         >
+                          {{ $t('All') }}
+                        </nuxt-link>
                       </template>
                     </SfMenuItem>
                   </SfListItem>
                   <SfListItem
+                    :data-cy="`svsf-categorySection-filtersSidebar-list-item-${subCat.slug}`"
                     class="list__item"
                     v-for="subCat in cat.items"
                     :key="`subcat-${subCat.slug}`"
                   >
                     <SfMenuItem
+                      :data-cy="`svsf-categorySection-filtersSidebar-menu-item-${subCat.slug}`"
                       :count="subCat.count || ''"
-                      :data-cy="`category-link_subcategory_${subCat.slug}`"
                       :label="subCat.label"
                       icon=""
                     >
                       <template #label="{ label }">
                         <nuxt-link
+                          :data-cy="`svsf-categorySection-filtersSidebar-menu-item-${subCat.slug}-link`"
                           :to="localePath(th.getCatLink(subCat))"
                           :class="
                             subCat.isCurrent ? 'sidebar--cat-selected' : ''
@@ -351,7 +406,13 @@ import {
   SfLoader,
   SfNotification,
 } from '@storefront-ui/vue';
-import { computed, onMounted, ref, watch } from '@vue/composition-api';
+import {
+  computed,
+  onMounted,
+  ref,
+  watch,
+  onUnmounted,
+} from '@vue/composition-api';
 import {
   useCart,
   useFacet,
@@ -372,7 +433,7 @@ export default {
     const th = useUiHelpers();
     const uiState = useUiState();
     const { isAuthenticated } = useUser();
-    const { cart, addItem: addToCart, isOnCart } = useCart();
+    const { cart, addItem: addToCart, isInCart } = useCart();
     const { addItem: addToWishlist } = useWishlist();
     const { result, search, loading } = useFacet(
       th.getFacetsFromURL().categorySlug,
@@ -414,12 +475,16 @@ export default {
       await search(th.getFacetsFromURL());
     });
 
+    onUnmounted(() => {
+      uiState.isFilterSidebarOpen.value && uiState.toggleFilterSidebar();
+    });
+
     const isProductInCart = (product) => {
       if (!product?.concreteProducts?.[0]) {
         return;
       }
 
-      isOnCart({ product: product.concreteProducts[0] });
+      isInCart({ product: product.concreteProducts[0] });
     };
 
     const isAddToCartVisible = (product) => {
@@ -613,10 +678,25 @@ export default {
   display: flex;
 }
 .sidebar {
-  flex: 0 0 20%;
-  padding: var(--spacer-sm);
-  border: 1px solid var(--c-light);
-  border-width: 0 1px 0 0;
+  @include for-desktop {
+    flex: 0 0 20%;
+    padding: var(--spacer-sm);
+    border: 1px solid var(--c-light);
+    border-width: 0 1px 0 0;
+  }
+
+  .sf-loader__overlay {
+    position: static;
+  }
+
+  &::v-deep .sf-sidebar__content {
+    @include for-mobile {
+      height: calc(
+        100% - var(--bottom-navigation-height, 3.75rem) -
+          var(--bar-height, 3.125rem)
+      );
+    }
+  }
 }
 .sidebar-filters {
   --sidebar-title-display: none;
@@ -658,6 +738,7 @@ export default {
   &__product-card {
     --product-card-add-button-transform: translate3d(0, 30%, 0);
     flex: 1 1 50%;
+    min-width: 0;
     @include for-desktop {
       --product-card-padding: var(--spacer-sm);
       flex: 1 1 25%;

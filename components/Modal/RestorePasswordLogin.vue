@@ -1,10 +1,14 @@
 <template>
   <div>
     <div class="message-header">
-      <p class="message-header_title">Your password has been reset</p>
-      <p class="message-header_description">Please login to your account</p>
+      <p class="message-header_title">
+        {{ $t('Your password has been reset') }}
+      </p>
+      <p class="message-header_description">
+        {{ $t('Please login to your account') }}
+      </p>
     </div>
-    <Login />
+    <Login data-cy="svsf-restorePasswordLoginPopUp-login-popUp" />
   </div>
 </template>
 <script>

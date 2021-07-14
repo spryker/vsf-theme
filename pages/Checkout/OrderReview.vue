@@ -168,7 +168,7 @@
                   color="#BEBFC4"
                   role="button"
                   class="button"
-                  @click="removeCartItem({ product })"
+                  @click="removeCartItem(product)"
                 />
               </SfTableData>
             </SfTableRow>
@@ -316,6 +316,8 @@ export default {
   setup(props, context) {
     context.emit('showReview');
     context.emit('changeStep', 3);
+    const billingSameAsShipping = ref(false);
+    const terms = ref(false);
     const {
       cart,
       removeItem,
@@ -323,11 +325,6 @@ export default {
       loading: cartLoading,
       load: loadCart,
     } = useCart();
-    if (!cart.value?.products?.length) {
-      context.root.$router.push('/');
-    }
-    const billingSameAsShipping = ref(false);
-    const terms = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const vouchers = computed(() => cartGetters.getCoupons(cart.value));
@@ -350,8 +347,8 @@ export default {
       },
     } = useVSFContext();
 
-    const removeCartItem = async (params) => {
-      await removeItem(params);
+    const removeCartItem = async (product) => {
+      await removeItem(product);
 
       if (!products.value.length) {
         context.root.$router.push('/');

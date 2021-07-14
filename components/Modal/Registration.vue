@@ -3,29 +3,30 @@
     <ValidationObserver v-slot="{ handleSubmit }" key="sign-up">
       <form
         class="form"
+        data-cy="svsf-registrationPopUp-form"
         @submit.prevent="handleSubmit(handleRegister)"
         autocomplete="off"
       >
         <ValidationProvider rules="required|email" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_email"
+            data-cy="svsf-registrationPopUp-email-input"
             v-model="form.email"
             :valid="!errors[0] && !registerErrors.field.email"
             :errorMessage="errors[0] || registerErrors.field.email"
             name="email"
-            label="Your email"
+            :label="$t('Your email')"
             class="form__element"
             required
           />
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfSelect
-            data-cy="login-input_salutation"
+            data-cy="svsf-registrationPopUp-salutation-select"
             v-model="form.salutation"
             :valid="!errors[0] && !registerErrors.field.salutation"
             :errorMessage="errors[0] || registerErrors.field.salutation"
             name="salutation"
-            label="Salutation"
+            :label="$t('Salutation')"
             class="form__element form__select sf-select--underlined"
             required
           >
@@ -40,36 +41,36 @@
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_firstName"
+            data-cy="svsf-registrationPopUp-firstName-input"
             v-model="form.firstName"
             :valid="!errors[0] && !registerErrors.field.firstName"
             :errorMessage="errors[0] || registerErrors.field.firstName"
             name="first-name"
-            label="First Name"
+            :label="$t('First Name')"
             class="form__element"
             required
           />
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_lastName"
+            data-cy="svsf-registrationPopUp-lastName-input"
             v-model="form.lastName"
             :valid="!errors[0] && !registerErrors.field.lastName"
             :errorMessage="errors[0] || registerErrors.field.lastName"
             name="last-name"
-            label="Last Name"
+            :label="$t('Last Name')"
             class="form__element"
             required
           />
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_password"
+            data-cy="svsf-registrationPopUp-password-input"
             v-model="form.password"
             :valid="!errors[0] && !registerErrors.field.password"
             :errorMessage="errors[0] || registerErrors.field.password"
             name="password"
-            label="Password"
+            :label="$t('Password')"
             type="password"
             class="form__element"
             required
@@ -77,12 +78,12 @@
         </ValidationProvider>
         <ValidationProvider rules="required" v-slot="{ errors }">
           <SfInput
-            data-cy="login-input_confirm-password"
+            data-cy="svsf-registrationPopUp-confirmPassword-input"
             v-model="form.confirmPassword"
             :valid="!errors[0] && !registerErrors.field.confirmPassword"
             :errorMessage="errors[0] || registerErrors.field.confirmPassword"
             name="confirm-password"
-            label="Confirm password"
+            :label="$t('Confirm password')"
             type="password"
             class="form__element"
             required
@@ -93,38 +94,43 @@
           v-slot="{ errors }"
         >
           <SfCheckbox
+            data-cy="svsf-registrationPopUp-acceptedTerms-checkbox"
             v-model="acceptedTerms"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="accepted-terms"
-            label="Accept Terms"
+            :label="$t('Accept Terms')"
             class="form__element"
           />
         </ValidationProvider>
-        <div class="error-log" v-if="registerErrors.form.length > 0">
+        <div
+          data-cy="svsf-registrationPopUp-error-message"
+          class="error-log"
+          v-if="registerErrors.form.length > 0"
+        >
           <p v-for="(error, index) in registerErrors.form" :key="index">
             {{ error }}
           </p>
         </div>
         <SfButton
-          data-cy="login-btn_submit"
+          data-cy="svsf-registrationPopUp-submit-button"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Create an account</div>
+            <div>{{ $t('Create an account') }}</div>
           </SfLoader>
         </SfButton>
       </form>
     </ValidationObserver>
     <div class="action">
-      or
+      {{ $t(' or') }}
       <SfButton
-        data-cy="login-btn_login-into-account"
+        data-cy="svsf-registrationPopUp-loginPopUp-button"
         class="sf-button--text"
         @click="toggleLogin"
-        >login in to your account</SfButton
+        >{{ $t('login in to your account') }}</SfButton
       >
     </div>
   </div>

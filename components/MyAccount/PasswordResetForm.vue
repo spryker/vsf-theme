@@ -1,19 +1,23 @@
 <template>
   <ValidationObserver ref="validationObserver" v-slot="{ handleSubmit }">
-    <form class="form" @submit.prevent="handleSubmit(onSubmit)">
+    <form
+      data-cy="svsf-passwordResetForm-form"
+      class="form"
+      @submit.prevent="handleSubmit(onSubmit)"
+    >
       <ValidationProvider
         rules="required"
         v-slot="{ errors }"
         class="form__element"
       >
         <SfInput
-          data-cy="password-input_old"
+          data-cy="svsf-passwordResetForm-input-password"
           v-model="passwordForm.password"
           :valid="!errors[0] && !fieldErrors.password"
           :errorMessage="errors[0]"
           type="password"
           name="password"
-          label="Old password"
+          :label="$t('Old password')"
         />
       </ValidationProvider>
       <ValidationProvider
@@ -22,13 +26,13 @@
         class="form__element"
       >
         <SfInput
-          data-cy="password-input_new"
+          data-cy="svsf-passwordResetForm-input-newPassword"
           v-model="passwordForm.newPassword"
           :valid="!errors[0] && !fieldErrors.newPassword"
           :errorMessage="errors[0]"
           type="password"
           name="newPassword"
-          label="New password"
+          :label="$t('New password')"
         />
       </ValidationProvider>
       <ValidationProvider
@@ -37,28 +41,36 @@
         class="form__element"
       >
         <SfInput
-          data-cy="password-input_confirm"
+          data-cy="svsf-passwordResetForm-input-confirmPassword"
           v-model="passwordForm.confirmPassword"
-          :valid="!errors[0] && !fieldErrors.confirmPassword"
+          :valid="
+            passwordForm.newPassword === passwordForm.confirmPassword &&
+            !errors[0] &&
+            !fieldErrors.confirmPassword
+          "
           :errorMessage="errors[0]"
           type="password"
           name="confirmPassword"
-          label="Confirm password"
+          :label="$t('Confirm password')"
         />
       </ValidationProvider>
       <div class="form__element">
         <SfButton
-          data-cy="password-btn_submit"
+          data-cy="svsf-passwordResetForm-button-submit"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Update an account</div>
+            <div>{{ $t('Update an account') }}</div>
           </SfLoader>
         </SfButton>
 
-        <div class="error-log" v-if="formErrors.length > 0">
+        <div
+          data-cy="svsf-passwordResetForm-error-message"
+          class="error-log"
+          v-if="formErrors.length > 0"
+        >
           <p v-for="error in formErrors" :key="error">
             {{ error }}
           </p>
@@ -104,7 +116,8 @@ export default {
 
     const onSubmit = async () => {
       setFormErrors([], {});
-      await changePassword(passwordForm.value);
+      const { password, newPassword } = passwordForm.value;
+      await changePassword({ current: password, new: newPassword });
       if (error.value.changePassword) {
         const { tag, value } = error.value.changePassword;
         tag === 'validate'

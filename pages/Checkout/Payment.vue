@@ -2,891 +2,554 @@
   <div>
     <SfHeading
       :level="3"
-      title="Billing address"
+      :title="$t('Payment')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfLoader :class="{ 'payment-loader': loading }" :loading="loading">
-      <ValidationObserver v-slot="{ invalid }" key="add-address">
-        <div class="form">
-          <SfCheckbox
-            v-model="sameAsShipping"
-            label="Copy address data from shipping"
-            name="copyShippingAddress"
-            class="form__element form__action-button--margin-bottom"
-            @input="afterModifiedAddress"
-          />
 
-          <UserBillingAddresses
-            v-if="
-              isAuthenticated && billingAddresses && billingAddresses.length
-            "
-            :setAsDefault="setAsDefault"
-            :billingAddresses="billingAddresses"
-            :currentAddressId="currentAddressId"
-            @setCurrentAddress="setCurrentExistedAddress($event)"
-            @changeSetAsDefault="setAsDefault = $event"
-          />
-
-          <div class="form__element">
-            <SfButton
-              v-if="
-                isAuthenticated && billingAddresses && billingAddresses.length
-              "
-              class="form__action-button form__action-button--margin-bottom"
-              type="submit"
-              @click.native="toggleNewAddress"
-            >
-              Add new address
-            </SfButton>
+    <SfAccordion first-open class="accordion smartphone-only">
+      <SfAccordionItem :header="$t('Personal Details')">
+        <div class="accordion__item">
+          <div class="accordion__content">
+            <p class="content">
+              {{ personalDetails.firstName }} {{ personalDetails.lastName
+              }}<br />
+            </p>
+            <p class="content">
+              {{ personalDetails.email }}
+            </p>
           </div>
-
-          <template v-if="canAddNewAddress">
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element"
-            >
-              <SfSelect
-                data-cy="billing-details-input_salutation"
-                v-model="newAddress.salutation"
-                name="salutation"
-                label="Salutation"
-                class="form__select sf-select--underlined"
-                @input="afterModifiedAddress"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                required
-              >
-                <SfSelectOption
-                  v-for="salutation in salutations"
-                  :key="salutation"
-                  :value="salutation"
-                  :name="salutation"
-                  >{{ salutation }}</SfSelectOption
-                >
-              </SfSelect>
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element form__element--half"
-            >
-              <SfInput
-                data-cy="billing-details-input_firstName"
-                v-model="newAddress.firstName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                label="First name"
-                name="firstName"
-                @input="afterModifiedAddress"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element form__element--half form__element--half-even"
-            >
-              <SfInput
-                data-cy="billing-details-input_lastName"
-                v-model="newAddress.lastName"
-                label="Last name"
-                name="lastName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                @input="afterModifiedAddress"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element"
-            >
-              <SfInput
-                data-cy="billing-details-input_address1"
-                v-model="newAddress.address1"
-                label="Street name"
-                name="address1"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                @input="afterModifiedAddress"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element form__element--half"
-            >
-              <SfInput
-                data-cy="billing-details-input_apartmanet"
-                v-model="newAddress.address2"
-                label="House/address2 number"
-                name="address2"
-                @input="afterModifiedAddress"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element form__element--half form__element--half-even"
-            >
-              <SfInput
-                data-cy="billing-details-input_zipcode"
-                v-model="newAddress.zipCode"
-                label="Zip-code"
-                name="zipCode"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                @input="afterModifiedAddress"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required|min:3"
-              v-slot="{ errors }"
-              class="form__element form__element--half"
-            >
-              <SfInput
-                data-cy="billing-details-input_city"
-                v-model="newAddress.city"
-                label="City"
-                name="city"
-                @input="afterModifiedAddress"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                required
-              />
-            </ValidationProvider>
-
-            <ValidationProvider
-              rules="required"
-              v-slot="{ errors }"
-              class="form__element form__element--half form__element--half-even"
-            >
-              <SfSelect
-                data-cy="shipping-details-select_country"
-                v-model="newAddress.country"
-                label="Country"
-                name="country"
-                class="form__select sf-select--underlined"
-                @input="afterModifiedAddress"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                required
-              >
-                <SfSelectOption
-                  v-for="{ name, code } in countries"
-                  :key="code"
-                  :value="code"
-                  :name="name"
-                >
-                  {{ name }}
-                </SfSelectOption>
-              </SfSelect>
-            </ValidationProvider>
-
-            <SfInput
-              data-cy="billing-details-input_phone"
-              v-model="newAddress.phone"
-              label="Phone number"
-              name="phone"
-              class="form__element"
-              @input="afterModifiedAddress"
-            />
-          </template>
+          <SfButton
+            v-if="!isAuthenticated"
+            data-cy="svsf-checkoutPaymentSection-personalEdit-button"
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('edit', 'personal-details')"
+            >{{ $t('Edit') }}</SfButton
+          >
         </div>
-        <SfHeading
-          v-if="canContinueToReview"
-          :level="3"
-          title="Payment methods"
-          class="sf-heading--left sf-heading--no-underline title"
+      </SfAccordionItem>
+      <SfAccordionItem v-if="shippingDetails" :header="$t('Shipping details')">
+        <div class="accordion__item">
+          <div class="accordion__content">
+            <p class="content">
+              <span class="content__label">{{ shippingName }}</span
+              ><br />
+              {{ shippingDetails.address1 }}
+              {{ shippingDetails.address2 }}, {{ shippingDetails.zipCode
+              }}<br />
+              {{ shippingDetails.city }}, {{ shippingDetails.country }}
+            </p>
+            <p class="content">{{ shippingDetails.phone }}</p>
+          </div>
+          <SfButton
+            data-cy="svsf-checkoutPaymentSection-shippingEdit-button"
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('edit', 'shipping')"
+            >Edit</SfButton
+          >
+        </div>
+      </SfAccordionItem>
+      <SfAccordionItem v-if="billingDetails" :header="$t('Billing address')">
+        <div class="accordion__item">
+          <div class="accordion__content">
+            <p v-if="billingSameAsShipping" class="content">
+              {{ $t('Same as shipping address') }}
+            </p>
+            <template v-else>
+              <p class="content">
+                {{ billingDetails.address1 }}
+                {{ billingDetails.address2 }}, {{ billingDetails.zipCode
+                }}<br />
+                {{ billingDetails.city }}, {{ billingDetails.country }}
+              </p>
+              <p class="content">{{ billingDetails.phone }}</p>
+            </template>
+          </div>
+          <SfButton
+            data-cy="svsf-checkoutPaymentSection-billingEdit-button"
+            class="sf-button--text color-secondary accordion__edit"
+            @click="$emit('edit', 'billing')"
+            >{{ $t('Edit') }}</SfButton
+          >
+        </div>
+      </SfAccordionItem>
+    </SfAccordion>
+
+    <SfTable
+      data-cy="svsf-checkoutPaymentSection-overview-table"
+      class="sf-table--bordered table desktop-only"
+    >
+      <SfTableHeading class="table__row">
+        <SfTableHeader class="table__header table__image">{{
+          $t('Item')
+        }}</SfTableHeader>
+        <SfTableHeader
+          v-for="tableHeader in tableHeaders"
+          :key="tableHeader"
+          class="table__header"
+          :class="{ table__description: tableHeader === 'Description' }"
+        >
+          {{ tableHeader }}
+        </SfTableHeader>
+      </SfTableHeading>
+      <SfTableRow
+        v-for="(product, index) in products"
+        :key="index"
+        class="table__row"
+      >
+        <SfTableData class="table__image">
+          <SfImage
+            :src="cartGetters.getItemImage(product)"
+            :alt="cartGetters.getItemName(product)"
+          />
+        </SfTableData>
+        <SfTableData class="table__data table__data--left table__description">
+          <div class="product-title">
+            {{ cartGetters.getItemName(product) }}
+          </div>
+          <div class="product-sku">
+            {{ cartGetters.getItemSku(product) }}
+          </div>
+          <div class="product-attributes">
+            <div
+              v-for="(value, key) in cartGetters.getItemAttributes(product)"
+              :key="key"
+            >
+              {{ key }}: <strong>{{ value }}</strong>
+            </div>
+          </div>
+        </SfTableData>
+        <SfTableData class="table__data">{{
+          cartGetters.getItemQty(product)
+        }}</SfTableData>
+        <SfTableData class="table__data price">
+          <SfPrice
+            :regular="
+              cartGetters.getItemPrice(product).regular !== 0
+                ? cartGetters.getFormattedPrice(
+                    cartGetters.getItemPrice(product).regular,
+                  )
+                : ''
+            "
+            :special="
+              cartGetters.getFormattedPrice(
+                cartGetters.getItemPrice(product).special,
+              )
+            "
+            class="product-price"
+          />
+          <SfIcon
+            data-cy="svsf-checkoutPaymentSection-removeFromCart-icon"
+            icon="cross"
+            size="xxs"
+            color="#BEBFC4"
+            role="button"
+            class="button table__remove"
+            @click="removeCartItem({ product })"
+          />
+        </SfTableData>
+      </SfTableRow>
+    </SfTable>
+    <div class="summary">
+      <div class="summary__group">
+        <div class="summary__total">
+          <SfProperty
+            data-cy="svsf-checkoutPaymentSection-subtotal-property-list"
+            :name="$t('Subtotal')"
+            :value="cartGetters.getFormattedPrice(totals.subtotal)"
+            class="sf-property--full-width property"
+          />
+          <SfProperty
+            data-cy="svsf-checkoutPaymentSection-shipping-property-list"
+            :name="$t('Shipping')"
+            :value="cartGetters.getFormattedPrice(shippingPrice)"
+            class="sf-property--full-width property"
+          />
+          <SfProperty
+            data-cy="svsf-checkoutPaymentSection-tax-property-list"
+            v-if="totals.tax"
+            :name="$t('Tax')"
+            :value="cartGetters.getFormattedPrice(totals.tax)"
+            class="sf-property--full-width property"
+          />
+        </div>
+
+        <template v-if="vouchers.length">
+          <SfProperty
+            data-cy="svsf-checkoutPaymentSection-voucher-property-list"
+            :name="$t('Voucher')"
+            v-for="voucher in vouchers"
+            :key="voucher.id"
+            :value="`- ${cartGetters.getFormattedPrice(voucher.value)}`"
+            class="sf-property--full-width sf-property--small property"
+          >
+            <template #name>
+              <span class="sf-property__name">
+                {{ $t('Voucher') }} ({{ voucher.name }})
+              </span>
+            </template>
+          </SfProperty>
+        </template>
+        <template v-if="giftCards.length">
+          <SfProperty
+            data-cy="svsf-checkoutPaymentSection-giftCard-property-list"
+            :name="$t('Gift Card')"
+            v-for="giftCard in giftCards"
+            :key="giftCard.id"
+            :value="`- ${cartGetters.getFormattedPrice(giftCard.value)}`"
+            class="sf-property--full-width sf-property--small property"
+          >
+            <template #name>
+              <span class="sf-property__name">
+                Gift Card ({{ giftCard.name }})
+              </span>
+            </template>
+          </SfProperty>
+        </template>
+
+        <SfDivider class="divider" />
+
+        <SfProperty
+          data-cy="svsf-checkoutPaymentSection-totalPrice-property-list"
+          :name="$t('Total price')"
+          :value="totalPrice"
+          class="sf-property--full-width sf-property--large summary__property-total"
         />
 
-        <div class="form">
-          <template v-if="canContinueToReview">
-            <div class="form__element payment-methods">
-              <ValidationProvider rules="required">
-                <SfRadio
-                  data-cy="payment-radio_paymentMethod"
-                  v-for="item in paymentMethods"
-                  :key="userCheckoutBillingGetters.getMethodName(item)"
-                  v-model="chosenPaymentMethod"
-                  :label="userCheckoutBillingGetters.getMethodName(item)"
-                  :value="userCheckoutBillingGetters.getMethodName(item)"
-                  name="paymentMethod"
-                  class="form__radio payment-method"
-                  @input="paymentChangeHandler(item)"
-                >
-                  <template #label>
-                    <div class="sf-radio__label">
-                      {{ userCheckoutBillingGetters.getMethodName(item) }}
-                    </div>
-                  </template>
-                </SfRadio>
-              </ValidationProvider>
-            </div>
+        <VsfPaymentProvider
+          data-cy="svsf-checkoutPaymentSection-vsfPaymentProvider"
+          @status="isPaymentReady = $event"
+        />
 
-            <div
-              class="form form--payment"
-              v-if="chosenPaymentMethod === paymentMethodNames.creditCard"
-            >
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element"
-              >
-                <SfSelect
-                  data-cy="payment-details-input_cardType"
-                  v-model="paymentDetails['dummyPaymentCreditCard.cardType']"
-                  name="cardType"
-                  label="Card Type"
-                  class="form__select sf-select--underlined"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                >
-                  <SfSelectOption
-                    v-for="cardType in cardTypes"
-                    :key="cardType.name"
-                    :value="cardType.name"
-                    :name="cardType.name"
-                  >
-                    {{ cardType.label }}
-                  </SfSelectOption>
-                </SfSelect>
-              </ValidationProvider>
+        <SfDivider class="divider payment-divider" />
 
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element"
-              >
-                <SfInput
-                  data-cy="payment-details-input_cardNumber"
-                  v-model="paymentDetails['dummyPaymentCreditCard.cardNumber']"
-                  label="Card Number"
-                  name="cardNumber"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                />
-              </ValidationProvider>
-
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element"
-              >
-                <SfInput
-                  data-cy="payment-details-input_nameOnCard"
-                  v-model="paymentDetails['dummyPaymentCreditCard.nameOnCard']"
-                  label="Name on the Card"
-                  name="nameOnCard"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                />
-              </ValidationProvider>
-
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element form__element--half"
-              >
-                <SfSelect
-                  data-cy="payment-details-input_cardExpiresMonth"
-                  v-model="
-                    paymentDetails['dummyPaymentCreditCard.cardExpiresMonth']
-                  "
-                  name="cardExpiresMonth"
-                  label="Expiration Month"
-                  class="form__select sf-select--underlined"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                >
-                  <SfSelectOption
-                    v-for="month in months"
-                    :key="month"
-                    :value="month"
-                    :name="month"
-                  >
-                    {{ month }}
-                  </SfSelectOption>
-                </SfSelect>
-              </ValidationProvider>
-
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element form__element--half form__element--half-even"
-              >
-                <SfSelect
-                  data-cy="payment-details-input_cardExpiresYear"
-                  v-model="
-                    paymentDetails['dummyPaymentCreditCard.cardExpiresYear']
-                  "
-                  name="cardExpiresYear"
-                  label="Expiration Year"
-                  class="form__select sf-select--underlined"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                >
-                  <SfSelectOption
-                    v-for="year in years"
-                    :key="year"
-                    :value="year"
-                    :name="year"
-                  >
-                    {{ year }}
-                  </SfSelectOption>
-                </SfSelect>
-              </ValidationProvider>
-
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element"
-              >
-                <SfInput
-                  data-cy="payment-details-input_cardSecurityCode"
-                  v-model="
-                    paymentDetails['dummyPaymentCreditCard.cardSecurityCode']
-                  "
-                  label="Code CVC"
-                  name="cardSecurityCode"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                />
-              </ValidationProvider>
-            </div>
-
-            <div
-              class="form form--payment"
-              v-if="chosenPaymentMethod === paymentMethodNames.invoice"
-            >
-              <ValidationProvider
-                rules="required"
-                v-slot="{ errors }"
-                class="form__element"
-              >
-                <SfInput
-                  data-cy="payment-details-input_dateOfBirth"
-                  v-model="paymentDetails['dummyPaymentInvoice.dateOfBirth']"
-                  label="Date of Birth"
-                  name="dateOfBirth"
-                  :valid="!errors[0]"
-                  :errorMessage="errors[0]"
-                  required
-                />
-              </ValidationProvider>
+        <SfCheckbox
+          data-cy="svsf-checkoutPaymentSection-terms-checkbox"
+          v-model="terms"
+          name="terms"
+          class="summary__terms"
+        >
+          <template #label>
+            <div class="sf-checkbox__label">
+              {{ $t('I agree to') }}
+              <SfLink href="#"> {{ $t('Terms and conditions') }}</SfLink>
             </div>
           </template>
-          <div class="form__action">
-            <NuxtLink to="/checkout/shipping">
-              <SfButton
-                data-cy="payment-btn_go-back"
-                class="color-secondary form__back-button"
-                >Go back
-              </SfButton>
-            </NuxtLink>
+        </SfCheckbox>
 
+        <div class="summary__action">
+          <SfButton
+            data-cy="svsf-checkoutPaymentSection-makeOrder-button"
+            :disabled="
+              loading ||
+              !isPaymentReady ||
+              !terms ||
+              checkoutDataComposablesLoading
+            "
+            class="summary__action-button"
+            @click="processOrder"
+          >
+            {{ $t('Make an order') }}
+          </SfButton>
+          <NuxtLink to="/checkout/billing">
             <SfButton
-              class="form__action-button"
-              @click="$emit('nextStep')"
-              v-if="canContinueToReview"
-              :disabled="invalid"
+              data-cy="svsf-checkoutPaymentSection-back-button"
+              class="smartphone-only sf-button sf-button--underlined summary__back-button"
             >
-              Review my order
+              {{ $t('Go back') }}
             </SfButton>
-            <SfButton
-              class="form__action-button"
-              @click="saveBillingDetails"
-              :disabled="invalid"
-              v-else
-            >
-              Select payment method
-            </SfButton>
-          </div>
+          </NuxtLink>
         </div>
-      </ValidationObserver>
-    </SfLoader>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {
   SfHeading,
-  SfInput,
-  SfButton,
-  SfSelect,
-  SfRadio,
-  SfImage,
+  SfTable,
   SfCheckbox,
-  SfLoader,
+  SfButton,
+  SfDivider,
+  SfImage,
+  SfIcon,
+  SfPrice,
+  SfProperty,
+  SfAccordion,
+  SfLink,
 } from '@storefront-ui/vue';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { getCountries, getCountryCodes } from '~/helpers/user-address';
-import { getSalutation } from '~/helpers/user';
-import { ref, watch, onMounted, computed } from '@vue/composition-api';
+import { ref, computed, inject, onBeforeMount } from '@vue/composition-api';
 import {
   useUser,
-  useCheckoutShipping,
-  useCheckoutBilling,
-  userCheckoutBillingGetters,
+  useCustomerPersonalDetails,
+  useShipping,
+  useShippingProvider,
+  useBilling,
+  usePaymentProvider,
   useCart,
+  cartGetters,
+  useMakeOrder,
+  shippingProviderGetters,
 } from '@spryker-vsf/composables';
 
 export default {
-  name: 'Payment',
+  name: 'ReviewOrder',
   components: {
     SfHeading,
-    SfInput,
-    SfButton,
-    SfSelect,
-    SfRadio,
+    SfTable,
     SfCheckbox,
-    SfLoader,
-    ValidationProvider,
-    ValidationObserver,
-    UserBillingAddresses: () =>
-      import('~/components/Checkout/UserBillingAddresses'),
+    SfButton,
+    SfDivider,
+    SfImage,
+    SfIcon,
+    SfPrice,
+    SfProperty,
+    SfAccordion,
+    SfLink,
+    VsfPaymentProvider: () =>
+      import('~/components/Checkout/VsfPaymentProvider'),
   },
   setup(props, context) {
-    context.emit('changeStep', 2);
-    const { cart } = useCart();
-    if (!cart.value?.products?.length) {
-      context.root.$router.push('/');
-    }
-    
-    const { shippingDetails } = useCheckoutShipping('checkout');
-    const {
-      load: loadBilling,
+    const { cart, load: loadCart, removeItem } = useCart();
+    const { order, make, loading } = useMakeOrder();
+
+    const isPaymentReady = ref(false);
+    const terms = ref(false);
+
+    const customerPersonalDetails = useCustomerPersonalDetails();
+    const billing = useBilling();
+    const shipping = useShipping();
+    const shippingProvider = useShippingProvider();
+    const paymentProvider = usePaymentProvider();
+
+    const checkoutDataComposables = [
+      customerPersonalDetails,
       billing,
-      loading,
-      billingDetails,
-      chosenPaymentDetails,
-      paymentDetails,
-    } = useCheckoutBilling('checkout');
-    const { isAuthenticated } = useUser();
-    const sameAsShipping = ref(false);
-    const canAddNewAddress = ref(true);
-    const addressIsModified = ref(false);
-    const currentAddressId = ref('');
-    const setAsDefault = ref(false);
-    const isBillingAddressCompleted = ref(false);
-    const countries = ref([{ name: '', code: '' }, ...getCountries()]);
-    const salutations = ref(['', ...getSalutation()]);
-    const codes = getCountryCodes();
-    const newAddress = ref({});
-    const chosenPaymentMethod = ref('');
-    const cardTypes = ref([
-      { name: '', label: '' },
-      { name: 'visa', label: 'Visa' },
-      { name: 'masterCard', label: 'Master Card' },
-    ]);
-    const months = [
-      '',
-      ...Array.from({ length: 12 }, (item, i) => {
-        return ('0' + (i + 1)).slice(-2);
-      }),
+      shipping,
+      shippingProvider,
+      paymentProvider,
     ];
-    const currentYear = new Date().getFullYear();
-    const years = ref([
-      '',
-      ...Array(currentYear + 6 - (currentYear + 1))
-        .fill()
-        .map((_, idx) => currentYear + idx),
-    ]);
-    const paymentMethodNames = {
-      creditCard: 'Credit Card',
-      invoice: 'Invoice',
-    };
 
-    extend('min', {
-      validate(value, args) {
-        return value.length >= args.length;
-      },
-      params: ['length'],
+    onBeforeMount(async () => {
+      await Promise.all([
+        loadCart(),
+        ...checkoutDataComposables.map((composable) => composable.load()),
+      ]);
     });
 
-    const mapAbstractAddressToIntegrationAddress = (address) => ({
-      ...address,
-      iso2Code: address.iso2Code ?? address.country,
-      country: codes[address.iso2Code] ?? codes[address.country],
-      id: address.id,
-      sameAsShipping: sameAsShipping.value,
-      isDefaultBilling: setAsDefault.value,
-      isDefaultShipping: false,
-    });
-
-    const setCurrentAddress = (addressId) => {
-      const billingAddresses = userCheckoutBillingGetters.getAddresses(
-        billing.value,
-      );
-      const currentAddress = billingAddresses.find(
-        (address) => address.id === addressId,
-      );
-
-      if (!currentAddress) {
-        return;
-      }
-
-      billingDetails.value = mapAbstractAddressToIntegrationAddress(
-        currentAddress,
-      );
-      addressIsModified.value = true;
-    };
-
-    const initialDataForAuthenticatedUser = () => {
-      if (!isAuthenticated.value) {
-        return;
-      }
-
-      const billingAddresses = userCheckoutBillingGetters.getAddresses(
-        billing.value,
-      );
-
-      if (!billingAddresses?.length) {
-        return;
-      }
-
-      canAddNewAddress.value = false;
-
-      if (userCheckoutBillingGetters.isAddressDefault(billingAddresses[0])) {
-        setCurrentAddress(billingAddresses[0].id);
-
-        currentAddressId.value = billingAddresses[0].id;
-      }
-    };
-
-    const orderReviewActivation = () => {
-      isBillingAddressCompleted.value = true;
-      addressIsModified.value = false;
-    };
-
-    onMounted(async () => {
-      const isBillingDetailsFullfilled = Boolean(
-        Object.keys(billingDetails.value).length,
-      );
-      const isMethodFullfilled = Boolean(
-        Object.keys(chosenPaymentDetails.value).length,
-      );
-
-      await loadBilling({ isAuthenticated: isAuthenticated.value });
-
-      if (!isBillingDetailsFullfilled) {
-        initialDataForAuthenticatedUser();
-
-        return;
-      }
-
-      if (isBillingDetailsFullfilled && isMethodFullfilled) {
-        chosenPaymentMethod.value =
-          chosenPaymentDetails.value.paymentMethodName;
-
-        orderReviewActivation();
-      }
-
-      setAsDefault.value = billingDetails.value.isDefaultBilling;
-
-      if (billingDetails.value.sameAsShipping) {
-        sameAsShipping.value = billingDetails.value.sameAsShipping;
-
-        return;
-      }
-
-      if (isBillingDetailsFullfilled && billingDetails.value?.id) {
-        currentAddressId.value = billingDetails.value.id;
-        canAddNewAddress.value = false;
-
-        return;
-      }
-
-      newAddress.value = {
-        ...billingDetails.value,
-        country: billingDetails.value.iso2Code,
-      };
-    });
-
-    const saveBillingDetails = async () => {
-      if (canAddNewAddress.value) {
-        billingDetails.value = mapAbstractAddressToIntegrationAddress(
-          newAddress.value,
-        );
-      }
-
-      if (!canAddNewAddress.value && !sameAsShipping.value) {
-        setCurrentAddress(currentAddressId.value);
-      }
-
-      if (!canAddNewAddress.value && sameAsShipping.value) {
-        billingDetails.value = mapAbstractAddressToIntegrationAddress(
-          shippingDetails.value,
-        );
-      }
-
-      orderReviewActivation();
-    };
-
-    const afterModifiedAddress = () => {
-      addressIsModified.value = true;
-      currentAddressId.value = '';
-      billingDetails.value = {};
-    };
-
-    const canContinueToReview = computed(
-      () => isBillingAddressCompleted.value && !addressIsModified.value,
+    const checkoutDataComposablesLoading = computed(() =>
+      checkoutDataComposables.some((composable) => composable.loading.value),
     );
 
-    watch(sameAsShipping, () => {
-      if (sameAsShipping.value) {
-        currentAddressId.value = '';
-        canAddNewAddress.value = false;
-        addressIsModified.value = true;
-      }
+    const processOrder = async () => {
+      await make();
+      context.root.$router.push(
+        `/checkout/thank-you?order=${order.value.orderReference}`,
+      );
+    };
 
-      if (
-        !sameAsShipping.value &&
-        !userCheckoutBillingGetters.getAddresses(billing.value)?.length
-      ) {
-        canAddNewAddress.value = true;
-        addressIsModified.value = true;
+    const shippingDetails = shipping.shipping;
+    const billingDetails = billing.billing;
+
+    const billingSameAsShipping = inject('checkoutBillingSameAsShipping');
+
+    const shippingPrice = computed(
+      () =>
+        shippingProviderGetters.getSelectedMethodPrice(
+          shippingProvider.state.value,
+        ).regular,
+    );
+
+    const shippingName = computed(() =>
+      shippingProviderGetters.getSelectedMethodName(
+        shippingProvider.state.value,
+      ),
+    );
+
+    const vouchers = computed(() => cartGetters.getCoupons(cart.value));
+    const giftCards = computed(() => cartGetters.getGiftCards(cart.value));
+    const totals = computed(() => cartGetters.getTotals(cart.value));
+
+    const { user, isAuthenticated } = useUser();
+
+    const personalDetails = inject('checkoutPersonalDetails');
+
+    const products = computed(() => cartGetters.getItems(cart.value));
+
+    const removeCartItem = async (params) => {
+      await removeItem(params);
+
+      if (!products.value.length) {
+        context.root.$router.push('/');
       }
+    };
+
+    const totalPrice = computed(() => {
+      const { priceToPay, total } = totals.value;
+      return cartGetters.getFormattedPrice(
+        (priceToPay ?? total) + shippingPrice.value,
+      );
     });
 
-    const toggleNewAddress = () => {
-      const billingAddresses = userCheckoutBillingGetters.getAddresses(
-        billing.value,
-      );
-
-      canAddNewAddress.value = !canAddNewAddress.value;
-
-      if (!canAddNewAddress.value) {
-        newAddress.value = {};
-      } else {
-        sameAsShipping.value = false;
-      }
-
-      if (
-        !billingAddresses?.length ||
-        canAddNewAddress.value ||
-        currentAddressId.value
-      ) {
-        return;
-      }
-
-      setCurrentAddress(billingAddresses[0].id);
-      currentAddressId.value = billingAddresses[0].id;
-    };
-
-    const setCurrentExistedAddress = (id) => {
-      currentAddressId.value = id;
-      addressIsModified.value = true;
-      sameAsShipping.value = false;
-      canAddNewAddress.value = false;
-      newAddress.value = {};
-    };
-
-    const paymentChangeHandler = (payment) => {
-      chosenPaymentDetails.value = { ...payment };
-      paymentDetails.value = {};
-    };
-
     return {
-      billingDetails,
-      chosenPaymentMethod,
-      sameAsShipping,
-      countries,
       isAuthenticated,
-      billingAddresses: computed(() =>
-        userCheckoutBillingGetters.getAddresses(billing.value),
-      ),
-      setAsDefault,
-      currentAddressId,
-      setCurrentAddress,
-      canAddNewAddress,
-      canContinueToReview,
-      isBillingAddressCompleted,
-      addressIsModified,
-      saveBillingDetails,
-      afterModifiedAddress,
-      toggleNewAddress,
-      salutations,
+      isPaymentReady,
+      terms,
+      products,
+      totals,
+      totalPrice,
+      tableHeaders: ['Description', 'Quantity', 'Amount'],
+
+      cartGetters,
+
+      processOrder,
+      removeCartItem,
       loading,
-      newAddress,
-      setCurrentExistedAddress,
-      paymentMethods: computed(() =>
-        userCheckoutBillingGetters.getMethods(billing.value),
-      ),
-      paymentDetails,
-      cardTypes,
-      months,
-      years,
-      paymentChangeHandler,
-      userCheckoutBillingGetters,
-      paymentMethodNames,
+      checkoutDataComposablesLoading,
+
+      personalDetails,
+
+      shippingDetails,
+      shippingName,
+      shippingPrice,
+
+      billingDetails,
+      billingSameAsShipping,
+
+      paymentProvider: paymentProvider.state,
+
+      vouchers,
+      giftCards,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '~@storefront-ui/vue/styles';
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+.table {
+  margin: 0 0 var(--spacer-base) 0;
+  &__row {
+    justify-content: space-between;
+  }
+  &__remove {
+    align-self: center;
+  }
   @include for-desktop {
-    margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    &__header {
+      text-align: center;
+      &:last-child {
+        text-align: right;
+      }
+    }
+    &__data {
+      text-align: center;
+    }
+    &__description {
+      text-align: left;
+      flex: 0 0 16rem;
+    }
+    &__image {
+      --image-width: 5.125rem;
+      text-align: left;
+      flex: 0 0 7rem;
+      padding-right: var(--spacer-base);
+    }
   }
 }
-.form {
-  &--payment {
-    width: 100%;
-    margin: 0 0 var(--spacer-lg);
+.product-sku {
+  color: var(--c-text-muted);
+  font-size: var(--font-size--sm);
+}
+.price {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+.product-price {
+  --price-font-size: var(--font-size--base);
+}
+.product-attributes {
+  padding-top: var(--spacer-base);
+}
+.summary {
+  &__terms {
+    margin: var(--spacer-base) 0 0 0;
   }
-  &__select {
-    --select-option-font-size: var(--font-size--lg);
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
-  }
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-sm);
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 calc(50% - var(--spacer-xl));
-        margin-right: calc(var(--spacer-xl) / 2);
-      }
-      &-even {
-        @include for-desktop {
-          margin-left: calc(var(--spacer-xl) / 2);
-          margin-right: 0;
-        }
-      }
-    }
-  }
-  &__group {
-    display: flex;
-    align-items: center;
+  &__total {
+    margin: 0 0 var(--spacer-sm) 0;
+    flex: 0 0 16.875rem;
   }
   &__action {
     @include for-desktop {
-      flex: 0 0 100%;
       display: flex;
-    }
-  }
-  &__action-button,
-  &__back-button {
-    --button-width: 100%;
-    @include for-desktop {
-      --button-width: auto;
+      margin: var(--spacer-xl) 0 0 0;
     }
   }
   &__action-button {
-    margin: 0 var(--spacer-xl) 0 0;
-
-    &--margin-bottom {
-      margin: 0 0 var(--spacer-xl);
+    margin: 0;
+    width: 100%;
+    margin: var(--spacer-sm) 0 0 0;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    &--secondary {
+      @include for-desktop {
+        text-align: right;
+      }
     }
   }
   &__back-button {
-    margin: 0 0 var(--spacer-sm) 0;
+    margin: var(--spacer-sm) 0 var(--spacer-xl);
+    width: 100%;
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
     }
   }
-  &__radio-group {
-    flex: 0 0 100%;
-    margin: 0 0 var(--spacer-2xl) 0;
+  &__property-total {
+    margin: var(--spacer-xl) 0;
   }
 }
-.payment-methods {
-  @include for-desktop {
-    display: flex;
-    padding: var(--spacer-lg) 0;
-    border: 1px solid var(--c-light);
-    border-width: 1px 0;
-    margin: 0 0 var(--spacer-lg);
-  }
-
-  & > span {
-    width: 100%;
-    display: flex;
+.property {
+  margin: 0 0 var(--spacer-sm) 0;
+  &__name {
+    color: var(--c-text-muted);
   }
 }
-.payment-method {
-  --radio-container-align-items: center;
-  --ratio-content-margin: 0 0 0 var(--spacer-base);
-  --radio-label-font-size: var(--font-base);
-  white-space: nowrap;
-  border: 1px solid var(--c-light);
-  border-width: 1px 0 0 0;
-  &:last-child {
-    border-width: 1px 0;
-  }
-  @include for-mobile {
-    --radio-background: transparent;
-  }
-  @include for-desktop {
-    border: 0;
-    --radio-border-radius: 4px;
-  }
-}
-.credit-card-form {
+.accordion {
   margin: 0 0 var(--spacer-xl) 0;
-  @include for-desktop {
-    flex: 0 0 66.666%;
-    padding: 0 calc((100% - 66.666%) / 2);
-  }
-  &__group {
+  &__item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 0 var(--spacer-xl) 0;
+    align-items: flex-start;
+  }
+  &__content {
+    flex: 1;
+  }
+  &__edit {
+    flex: unset;
+  }
+}
+.content {
+  margin: 0 0 var(--spacer-xl) 0;
+  color: var(--c-text);
+  &:last-child {
+    margin: 0;
   }
   &__label {
-    flex: unset;
-    font: 300 var(--font-base) / 1.6 var(--font-family-secondary);
-  }
-  &__element {
-    display: flex;
-    flex: 0 0 66.66%;
-  }
-  &__input {
-    flex: 1;
-    &--small {
-      flex: 0 0 46.666%;
-    }
-    & + & {
-      margin: 0 0 0 var(--spacer-xl);
-    }
+    font-weight: var(--font-weight--normal);
   }
 }
-.payment-loader {
-  height: 20rem;
+.divider {
+  --divider-border-color: var(--c-primary);
+  --divider-width: 100%;
+  --divider-margin: 0 0 var(--spacer-base) 0;
+}
+
+.payment-divider {
+  margin: var(--spacer-xl) 0 0 0;
 }
 </style>

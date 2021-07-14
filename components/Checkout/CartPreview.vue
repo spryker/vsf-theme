@@ -2,6 +2,7 @@
   <div>
     <div class="highlighted">
       <SfHeading
+        data-cy="svsf-cartPreview-heading"
         :level="3"
         title="Order summary"
         class="sf-heading--left sf-heading--no-underline title"
@@ -9,12 +10,14 @@
     </div>
     <div class="highlighted">
       <SfProperty
-        name="Products"
+        data-cy="svsf-cartPreview-totalItems-property"
+        :name="$t('Products')"
         :value="totalItems"
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
-        name="Subtotal"
+        data-cy="svsf-cartPreview-subtotal-property"
+        :name="$t('Subtotal')"
         :value="`${cartGetters.getFormattedPrice(totals.subtotal)}`"
         :class="[
           'sf-property--full-width',
@@ -23,19 +26,23 @@
         ]"
       />
       <SfProperty
-        name="Tax"
-        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
-        :class="['sf-property--full-width', 'sf-property--large']"
-      />
-      <SfProperty
-        name="Shipping"
+        data-cy="svsf-cartPreview-shippingPrice-property"
+        :name="$t('Shipping')"
         v-if="shippingPrice"
         :value="`${cartGetters.getFormattedPrice(shippingPrice)}`"
-        class="sf-property--full-width sf-property--large property"
+        class="sf-property--full-width sf-property--large"
+      />
+      <SfProperty
+        data-cy="svsf-cartPreview-tax-property"
+        v-if="totals.tax"
+        :name="$t('Tax')"
+        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
+        class="sf-property--full-width sf-property--large"
       />
       <template v-if="vouchers.length">
         <SfProperty
-          name="Voucher"
+          :data-cy="`svsf-cartPreview-vouchers-property-${voucher.id}`"
+          :name="$t('Voucher')"
           v-for="voucher in vouchers"
           :key="voucher.id"
           :value="`- ${cartGetters.getFormattedPrice(voucher.value)}`"
@@ -43,8 +50,9 @@
         >
           <template #name>
             <span class="sf-property__name">
-              Voucher ({{ voucher.name }})
+              {{ $t('Voucher') }} ({{ voucher.name }})
               <a
+                data-cy="svsf-cartPreview-removeVoucher-link"
                 href="#"
                 @click.prevent="() => removeCoupon({ coupon: voucher.code })"
                 >X</a
@@ -55,7 +63,8 @@
       </template>
       <template v-if="discounts.length">
         <SfProperty
-          name="Discount"
+          :data-cy="`svsf-cartPreview-discounts-property-${discount.id}`"
+          :name="$t('Discount')"
           v-for="discount in discounts"
           :key="discount.id"
           :value="`- ${cartGetters.getFormattedPrice(discount.value)}`"
@@ -63,14 +72,15 @@
         >
           <template #name>
             <span class="sf-property__name">
-              Discount ({{ discount.name }})
+              {{ $t('Discount') }} ({{ discount.name }})
             </span>
           </template>
         </SfProperty>
       </template>
       <template v-if="giftCards.length">
         <SfProperty
-          name="Gift Card"
+          :data-cy="`svsf-cartPreview-giftCards-property-${giftCard.id}`"
+          :name="$t('Gift Card')"
           v-for="giftCard in giftCards"
           :key="giftCard.id"
           :value="`- ${cartGetters.getFormattedPrice(giftCard.value)}`"
@@ -78,8 +88,9 @@
         >
           <template #name>
             <span class="sf-property__name">
-              Gift Card ({{ giftCard.name }})
+              {{ $t('Gift Card') }} ({{ giftCard.name }})
               <a
+                data-cy="svsf-cartPreview-removeGiftCard-link"
                 href="#"
                 @click.prevent="() => removeCoupon({ coupon: giftCard.code })"
                 >X</a
@@ -89,12 +100,14 @@
         </SfProperty>
       </template>
       <SfProperty
+        data-cy="svsf-cartPreview-totalsSpecial-property"
         v-if="totals.special > 0"
         :value="`${cartGetters.getFormattedPrice(totals.special)}`"
         class="sf-property--full-width sf-property--small property special-price"
       />
       <SfProperty
-        name="Total"
+        data-cy="svsf-cartPreview-total-property"
+        :name="$t('Total')"
         :value="`${cartGetters.getFormattedPrice(
           totals.total + shippingPrice,
         )}`"
@@ -104,6 +117,7 @@
     </div>
     <div class="highlighted">
       <SfCharacteristic
+        :data-cy="`svsf-cartPreview-characteristics-${characteristic.title}`"
         v-for="characteristic in characteristics"
         :key="characteristic.title"
         :title="characteristic.title"
@@ -129,8 +143,8 @@ import {
   useCart,
   checkoutGetters,
   cartGetters,
-  userCheckoutShippingGetters,
-  useCheckoutShipping,
+  shippingProviderGetters,
+  useShippingProvider,
 } from '@spryker-vsf/composables';
 import VoucherCardForm from './VoucherCardForm';
 
@@ -147,7 +161,7 @@ export default {
     VoucherCardForm,
   },
   setup() {
-    const { chosenShippingMethod } = useCheckoutShipping('checkout');
+    const { state: shippingProvider } = useShippingProvider();
     const {
       cart,
       removeItem,
@@ -160,7 +174,7 @@ export default {
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const shippingPrice = computed(
       () =>
-        userCheckoutShippingGetters.getMethodPrice(chosenShippingMethod.value)
+        shippingProviderGetters.getSelectedMethodPrice(shippingProvider.value)
           .regular,
     );
     const totals = computed(() => cartGetters.getTotals(cart.value));
@@ -175,7 +189,6 @@ export default {
       vouchers,
       giftCards,
       products,
-      chosenShippingMethod,
       totals,
       removeItem,
       updateQuantity,

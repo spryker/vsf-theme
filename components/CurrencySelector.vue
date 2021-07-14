@@ -1,23 +1,38 @@
 <template>
   <div class="container">
     <SfButton
-      data-cy="locale-select_change-langauge"
+      data-cy="svsf-currencySelector-openPopUp-button"
       class="container__lang container__lang--selected"
       @click="isCurModalOpen = !isCurModalOpen"
     >
       {{ currency.selected }}
     </SfButton>
     <SfBottomModal
+      data-cy="svsf-currencySelector-modal"
       :is-open="isCurModalOpen"
-      title="Choose language"
+      :title="$t('Choose currency')"
       @click:close="isCurModalOpen = !isCurModalOpen"
     >
       <SfList>
-        <SfListItem v-for="curr in currency.options" :key="curr.name">
-          <a href="#" @click.prevent="setCurrency(curr.name)">
-            <SfCharacteristic class="language">
+        <SfListItem
+          :data-cy="`svsf-currencySelector-currency-${curr.name}`"
+          v-for="curr in currency.options"
+          :key="curr.name"
+        >
+          <a
+            href="#"
+            :data-cy="`svsf-currencySelector-currency-${curr.name}-link`"
+            @click.prevent="setCurrency(curr.name)"
+          >
+            <SfCharacteristic
+              :data-cy="`svsf-currencySelector-currency-${curr.name}-characteristic`"
+              class="language"
+            >
               <template #title>
-                <span>{{ curr.label }}</span>
+                <span
+                  :data-cy="`svsf-currencySelector-currency-${curr.name}-label`"
+                  >{{ curr.label }}</span
+                >
               </template>
             </SfCharacteristic>
           </a>
@@ -50,13 +65,6 @@ export default {
     SfCharacteristic,
   },
   setup(props, context) {
-    const {
-      $vsf: {
-        $spryker: {
-          config: { localisation, currencies, defaultCurrency },
-        },
-      },
-    } = context.root;
     const { currency, load, setCurrency } = useCurrency();
     const isCurModalOpen = ref(false);
 

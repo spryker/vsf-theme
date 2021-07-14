@@ -2,44 +2,49 @@
   <div>
     <ValidationObserver v-slot="{ handleSubmit }" key="forgoteen-password">
       <form
+        data-cy="svsf-forgottenPasswordPopUp-form"
         class="form"
         @submit.prevent="handleSubmit(handleNewPasswordSubmit)"
       >
         <ValidationProvider rules="required|email" v-slot="{ errors }">
           <SfInput
-            data-cy="forgotten-password_email"
+            data-cy="svsf-forgottenPasswordPopUp-email-input"
             v-model="form.email"
             :valid="!errors[0] && forgottenErrors.form.length === 0"
             :errorMessage="errors[0]"
             name="email"
-            label="Your email"
+            :label="$t('Your email')"
             class="form__element"
             required
           />
         </ValidationProvider>
-        <div class="error-log" v-if="forgottenErrors.form.length > 0">
+        <div
+          data-cy="svsf-forgottenPasswordPopUp-error-message"
+          class="error-log"
+          v-if="forgottenErrors.form.length > 0"
+        >
           <p v-for="(error, index) in errors.form" :key="index">
             {{ error }}
           </p>
         </div>
         <SfButton
-          data-cy="forgotten-password_submit"
+          data-cy="svsf-forgottenPasswordPopUp-submit-button"
           type="submit"
           class="sf-button--full-width form__button"
           :disabled="loading"
         >
           <SfLoader :class="{ loader: loading }" :loading="loading">
-            <div>Request new password</div>
+            <div>{{ $t('Request new password') }}</div>
           </SfLoader>
         </SfButton>
       </form>
     </ValidationObserver>
     <div class="action">
       <SfButton
-        data-cy="forgotten-password-btn_back-to-login"
+        data-cy="svsf-forgottenPasswordPopUp-back-button"
         class="sf-button--text"
         @click="toggleLogin"
-        >Back to login</SfButton
+        >{{ $t('Back to login') }}</SfButton
       >
     </div>
   </div>

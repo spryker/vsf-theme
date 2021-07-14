@@ -1,6 +1,7 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }" key="add-address">
     <form
+      data-cy="svsf-shippingAddressForm-form"
       class="form"
       @submit.prevent="handleSubmit(submitForm)"
       autocomplete="off"
@@ -11,12 +12,12 @@
         class="form__element"
       >
         <SfSelect
-          data-cy="address_salutation"
+          data-cy="svsf-shippingAddressForm-salutation-select"
           v-model="form.salutation"
           :valid="!errors[0]"
           :errorMessage="errors[0]"
           name="salutation"
-          label="Salutation"
+          :label="$t('Salutation')"
           class="form__select sf-select--underlined"
           required
         >
@@ -37,12 +38,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_firstName"
+            data-cy="svsf-shippingAddressForm-firstName-input"
             v-model="form.firstName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="first-name"
-            label="First Name"
+            :label="$t('First Name')"
             required
           />
         </ValidationProvider>
@@ -53,12 +54,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_lastName"
+            data-cy="svsf-shippingAddressForm-lastName-input"
             v-model="form.lastName"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="last-name"
-            label="Last Name"
+            :label="$t('Last Name')"
             required
           />
         </ValidationProvider>
@@ -66,18 +67,18 @@
 
       <div class="form__horizontal">
         <SfInput
-          data-cy="address_phone"
+          data-cy="svsf-shippingAddressForm-phone-input"
           v-model="form.phone"
           name="address-phone"
-          label="Phone"
+          :label="$t('Phone')"
           class="form__element"
         />
 
         <SfInput
-          data-cy="address_company"
+          data-cy="svsf-shippingAddressForm-company-input"
           v-model="form.company"
           name="company"
-          label="Company"
+          :label="$t('Company')"
           class="form__element"
         />
       </div>
@@ -89,12 +90,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_street_name"
+            data-cy="svsf-shippingAddressForm-address1-input"
             v-model="form.address1"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="street-name"
-            label="Street"
+            :label="$t('Street')"
             required
           />
         </ValidationProvider>
@@ -105,12 +106,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_street_number"
+            data-cy="svsf-shippingAddressForm-address2-input"
             v-model="form.address2"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="street-number"
-            label="Number"
+            :label="$t('Number')"
             required
           />
         </ValidationProvider>
@@ -119,7 +120,7 @@
       <div class="form__horizontal">
         <div class="form__element">
           <SfInput
-            data-cy="address_addition"
+            data-cy="svsf-shippingAddressForm-address3-input"
             v-model="form.address3"
             name="address-addition"
             label="Addition to address"
@@ -132,12 +133,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_zipCode"
+            data-cy="svsf-shippingAddressForm-zipCode-input"
             v-model="form.zipCode"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="zip-code"
-            label="Zip Code"
+            :label="$t('Zip Code')"
             required
           />
         </ValidationProvider>
@@ -150,12 +151,12 @@
           class="form__element"
         >
           <SfInput
-            data-cy="address_city"
+            data-cy="svsf-shippingAddressForm-city-input"
             v-model="form.city"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="city"
-            label="City"
+            :label="$t('City')"
             required
           />
         </ValidationProvider>
@@ -166,12 +167,12 @@
           class="form__element"
         >
           <SfSelect
-            data-cy="address_country"
+            data-cy="svsf-shippingAddressForm-country-select"
             v-model="form.iso2Code"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
             name="country"
-            label="Country"
+            :label="$t('Country')"
             class="form__select sf-select--underlined"
             required
           >
@@ -188,6 +189,7 @@
 
       <div class="form__horizontal">
         <SfCheckbox
+          data-cy="svsf-shippingAddressForm-isDefaultShipping-checkbox"
           v-model="form.isDefaultShipping"
           name="default-shipping-address"
           label="Is default shipping address"
@@ -195,20 +197,21 @@
         />
 
         <SfCheckbox
+          data-cy="svsf-shippingAddressForm-isDefaultBilling-checkbox"
           v-model="form.isDefaultBilling"
           name="default-billing-address"
-          label="Is default billing address"
+          :label="$t('Is default billing address')"
           class="form__element"
         />
       </div>
 
       <SfButton
-        data-cy="shipping-details-btn_update"
+        data-cy="svsf-shippingAddressForm-submit-button"
         type="submit"
         class="form__button"
         :disabled="loading"
       >
-        {{ isNew ? 'ADD' : 'CHANGE' }} THE ADDRESS
+        {{ isNew ? $t('ADD THE ADDRESS') : $t('CHANGE THE ADDRESS') }}
       </SfButton>
     </form>
   </ValidationObserver>

@@ -1,13 +1,15 @@
 <template>
   <div id="cart">
     <SfSidebar
+      data-cy="svsf-cartSidebar-sideBar"
       :visible="isCartSidebarOpen"
-      title="My Cart"
+      :title="$t('My Cart')"
       class="sf-sidebar--right"
       @close="toggleCartSidebar"
     >
       <template #content-top>
         <SfNotification
+          data-cy="svsf-cartSidebar-cartError-message"
           :visible="!!cartErrorMessage"
           :message="cartErrorMessage"
           type="danger"
@@ -20,12 +22,17 @@
         </SfNotification>
         <div v-if="totalItems" class="cart-meta">
           <SfProperty
+            data-cy="svsf-cartSidebar-totalItems-property"
             class="sf-property--large cart-summary desktop-only"
-            name="Total items"
+            :name="$t('Total items')"
             :value="totalItems"
           />
-          <SfButton class="color-light" @click="clearCartItems">
-            Clear cart
+          <SfButton
+            data-cy="svsf-cartSidebar-clearCart-button"
+            class="color-light"
+            @click="clearCartItems"
+          >
+            {{ $t('Clear cart') }}
           </SfButton>
         </div>
       </template>
@@ -34,7 +41,9 @@
           <div class="collected-product-list">
             <transition-group name="sf-fade" tag="div">
               <SfCollectedProduct
-                data-cy="collected-product-cart-sidebar"
+                :data-cy="`svsf-cartSidebar-product-${cartGetters.getItemSku(
+                  product,
+                )}`"
                 v-for="product in products"
                 :key="cartGetters.getItemSku(product)"
                 :image="cartGetters.getItemImage(product)"
@@ -58,6 +67,7 @@
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
+                      :data-cy="`svsf-cartSidebar-configuration-property-${key}`"
                       v-for="(
                         attribute, key
                       ) in cartGetters.getItemAttributes(product, [
@@ -71,13 +81,16 @@
                   </div>
                 </template>
                 <template #actions>
-                  <SfButton
-                    v-if="isAuthenticated"
-                    class="sf-button--text desktop-only"
-                    @click="addToWishlist({ product })"
-                  >
-                    Save for later
-                  </SfButton>
+                  <Fragment>
+                    <SfButton
+                      v-if="isAuthenticated"
+                      data-cy="svsf-cartSidebar-addToWishlist-button"
+                      class="sf-button--text desktop-only"
+                      @click="addToWishlist({ product })"
+                    >
+                      {{ $t('Save for later') }}
+                    </SfButton>
+                  </Fragment>
                 </template>
               </SfCollectedProduct>
             </transition-group>
@@ -86,16 +99,20 @@
         <div v-else key="empty-cart" class="empty-cart">
           <div class="empty-cart__banner">
             <SfImage
+              data-cy="svsf-cartSidebar-emptyCart-image"
               alt="Empty bag"
               class="empty-cart__image"
               src="/icons/empty-cart.svg"
             />
             <SfHeading
-              title="Your cart is empty"
+              data-cy="svsf-cartSidebar-emptyCart-heading"
+              :title="$t('Your cart is empty')"
               :level="2"
               class="empty-cart__heading"
-              description="Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in."
+              :description="
+                $t(`Looks like you haven’t added any items to the bag yet. Start
+              shopping to fill it in.`)
+              "
             />
           </div>
         </div>
@@ -104,33 +121,38 @@
         <transition name="sf-fade">
           <div v-if="totalItems">
             <SfProperty
-              name="Total price"
+              data-cy="svsf-cartSidebar-totalPrice-property"
+              :name="$t('Total price')"
               class="sf-property--full-width sf-property--large my-cart__total-price"
             >
               <template #value>
                 <SfPrice
+                  data-cy="svsf-cartSidebar-price"
                   :regular="cartGetters.getFormattedPrice(totals.total)"
                 />
               </template>
             </SfProperty>
             <nuxt-link
+              data-cy="svsf-cartSidebar-checkout-link"
               :to="`/checkout/${
                 isAuthenticated ? 'shipping' : 'personal-details'
               }`"
             >
               <SfButton
+                data-cy="svsf-cartSidebar-checkout-button"
                 class="sf-button--full-width color-secondary"
                 @click="toggleCartSidebar"
               >
-                Go to checkout
+                {{ $t('Go to checkout') }}
               </SfButton>
             </nuxt-link>
           </div>
           <div v-else>
             <SfButton
+              data-cy="svsf-cartSidebar-closePopUp-button"
               class="sf-button--full-width color-primary"
               @click="toggleCartSidebar"
-              >Go back shopping</SfButton
+              >{{ $t('Go back shopping') }}</SfButton
             >
           </div>
         </transition>
@@ -158,6 +180,7 @@ import {
 } from '@spryker-vsf/composables';
 import { useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
+import Fragment from '~/components/Fragment';
 
 export default {
   name: 'Cart',
@@ -170,6 +193,7 @@ export default {
     SfCollectedProduct,
     SfImage,
     SfNotification,
+    Fragment,
   },
   setup() {
     const { isCartSidebarOpen, toggleCartSidebar } = useUiState();
@@ -183,7 +207,7 @@ export default {
       loading,
     } = useCart();
     const { isAuthenticated } = useUser();
-    const { addItem: addToWishlist } = useWishlist();
+    const { addItem: addWishlistItem } = useWishlist();
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -217,6 +241,11 @@ export default {
       cartError.value = null;
       await clearCart();
       cartError.value = error.value?.clear ?? null;
+    }
+
+    function addToWishlist({ product }) {
+      addWishlistItem({ product });
+      removeCartItem({ product });
     }
 
     watch(cartError, () => {
@@ -294,16 +323,12 @@ export default {
     padding: 0 var(--spacer-base);
   }
   &__image {
-    --image-width: 13.1875rem;
-    margin: 0 0 var(--spacer-xl) 7.5rem;
+    width: 18.125rem;
+    height: 12.3125rem;
+    margin-left: 50%;
     @include for-desktop {
-      --image-width: 23.3125rem;
-      margin: 0 0 var(--spacer-2xl) 7.5rem;
+      margin-left: 45%;
     }
-  }
-  @include for-desktop {
-    --heading-title-font-size: var(--font-size--xl);
-    --heading-title-margin: 0 0 var(--spacer-sm) 0;
   }
 }
 .collected-product-list {
