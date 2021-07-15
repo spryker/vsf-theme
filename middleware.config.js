@@ -4,7 +4,7 @@ module.exports = {
       location: '@spryker-vsf/api/server',
       configuration: {
         axiosConfig: {
-          baseURL: process.env.API_URL ?? 'http://glue.de.spryker.local',
+          baseURL: process.env.API_URL || 'http://glue.de.spryker.local',
         },
         currency: 'EUR',
         locale: 'en',
