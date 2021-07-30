@@ -1,5 +1,9 @@
 <template>
-  <SfTabs data-cy="svsf-orderHistorySection-orders-tabs" :open-tab="1">
+  <SfTabs
+    data-cy="svsf-orderHistorySection-orders-tabs"
+    @click:tab="changeTab"
+    :open-tab="currentTab"
+  >
     <SfTab
       data-cy="svsf-orderHistorySection-orders-tab"
       :title="$t('My orders')"
@@ -142,6 +146,12 @@
             </SfTableData>
           </SfTableRow>
         </SfTable>
+
+        <div v-if="isReturnable" class="button-container">
+          <SfButton @click="goToCreateReturn">{{
+            $t('Return order')
+          }}</SfButton>
+        </div>
       </div>
       <div v-else>
         <p class="message">
@@ -247,18 +257,26 @@
         </SfTable>
       </div>
     </SfTab>
-    <SfTab :title="$t('Returns')">
-      <p class="message">
-        {{ $t('This feature is not implemented yet! Please take a look at')
-        }}<br />
-        <SfLink
-          data-cy="svsf-orderHistorySection-issues-link"
-          class="message__link"
-          href="#"
-          >https://github.com/DivanteLtd/vue-storefront/issues</SfLink
-        >
-        {{ $t('for our Roadmap!') }}
-      </p>
+    <SfTab
+      data-cy="svsf-orderHistorySection-returns-tab"
+      :title="$t('Returns')"
+    >
+      <ReturnOrder
+        data-cy="svsf-orderHistorySection-return-order"
+        v-if="currentOrder && returnOrderIsShown"
+        :order="currentOrder"
+        @createReturn="showReturnDetailsAndResetCurrenOrder"
+      ></ReturnOrder>
+      <ReturnDetails
+        data-cy="svsf-orderHistorySection-return-details"
+        :returnId="returnId"
+        v-if="returnDetailsIsShown"
+      />
+      <ReturnsList
+        data-cy="svsf-orderHistorySection-returns-list"
+        v-if="returnsListlsIsShown"
+        @goToReturnDetails="showReturnDetails"
+      />
     </SfTab>
   </SfTabs>
 </template>
@@ -273,12 +291,15 @@ import {
   SfLoader,
   SfPrice,
 } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
+import { ref, computed } from '@vue/composition-api';
 import { useUserOrders, orderGetters } from '@spryker-vsf/composables';
 import { AgnosticOrderStatus, onSSR } from '@vue-storefront/core';
+import ReturnOrder from '~/components/OrderHistory/ReturnOrder';
+import ReturnDetails from '~/components/OrderHistory/ReturnDetails';
+import ReturnsList from '~/components/OrderHistory/ReturnsList';
 
 export default {
-  name: 'PersonalDetails',
+  name: 'OrderHistory',
   components: {
     SfTabs,
     SfTable,
@@ -287,10 +308,27 @@ export default {
     SfLink,
     SfLoader,
     SfPrice,
+    ReturnOrder,
+    ReturnDetails,
+    ReturnsList,
   },
   setup() {
+    const TAB_ORDERS_HISTORY = 1;
+    const TAB_RETURNS = 2;
     const { orders, search, loading } = useUserOrders();
+    const currentTab = ref(TAB_ORDERS_HISTORY);
+    const returnOrderIsShown = ref(false);
+    const returnDetailsIsShown = ref(false);
+    const returnsListlsIsShown = ref(true);
+    const returnId = ref('');
     const currentOrder = ref(null);
+    const isReturnable = computed(() =>
+      !currentOrder.value
+        ? false
+        : currentOrder.value.attributes.items.some(
+            ({ isReturnable }) => isReturnable,
+          ),
+    );
 
     onSSR(async () => {
       await search();
@@ -352,6 +390,33 @@ export default {
       await search();
     };
 
+    const goToCreateReturn = () => {
+      currentTab.value = TAB_RETURNS;
+      returnOrderIsShown.value = true;
+      returnsListlsIsShown.value = false;
+      returnDetailsIsShown.value = false;
+    };
+
+    const showReturnDetails = (id) => {
+      returnDetailsIsShown.value = true;
+      returnOrderIsShown.value = false;
+      returnsListlsIsShown.value = false;
+      returnId.value = id;
+    };
+
+    const showReturnDetailsAndResetCurrenOrder = (id) => {
+      showReturnDetails(id);
+      showOrderDetails(currentOrder.value);
+    };
+
+    const changeTab = (tabIndex) => {
+      currentTab.value = tabIndex;
+      if (tabIndex !== TAB_ORDERS_HISTORY) return;
+      returnOrderIsShown.value = false;
+      returnDetailsIsShown.value = false;
+      returnsListlsIsShown.value = true;
+    };
+
     return {
       loading,
       tableHeaders,
@@ -364,6 +429,16 @@ export default {
       showOrderDetails,
       showOrdersList,
       currentOrder,
+      isReturnable,
+      currentTab,
+      changeTab,
+      returnOrderIsShown,
+      returnDetailsIsShown,
+      returnsListlsIsShown,
+      goToCreateReturn,
+      showReturnDetails,
+      showReturnDetailsAndResetCurrenOrder,
+      returnId,
     };
   },
 };
@@ -469,5 +544,10 @@ export default {
     --property-value-font-size: var(--font-size--lg);
     --property-value-font-weight: var(--font-weight--semibold);
   }
+}
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 </style>
