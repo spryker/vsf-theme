@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
-    "@spryker-vsf/api": "^0.3.0",
-    "@spryker-vsf/composables": "^0.2.0",
+    "@spryker-vsf/api": "^0.4.0",
+    "@spryker-vsf/composables": "^0.3.0",
     "@storefront-ui/vue": "^0.10.5",
     "@vue-storefront/middleware": "^2.3.1",
     "@vue-storefront/nuxt": "^2.3.1",
