@@ -166,9 +166,9 @@
           />
           <SfProperty
             data-cy="svsf-checkoutPaymentSection-tax-property-list"
-            v-if="totals.tax"
+            v-if="tax"
             :name="$t('Tax')"
-            :value="cartGetters.getFormattedPrice(totals.tax)"
+            :value="cartGetters.getFormattedPrice(tax)"
             class="sf-property--full-width property"
           />
         </div>
@@ -290,6 +290,8 @@ import {
   cartGetters,
   useMakeOrder,
   shippingProviderGetters,
+  useTax,
+  taxGetters,
 } from '@spryker-vsf/composables';
 
 export default {
@@ -315,7 +317,8 @@ export default {
 
     const isPaymentReady = ref(false);
     const terms = ref(false);
-
+    const { taxes } = useTax();
+    const tax = computed(() => taxGetters.getTaxAmount(taxes.value));
     const customerPersonalDetails = useCustomerPersonalDetails();
     const billing = useBilling();
     const shipping = useShipping();
@@ -397,6 +400,7 @@ export default {
       terms,
       products,
       totals,
+      tax,
       totalPrice,
       tableHeaders: ['Description', 'Quantity', 'Amount'],
 

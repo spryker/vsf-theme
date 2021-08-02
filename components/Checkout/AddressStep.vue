@@ -281,6 +281,7 @@ import {
   useUser,
   useUserShipping,
   userShippingGetters,
+  useTax,
 } from '@spryker-vsf/composables';
 import { min } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
@@ -333,6 +334,7 @@ export default {
     };
 
     const { [type]: address, load, save } = composables[type]();
+    const { load: loadTaxes } = useTax();
 
     const { isAuthenticated } = useUser();
     const {
@@ -392,6 +394,7 @@ export default {
       const details = adjustDetails(valueToAdjust);
 
       await save({ [savePropertiesNames[type]]: details });
+      await loadTaxes({ shippingAddress: address.value });
     };
 
     const moveToShipmnetProvider = async () => {
