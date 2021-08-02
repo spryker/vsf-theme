@@ -34,9 +34,9 @@
       />
       <SfProperty
         data-cy="svsf-cartPreview-tax-property"
-        v-if="totals.tax"
+        v-if="tax"
         :name="$t('Tax')"
-        :value="`${cartGetters.getFormattedPrice(totals.tax)}`"
+        :value="`${cartGetters.getFormattedPrice(tax)}`"
         class="sf-property--full-width sf-property--large"
       />
       <template v-if="vouchers.length">
@@ -145,6 +145,8 @@ import {
   cartGetters,
   shippingProviderGetters,
   useShippingProvider,
+  useTax,
+  taxGetters,
 } from '@spryker-vsf/composables';
 import VoucherCardForm from './VoucherCardForm';
 
@@ -169,6 +171,8 @@ export default {
       applyCoupon,
       removeCoupon,
     } = useCart();
+    const { taxes } = useTax();
+    const tax = computed(() => taxGetters.getTaxAmount(taxes.value));
     const listIsHidden = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -190,6 +194,7 @@ export default {
       giftCards,
       products,
       totals,
+      tax,
       removeItem,
       updateQuantity,
       checkoutGetters,
