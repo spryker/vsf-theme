@@ -116,3 +116,4 @@ $ yarn test:e2e:ci
 ---
 
 For a detailed explanation on how things work, please check out the frameworks documentation under [Nuxt.js docs](https://nuxtjs.org).
+
