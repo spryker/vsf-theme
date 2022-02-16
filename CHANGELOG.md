@@ -3,6 +3,371 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-dev.17](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.16...@spryker-vsf/theme@0.5.0-dev.17) (2022-02-10)
+
+
+### Features
+
+* add jest config ([b9c47be](https://github.com/spryker/vsf-monorepo/commit/b9c47be842fa50de6ddc1a8838009e551af18987))
+* moved e2e test into theme package ([7d63fd6](https://github.com/spryker/vsf-monorepo/commit/7d63fd6667b52dec00b5faf82bebd5e59ef6b73e))
+
+
+
+
+
+# [0.5.0-dev.16](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.15...@spryker-vsf/theme@0.5.0-dev.16) (2022-02-04)
+
+
+### Bug Fixes
+
+* faas-998 fixing .env less way of running the extracted theme ([10b55d1](https://github.com/spryker/vsf-monorepo/commit/10b55d1eb53fd89b9b7932d5df698fa6653151d4))
+* faas-998 Removing middleware ([5b7bcad](https://github.com/spryker/vsf-monorepo/commit/5b7bcad69fa39e8504265d84575bfd80ac9908ab))
+* faas-998 replacing base glue url ([538b6a6](https://github.com/spryker/vsf-monorepo/commit/538b6a69c663a45a160e167e5d9ad12cb12ca506))
+
+
+### Features
+
+* **extract:** adding script for working with external middleware ([461e98d](https://github.com/spryker/vsf-monorepo/commit/461e98d4540c93a6585cc07ecea707304b392baa))
+* **extract:** moving dotenv package to the root of the monorepo ([9a5b5da](https://github.com/spryker/vsf-monorepo/commit/9a5b5da36152df6389805f1a869f9b77396f15fd))
+* **extract:** optimizing nuxt config override ([5bacd8b](https://github.com/spryker/vsf-monorepo/commit/5bacd8b599fa768a7a126849d30b6b7a0c6cd674))
+* **extract:** removing version plugin ([c162c5c](https://github.com/spryker/vsf-monorepo/commit/c162c5cd541c53642c4522958bda6e6d69b4b082))
+* adding 2 options for a theme extraction ([8102831](https://github.com/spryker/vsf-monorepo/commit/810283127d94e71a549087722f26871aac9aee96))
+* adding external glue url to env.template ([e7ddcc6](https://github.com/spryker/vsf-monorepo/commit/e7ddcc6aa4a6a5df6e6e5213175b983983fe669e))
+* fixing nuxt.config ([b7145dc](https://github.com/spryker/vsf-monorepo/commit/b7145dc53bb1830518f3419983d721ad38eb6587))
+* fixing path to nuxt.config ([11b78b3](https://github.com/spryker/vsf-monorepo/commit/11b78b31aa8b52194baf68af518aab411d92b617))
+* resolving @babel/preset-env ([204dd8f](https://github.com/spryker/vsf-monorepo/commit/204dd8fcb46a7252ce4b6422a98cf8286af6be6c))
+* splitting configs for proper theme generation ([ed273e5](https://github.com/spryker/vsf-monorepo/commit/ed273e58d7d02df160e434ead77700642c15d36a))
+
+
+
+
+
+# [0.5.0-dev.15](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.14...@spryker-vsf/theme@0.5.0-dev.15) (2022-01-24)
+
+
+### Bug Fixes
+
+* **theme:** fix store ([c4d5cb7](https://github.com/spryker/vsf-monorepo/commit/c4d5cb72bc7f357e4cf6caae550be05e95e9730e))
+
+
+
+
+
+# [0.5.0-dev.14](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.13...@spryker-vsf/theme@0.5.0-dev.14) (2022-01-24)
+
+
+### Bug Fixes
+
+* **composables:** add tokens storage fallback ([d7622cd](https://github.com/spryker/vsf-monorepo/commit/d7622cd6339707020733b4b77f104367abe99c20))
+* **theme:** add token storage config ([c9d7867](https://github.com/spryker/vsf-monorepo/commit/c9d7867981691a2a111c6aa67c84b32d64c6098d))
+
+
+
+
+
+# [0.5.0-dev.13](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.12...@spryker-vsf/theme@0.5.0-dev.13) (2022-01-06)
+
+
+### Bug Fixes
+
+* add travis-e2e env file ([38a6dc9](https://github.com/spryker/vsf-monorepo/commit/38a6dc95e39a3934255c47d02e04a7ba7ed4a6f1))
+
+
+
+
+
+# [0.5.0-dev.12](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.11...@spryker-vsf/theme@0.5.0-dev.12) (2022-01-03)
+
+
+### Features
+
+* removing unnecessary configs ([b8e99bc](https://github.com/spryker/vsf-monorepo/commit/b8e99bcbd40139fac2eb6caa6c426ac4eafb6aec))
+* upgrading VSF theme dependencies ([36e4726](https://github.com/spryker/vsf-monorepo/commit/36e4726136eb482bbb6da98fc5a55a1ed0aad656))
+
+
+
+
+
+# [0.5.0-dev.11](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.10...@spryker-vsf/theme@0.5.0-dev.11) (2021-12-23)
+
+
+### Features
+
+* removing stuff related to oryx-icon implementation ([0c01110](https://github.com/spryker/vsf-monorepo/commit/0c01110d12d81af4783dfdd16e47033d826bc7a5))
+* removing webcomponents plugin ([2415c36](https://github.com/spryker/vsf-monorepo/commit/2415c3643c9811ce05fc64e038af13da566c8664))
+* **fes:** rendering oryx-icon web component inside vsf theme ([0d72020](https://github.com/spryker/vsf-monorepo/commit/0d72020741996df8ed89fefb2a1c264732141027))
+
+
+
+
+
+# [0.5.0-dev.10](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.9...@spryker-vsf/theme@0.5.0-dev.10) (2021-11-26)
+
+
+### Bug Fixes
+
+* **theme:** fixing fetching products ([36435f0](https://github.com/spryker/vsf-monorepo/commit/36435f04df967753630ca45d89dda79565dc61d1))
+
+
+
+
+
+# [0.5.0-dev.9](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.8...@spryker-vsf/theme@0.5.0-dev.9) (2021-10-01)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.8](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.7...@spryker-vsf/theme@0.5.0-dev.8) (2021-09-15)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.7](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.6...@spryker-vsf/theme@0.5.0-dev.7) (2021-09-13)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.6](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.5...@spryker-vsf/theme@0.5.0-dev.6) (2021-09-13)
+
+
+### Bug Fixes
+
+* **theme:** default locale for nuxt and middleware ([5c7fef9](https://github.com/spryker/vsf-monorepo/commit/5c7fef9f4f46df907bb726f7ebab16eef05b234b))
+* **theme:** locales code as iso ([b6c6d05](https://github.com/spryker/vsf-monorepo/commit/b6c6d0522f2af97cbdd70a518f2281c70a99139a))
+* **theme:** locales-config ([cb5691e](https://github.com/spryker/vsf-monorepo/commit/cb5691eccfb58c6434ef73b158490d85a2aae29c))
+
+
+
+
+
+# [0.5.0-dev.5](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.4...@spryker-vsf/theme@0.5.0-dev.5) (2021-09-09)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.4](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.3...@spryker-vsf/theme@0.5.0-dev.4) (2021-09-08)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.2...@spryker-vsf/theme@0.5.0-dev.3) (2021-09-07)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.1...@spryker-vsf/theme@0.5.0-dev.2) (2021-09-03)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.0...@spryker-vsf/theme@0.5.0-dev.1) (2021-09-01)
+
+
+### Bug Fixes
+
+* **vjs-732:** added the ability to display taxes in the component ([fadd52b](https://github.com/spryker/vsf-monorepo/commit/fadd52b4df4675ed638c4829257c5701085c3ae7))
+* **vjs-732:** made a conclusion tax ([a95f3d5](https://github.com/spryker/vsf-monorepo/commit/a95f3d5fd9c728b87ea1abe83a55ba0448ee4094))
+
+
+
+
+
+# [0.5.0-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.1-dev.3...@spryker-vsf/theme@0.5.0-dev.0) (2021-08-26)
+
+
+### Features
+
+* **theme:** .env.template, nuxt and middleware configs update ([ce0881d](https://github.com/spryker/vsf-monorepo/commit/ce0881d7241cd0185346dd30f66a02d1e7144dbd))
+
+
+
+
+
+## [0.4.1-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.1-dev.2...@spryker-vsf/theme@0.4.1-dev.3) (2021-08-12)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.4.1-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.1-dev.1...@spryker-vsf/theme@0.4.1-dev.2) (2021-08-10)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.4.1-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.1-dev.0...@spryker-vsf/theme@0.4.1-dev.1) (2021-08-03)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.4.1-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.0...@spryker-vsf/theme@0.4.1-dev.0) (2021-08-02)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.4.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.0-next.0...@spryker-vsf/theme@0.4.0) (2021-08-02)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.4.0-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.4.0-dev.0...@spryker-vsf/theme@0.4.0-next.0) (2021-08-02)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.4.0-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.3.1-dev.0...@spryker-vsf/theme@0.4.0-dev.0) (2021-08-02)
+
+
+### Bug Fixes
+
+* **composable:** added getters and types for usetax ([285f166](https://github.com/spryker/vsf-monorepo/commit/285f166b3fc9ef32bf21e7d6b941eda26b001df0))
+* **composable:** resolved pr comments according to usetax ([af30577](https://github.com/spryker/vsf-monorepo/commit/af30577393f3d4a9df9e5e6fd1ec51c0ede2d46a))
+
+
+### Features
+
+* **composable:** added composable for getting tax amount ([6e1fffd](https://github.com/spryker/vsf-monorepo/commit/6e1fffd895a7bb49814fc31654607f84ca0db7d0))
+
+
+
+
+
+## [0.3.1-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.3.1-next.0...@spryker-vsf/theme@0.3.1-dev.0) (2021-07-30)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.3.1-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.3.0...@spryker-vsf/theme@0.3.1-next.0) (2021-07-30)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.3.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.3.0-next.0...@spryker-vsf/theme@0.3.0) (2021-07-30)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.3.0-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.3.0-dev.0...@spryker-vsf/theme@0.3.0-next.0) (2021-07-30)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.3.0-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.1-dev.3...@spryker-vsf/theme@0.3.0-dev.0) (2021-07-29)
+
+
+### Features
+
+* **theme:** add new UI components skeletons and base logic ([62a5652](https://github.com/spryker/vsf-monorepo/commit/62a5652a1faf26f8ecb9fed581d1e115f793521b))
+* **theme:** add return order button ([31c2cbc](https://github.com/spryker/vsf-monorepo/commit/31c2cbc3c5684c87a19f1d1bc46dd252b5da1c68))
+* **theme:** add return order component ([bc51d72](https://github.com/spryker/vsf-monorepo/commit/bc51d728f266338b82d47543144e82b8f4416e7f))
+* **theme:** add returns views skeleton ([7c54afa](https://github.com/spryker/vsf-monorepo/commit/7c54afa4c0083b66b11a59dbd3bd1d03690fcdff))
+* **theme:** extend templates functionallty ([f5b0ea4](https://github.com/spryker/vsf-monorepo/commit/f5b0ea4a3a65ee3ea16222b8bfb77b67f2c48434))
+* **theme:** extend UI elements ([191cdb3](https://github.com/spryker/vsf-monorepo/commit/191cdb3a9fe1fe8e4f99acc6907a8e0d56ec63a7))
+* **theme:** make checkbox selection work ([8b3722e](https://github.com/spryker/vsf-monorepo/commit/8b3722eb408e994511e8bd88e87f3f865199688a))
+* **theme:** start to add returns list ([7a4e37f](https://github.com/spryker/vsf-monorepo/commit/7a4e37f8ec2ef09e05b5f9579e325ffc47555e3a))
+* **theme:** update current order after return request ([8a94df5](https://github.com/spryker/vsf-monorepo/commit/8a94df5ad7edc81585257a530afe31430d08d456))
+* **theme:** update template to call return reasons ([232c64b](https://github.com/spryker/vsf-monorepo/commit/232c64b78c543c55bc646485c276b95a0d2719c7))
+
+
+
+
+
+## [0.2.1-dev.3](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.1-dev.2...@spryker-vsf/theme@0.2.1-dev.3) (2021-07-28)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.2.1-dev.2](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.1-dev.1...@spryker-vsf/theme@0.2.1-dev.2) (2021-07-28)
+
+
+### Bug Fixes
+
+* **theme:** fix api-client dependency version in theme ([3dc378b](https://github.com/spryker/vsf-monorepo/commit/3dc378ba0ea32f27e8c352408da82d02ca8ecc49))
+
+
+
+
+
+## [0.2.1-dev.1](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.1-dev.0...@spryker-vsf/theme@0.2.1-dev.1) (2021-07-21)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+## [0.2.1-dev.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.1-next.0...@spryker-vsf/theme@0.2.1-dev.0) (2021-07-14)
+
+
+### Bug Fixes
+
+* **theme:** hide add-to-cart button conditionally, make quantity selector work ([26002ad](https://github.com/spryker/vsf-monorepo/commit/26002ad92714f5462e5697fa6df982396ea60b5d))
+* **theme:** make images fully visible on list view ([e40f064](https://github.com/spryker/vsf-monorepo/commit/e40f0641440d9b992f4def1017881f06d185ade1))
+
+
+
+
+
+## [0.2.1-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0...@spryker-vsf/theme@0.2.1-next.0) (2021-07-14)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
 # [0.2.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-next.1...@spryker-vsf/theme@0.2.0) (2021-07-14)
 
 **Note:** Version bump only for package @spryker-vsf/theme
@@ -22,10 +387,28 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [0.2.0-next.0](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.15...@spryker-vsf/theme@0.2.0-next.0) (2021-07-12)
 
 
+
 ### Bug Fixes
 
 * **theme:** fallback syntax of the API env variable ([f377fe4](https://github.com/spryker/vsf-monorepo/commit/f377fe4b2c8c6f8ac19397791726b43e68bce3e8))
 * **theme:** fix changelogs ([4b5e7c2](https://github.com/spryker/vsf-monorepo/commit/4b5e7c2e69c26386f56f68cf5fe5a5413111f967))
+* **theme:** use env variable for API url ([4ded6bc](https://github.com/spryker/vsf-monorepo/commit/4ded6bc9cf3e815c88bdfffb54d02a7d752b706b))
+
+
+
+
+
+
+# [0.2.0-dev.16](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.2.0-dev.15...@spryker-vsf/theme@0.2.0-dev.16) (2021-07-14)
+
+
+
+### Bug Fixes
+
+* **theme:** fallback syntax of the API env variable ([f377fe4](https://github.com/spryker/vsf-monorepo/commit/f377fe4b2c8c6f8ac19397791726b43e68bce3e8))
+* **theme:** fix changelogs ([4b5e7c2](https://github.com/spryker/vsf-monorepo/commit/4b5e7c2e69c26386f56f68cf5fe5a5413111f967))
+* **theme:** hide add-to-cart button conditionally, make quantity selector work ([26002ad](https://github.com/spryker/vsf-monorepo/commit/26002ad92714f5462e5697fa6df982396ea60b5d))
+* **theme:** make images fully visible on list view ([e40f064](https://github.com/spryker/vsf-monorepo/commit/e40f0641440d9b992f4def1017881f06d185ade1))
 * **theme:** use env variable for API url ([4ded6bc](https://github.com/spryker/vsf-monorepo/commit/4ded6bc9cf3e815c88bdfffb54d02a7d752b706b))
 
 

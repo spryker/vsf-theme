@@ -34,9 +34,9 @@
       />
       <SfProperty
         data-cy="svsf-cartPreview-tax-property"
-        v-if="tax"
         :name="$t('Tax')"
-        :value="`${cartGetters.getFormattedPrice(tax)}`"
+        v-if="taxes"
+        :value="`${cartGetters.getFormattedPrice(taxes)}`"
         class="sf-property--full-width sf-property--large"
       />
       <template v-if="vouchers.length">
@@ -109,7 +109,7 @@
         data-cy="svsf-cartPreview-total-property"
         :name="$t('Total')"
         :value="`${cartGetters.getFormattedPrice(
-          totals.total + shippingPrice,
+          totals.total + shippingPrice + taxes,
         )}`"
         class="sf-property--full-width sf-property--large property-total"
       />
@@ -171,8 +171,8 @@ export default {
       applyCoupon,
       removeCoupon,
     } = useCart();
-    const { taxes } = useTax();
-    const tax = computed(() => taxGetters.getTaxAmount(taxes.value));
+    const { attributes } = useTax();
+    const tax = computed(() => taxGetters.getTaxAmount(attributes.value));
     const listIsHidden = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -185,6 +185,7 @@ export default {
     const discounts = computed(() => cartGetters.getDiscounts(cart.value));
     const vouchers = computed(() => cartGetters.getCoupons(cart.value));
     const giftCards = computed(() => cartGetters.getGiftCards(cart.value));
+    const taxes = computed(() => (shippingPrice.value ? totals.value.tax : 0));
 
     return {
       discounts,
@@ -220,6 +221,7 @@ export default {
         },
       ],
       shippingPrice,
+      taxes,
     };
   },
 };

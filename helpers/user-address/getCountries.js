@@ -32,6 +32,11 @@ export function getCountries() {
       name: 'United Kingdom',
       code: 'GB',
     },
+
+    {
+      name: 'United States of America',
+      code: 'US',
+    },
   ];
 }
 

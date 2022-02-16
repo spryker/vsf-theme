@@ -112,7 +112,7 @@ export default {
     /**
      * If user data is empty check for access token
      */
-    const userAccessToken = sprykerAuth.getAccessToken();
+    const userAccessToken = sprykerAuth.getToken();
 
     if (!userAccessToken) {
       return redirect('/');
@@ -124,7 +124,7 @@ export default {
     const { error: authError } = await api.getCustomerData(userAccessToken);
 
     if (authError) {
-      sprykerAuth.removeAccessToken();
+      sprykerAuth.removeToken();
       return redirect('/');
     }
   },

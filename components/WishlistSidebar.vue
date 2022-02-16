@@ -119,10 +119,7 @@
               :title="$t('Your bag is empty')"
               :level="2"
               class="empty-cart__heading"
-              :description="
-                $t(`Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in.`)
-              "
+              :description="$t('Empty')"
             />
           </div>
           <SfButton

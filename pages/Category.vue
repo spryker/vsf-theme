@@ -229,41 +229,17 @@
           tag="div"
           class="products__list"
         >
-          <SfProductCardHorizontal
-            data-cy="svsf-categorySection-product-horizontal"
+          <CardHorizontal
             v-for="(product, i) in products"
-            :key="productGetters.getSlug(product)"
-            :style="{ '--index': i }"
-            :title="productGetters.getName(product)"
-            :description="productGetters.getDescription(product)"
-            :image="productGetters.getCoverImage(product)"
-            :regular-price="
-              productGetters.getFormattedPrice(
-                productGetters.getPrice(product).regular,
-              )
-            "
-            :special-price="
-              productGetters.getFormattedPrice(
-                productGetters.getPrice(product).special,
-              )
-            "
-            :max-rating="5"
-            :score-rating="3"
-            :wishlistIcon="
-              productGetters.getProductConcretes(product).length === 1 &&
-              isAuthenticated
-                ? 'heart'
-                : false
-            "
-            :is-on-wishlist="false"
             class="products__product-card-horizontal"
-            @click:wishlist="addToWishlist(product)"
-            :link="
-              localePath(
-                `/p/${productGetters.getId(product)}/${productGetters.getSlug(
-                  product,
-                )}`,
-              )
+            :index="i"
+            :product="product"
+            :isAuthenticated="isAuthenticated"
+            :key="productGetters.getSlug(product)"
+            :isAddToCartVisible="isAddToCartVisible(product)"
+            @click:add-to-cart="addProductToCart"
+            @click:wishlist="
+              addToWishlist({ product: product.concreteProducts[0] })
             "
           />
         </transition-group>
@@ -398,7 +374,6 @@ import {
   SfHeading,
   SfMenuItem,
   SfProductCard,
-  SfProductCardHorizontal,
   SfPagination,
   SfAccordion,
   SfSelect,
@@ -424,6 +399,7 @@ import {
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import Filters from '../components/Filters';
+import CardHorizontal from '../components/Category/CardHorizontal';
 
 export default {
   name: 'Category',
@@ -491,14 +467,14 @@ export default {
       return product?.concreteProducts?.length === 1;
     };
 
-    const addProductToCart = (product) => {
+    const addProductToCart = (product, quantity) => {
       if (!product?.concreteProducts?.[0]) {
         return;
       }
 
       addToCart({
         product: product.concreteProducts[0],
-        quantity: 1,
+        quantity: quantity ?? 1,
       });
     };
 
@@ -527,7 +503,6 @@ export default {
     SfIcon,
     SfList,
     SfProductCard,
-    SfProductCardHorizontal,
     SfPagination,
     SfMenuItem,
     SfAccordion,
@@ -537,6 +512,7 @@ export default {
     SfHeading,
     Filters,
     SfNotification,
+    CardHorizontal,
   },
 };
 </script>

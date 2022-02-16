@@ -1,19 +1,9 @@
 <template>
   <div>
     <SfHeader
-      data-cy="app-header"
-      @click:cart="toggleCartSidebar"
-      @click:wishlist="toggleWishlistSidebar"
-      @click:account="handleAccountClick"
-      @enter:search="changeSearchTerm"
-      @change:search="p => (term = p)"
-      :searchValue="term"
-      :cartItemsQty="cartTotalItems"
-      :accountIcon="accountIcon"
-      :wishlistIcon="isAuthenticated ? 'heart' : false"
-      is-nav-visible
-      @keyup.enter="changeSearchTerm"
+      data-cy="svsf-appHeader-header"
       class="sf-header--has-mobile-search"
+      :is-nav-visible="false"
     >
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
@@ -124,6 +114,60 @@
           </SfButton>
         </div>
       </template>
+      <template #search>
+        <div class="sf-search-bar searchbar">
+          <input
+            data-cy="svsf-appHeader-searchCompletion-input"
+            class="sf-search-bar__input searchbar_hint"
+            readonly="readonly"
+            :value="searchCompletion === term ? '' : searchCompletion"
+          />
+          <input
+            data-cy="svsf-appHeader-search-input"
+            class="sf-search-bar__input searchbar_input"
+            type="search"
+            placeholder="Search"
+            v-model="term"
+            @keyup.enter="changeSearchTerm($event.target.value), clearTerm()"
+            @keydown.tab.prevent="term = searchCompletion || term"
+            @keyup.esc="clearTerm"
+            @blur="clearTerm"
+          />
+          <div
+            data-cy="svsf-appHeader-productsPopUp"
+            v-if="getAbstractProducts(suggestions).length > 0"
+            class="searchbar_suggestions"
+            @mouseenter="blurLock = true"
+            @mouseleave="blurLock = false"
+          >
+            <div
+              :data-cy="`svsf-appHeader-products-${getAbstractProductSku(
+                product,
+              )}`"
+              class="searchbar_suggestions-product"
+              v-for="product in getAbstractProducts(suggestions)"
+              :key="getAbstractProductSku(product)"
+              @click="goto(getAbstractProductUrl(product))"
+            >
+              <div class="searchbar_suggestions-product-image">
+                <img :src="getAbstractProductSmallImage(product)" />
+              </div>
+              <div class="searchbar_suggestions-product-info">
+                <p class="searchbar_suggestions-product-title">
+                  {{ getAbstractProductName(product) }}
+                </p>
+                <p class="searchbar_suggestions-product-price">
+                  {{
+                    productGetters.getFormattedPrice(
+                      getAbstractProductPrice(product),
+                    )
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </SfHeader>
 
     <!-- TODO: delete when SfHeaderNavigation mobile menu will be fixed -->
@@ -178,15 +222,19 @@ import {
   useUser,
   cartGetters,
   useCategory,
+  productGetters,
 } from '@spryker-vsf/composables';
-import { computed, ref, watch } from '@vue/composition-api';
+import {
+  useCatalogSearchSuggestions,
+  catalogSearchSuggestionsGetters as suggestionsGetters,
+} from '@spryker-vsf/catalog-search-suggestions';
+import { computed, ref, watch, onMounted } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useUiHelpers, useUiState } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 
 export default {
-  name: 'AppHeader',
   components: {
     SfHeader,
     SfImage,
@@ -218,8 +266,19 @@ export default {
     const { categories, search: searchCategories } = useCategory(
       'category-tree',
     );
-
     const term = ref(getFacetsFromURL().term);
+    const blurLock = ref(false);
+    const {
+      suggestions,
+      search: searchSuggestions,
+      loading: suggestionsLoading,
+    } = useCatalogSearchSuggestions();
+
+    const searchCompletion = computed(function () {
+      return suggestionsLoading.value
+        ? ''
+        : suggestionsGetters.getCompletion(suggestions.value, term.value);
+    });
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -239,16 +298,33 @@ export default {
       toggleModal();
     };
 
-    watch(isMobileMenuOpen, () => {
-      const overflow = isMobileMenuOpen.value ? 'hidden' : '';
-      Object.assign(document.documentElement.style, { overflow });
+    onSSR(async () => {
+      await searchCategories();
     });
 
-    onSSR(async () => {
+    onMounted(async () => {
       await loadUser();
       await loadCart();
       await loadWishlist();
-      await searchCategories();
+    });
+
+    function clearTerm() {
+      !blurLock.value && (term.value = '');
+    }
+
+    function goto(path) {
+      blurLock.value = false;
+      clearTerm();
+      $router.push(path);
+    }
+
+    watch(term, () => {
+      searchSuggestions(term.value);
+    });
+
+    watch(isMobileMenuOpen, () => {
+      const overflow = isMobileMenuOpen.value ? 'hidden' : '';
+      Object.assign(document.documentElement.style, { overflow });
     });
 
     return {
@@ -263,6 +339,13 @@ export default {
       term,
       currentCategory: '',
       isVisible: false,
+      clearTerm,
+      suggestions,
+      productGetters,
+      searchCompletion,
+      blurLock,
+      goto,
+      ...suggestionsGetters,
       isMobileMenuOpen,
       closeMobileMenu,
       toggleMobileMenu,
@@ -290,6 +373,66 @@ export default {
   --header-navigation-item-margin: 0 var(--spacer-base);
 }
 
+.searchbar {
+  position: relative;
+  &_input {
+    z-index: 2;
+  }
+  &_hint {
+    position: absolute;
+    border-color: transparent;
+    color: var(--_c-gray-accent-darken);
+    z-index: 1;
+  }
+  &_suggestions {
+    width: 320px;
+    max-height: 50vh;
+    box-sizing: border-box;
+    position: absolute;
+    background-color: white;
+    right: 0;
+    padding: 30px;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
+    top: 50px;
+    overflow: auto;
+
+    &-product {
+      display: flex;
+      align-items: center;
+      padding-bottom: 30px;
+      cursor: pointer;
+
+      &:hover &-title,
+      &:hover &-price {
+        color: var(--_c-green-primary);
+      }
+
+      &-info {
+        padding-left: 30px;
+      }
+
+      &-title,
+      &-price {
+        margin: 0;
+      }
+
+      &-price {
+        color: var(--_c-gray-primary-lighten);
+      }
+
+      &-image {
+        height: 50px;
+
+        & > img {
+          object-fit: contain;
+          width: 50px;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
 .mobile-menu {
   position: fixed;
   left: 0;
@@ -297,6 +440,7 @@ export default {
   z-index: 3;
   overflow: auto;
   height: 100%;
+
   .nuxt-link-active {
     font-weight: bold;
   }

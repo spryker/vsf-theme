@@ -1,13 +1,19 @@
-import webpack from 'webpack';
+const netlifyUrl = process.env.URL;
+const currencies = process.env.CURRENCIES
+  ? process.env.CURRENCIES.split(',').map((currency) => ({
+      name: currency,
+      label: currency,
+    }))
+  : [
+      {
+        name: 'EUR',
+        label: 'EUR',
+      },
+    ];
 
-export default {
-  mode: 'universal',
-  server: {
-    port: 3000,
-    host: '0.0.0.0',
-  },
+module.exports = {
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Spryker VSF',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -39,7 +45,6 @@ export default {
         once: true,
       },
     ],
-    script: [],
   },
   loading: { color: '#fff' },
   plugins: [],
@@ -54,23 +59,45 @@ export default {
         coreDevelopment: true,
         // @core-development-only-end
         useRawSource: {
-          dev: ['@spryker-vsf/composables', '@vue-storefront/core'],
-          prod: ['@spryker-vsf/composables', '@vue-storefront/core'],
+          dev: [
+            '@spryker-vsf/oidc-client',
+            '@spryker-vsf/oidc',
+            '@spryker-vsf/catalog-search-suggestions',
+            '@spryker-vsf/composables',
+            '@spryker-vsf/api',
+            '@vue-storefront/core',
+          ],
+          prod: [
+            '@spryker-vsf/oidc-client',
+            '@spryker-vsf/oidc',
+            '@spryker-vsf/catalog-search-suggestions',
+            '@spryker-vsf/composables',
+            '@spryker-vsf/api',
+            '@vue-storefront/core',
+          ],
         },
       },
     ],
-    ['@vue-storefront/nuxt-theme'],
+    '@spryker-vsf/catalog-search-suggestions/nuxt',
+    [
+      '@spryker-vsf/oidc-client/nuxt',
+      {
+        providers: {
+          spryker: {
+            clientId: 'clientId',
+            authUri: 'http://localhost:3000/auth',
+            tokenUri: 'https://glue.de.spryker.local/token',
+            publicKey:
+              'Environment public key Example: -----BEGIN PUBLIC KEY----- ...',
+            enablePkce: true,
+          },
+        },
+      },
+    ],
+    '@spryker-vsf/oidc/nuxt',
     [
       '@spryker-vsf/composables/nuxt',
       {
-        currency: {
-          default: 'EUR',
-          options: [
-            { name: 'EUR', label: 'Euro' },
-            { name: 'CHF', label: 'Swiss Franc' },
-          ],
-        },
-        store: 'DE',
         i18n: {
           useNuxtI18nModule: true,
         },
@@ -102,55 +129,61 @@ export default {
     ],
   ],
   modules: [
-    '@vue-storefront/middleware/nuxt',
+    ...(!netlifyUrl ? ['@vue-storefront/middleware/nuxt'] : []),
     'vue-scrollto/nuxt',
     'nuxt-i18n',
     'cookie-universal-nuxt',
   ],
-  // publicRuntimeConfig: {
-  //   middlewareUrl: 'http://localhost:8181',
-  // },
+  publicRuntimeConfig: {
+    ...(netlifyUrl ? { middlewareUrl: netlifyUrl } : {}),
+    spryker: {
+      contentBackendUrl:
+        process.env.CONTENT_BACKEND_URL ||
+        'https://eb-demo-server.herokuapp.com',
+      currency: {
+        default: process.env.CURRENCY_DEFAULT || 'EUR',
+        options: currencies,
+      },
+      store: process.env.STORE || 'DE',
+      priceMode: process.env.PRICE_MODE || 'GROSS_MODE',
+      enabledLocales: process.env.LOCALES
+        ? process.env.LOCALES.split(',')
+        : ['en_US', 'de_DE'],
+    },
+  },
   i18n: {
-    defaultLocale: 'en',
-    langDir: 'lang/',
+    country: process.env.COUNTRY || 'DE',
+    currency: process.env.CURRENCY || 'EUR',
+    currencies,
     locales: [
-      { code: 'en', iso: 'en_US', file: 'en.js', label: 'English' },
-      { code: 'de', iso: 'de_DE', file: 'de.js', label: 'German' },
+      { code: 'en_US', iso: 'en_US', label: 'English', file: 'en.js' },
+      { code: 'de_DE', iso: 'de_DE', label: 'German', file: 'de.js' },
     ],
+    defaultLocale: process.env.LOCALE_DEFAULT || 'en_US',
     lazy: true,
     seo: true,
+    langDir: 'lang/',
+    vueI18n: {
+      fallbackLocale: process.env.LOCALE_DEFAULT || 'en_US',
+    },
     detectBrowserLanguage: {
       cookieKey: 'vsf-locale',
-      fallbackLocale: 'en',
+      fallbackLocale: 'en_US',
     },
   },
   styleResources: {
-    scss: [
-      require.resolve('@storefront-ui/shared/styles/_helpers.scss', {
-        paths: [process.cwd()],
-      }),
-    ],
+    scss: '@storefront-ui/shared/styles/_helpers.scss',
   },
   build: {
     transpile: ['vee-validate/dist/rules'],
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.VERSION': JSON.stringify({
-          // eslint-disable-next-line global-require
-          version: require('./package.json').version,
-          lastCommit: process.env.LAST_COMMIT || '',
-        }),
-      }),
-    ],
   },
   router: {
     middleware: ['checkout'],
-    scrollBehavior(_to, _from, savedPosition) {
-      if (savedPosition) {
-        return savedPosition;
-      } else {
-        return { x: 0, y: 0 };
-      }
+    extendRoutes(routes) {
+      // Adding routes generated by '@vue-storefront/nuxt-theme' module
+      // https://github.com/vuestorefront/vue-storefront/blob/main/packages/core/nuxt-theme-module/routes.js
+      const vsfRoutes = require('./vsf.routes.js');
+      routes.push(...vsfRoutes());
     },
   },
 };

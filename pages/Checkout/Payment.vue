@@ -166,9 +166,9 @@
           />
           <SfProperty
             data-cy="svsf-checkoutPaymentSection-tax-property-list"
-            v-if="tax"
+            v-if="taxes"
             :name="$t('Tax')"
-            :value="cartGetters.getFormattedPrice(tax)"
+            :value="cartGetters.getFormattedPrice(taxes)"
             class="sf-property--full-width property"
           />
         </div>
@@ -317,8 +317,8 @@ export default {
 
     const isPaymentReady = ref(false);
     const terms = ref(false);
-    const { taxes } = useTax();
-    const tax = computed(() => taxGetters.getTaxAmount(taxes.value));
+    const { attributes } = useTax();
+    const tax = computed(() => taxGetters.getTaxAmount(attributes.value));
     const customerPersonalDetails = useCustomerPersonalDetails();
     const billing = useBilling();
     const shipping = useShipping();
@@ -372,7 +372,7 @@ export default {
     const vouchers = computed(() => cartGetters.getCoupons(cart.value));
     const giftCards = computed(() => cartGetters.getGiftCards(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
-
+    const taxes = computed(() => totals.value.tax);
     const { user, isAuthenticated } = useUser();
 
     const personalDetails = inject('checkoutPersonalDetails');
@@ -390,7 +390,7 @@ export default {
     const totalPrice = computed(() => {
       const { priceToPay, total } = totals.value;
       return cartGetters.getFormattedPrice(
-        (priceToPay ?? total) + shippingPrice.value,
+        (priceToPay ?? total) + shippingPrice.value + taxes.value,
       );
     });
 
@@ -401,6 +401,7 @@ export default {
       products,
       totals,
       tax,
+      taxes,
       totalPrice,
       tableHeaders: ['Description', 'Quantity', 'Amount'],
 

@@ -47,6 +47,7 @@ import {
   SfCharacteristic,
 } from '@storefront-ui/vue';
 import { ref, computed } from '@vue/composition-api';
+import { useLocale } from '@spryker-vsf/composables';
 
 export default {
   components: {
@@ -57,11 +58,13 @@ export default {
     SfBottomModal,
     SfCharacteristic,
   },
+
   setup(props, context) {
-    const { locales, locale } = context.root.$i18n;
+    const { locales } = useLocale();
+    const { locale } = context.root.$i18n;
     const isLangModalOpen = ref(false);
     const availableLocales = computed(() =>
-      locales.filter((i) => i.code !== locale),
+      locales.value.filter((i) => i.code !== locale),
     );
 
     const setLocale = async (locale, url) => {

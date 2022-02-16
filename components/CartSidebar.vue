@@ -109,10 +109,7 @@
               :title="$t('Your cart is empty')"
               :level="2"
               class="empty-cart__heading"
-              :description="
-                $t(`Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in.`)
-              "
+              :description="$t('Empty')"
             />
           </div>
         </div>
@@ -171,7 +168,7 @@ import {
   SfImage,
   SfNotification,
 } from '@storefront-ui/vue';
-import { computed, ref, watch } from '@vue/composition-api';
+import { computed, ref, watch, onMounted } from '@vue/composition-api';
 import {
   useCart,
   useUser,
@@ -179,7 +176,6 @@ import {
   useWishlist,
 } from '@spryker-vsf/composables';
 import { useUiState } from '~/composables';
-import { onSSR } from '@vue-storefront/core';
 import Fragment from '~/components/Fragment';
 
 export default {
@@ -255,7 +251,7 @@ export default {
           : null;
     });
 
-    onSSR(async () => {
+    onMounted(async () => {
       await loadCart();
     });
 

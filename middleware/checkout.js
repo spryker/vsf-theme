@@ -10,7 +10,7 @@ export default async ({ $vsf, app }) => {
   const currentPath = fullPath.split(`${checkoutPath}/`)[1];
   const { included } = await (sprykerAuth.getCartId()
     ? api.getCart({
-        accessToken: sprykerAuth.getAccessToken(),
+        accessToken: sprykerAuth.getToken(),
         cartId: sprykerAuth.getCartId(),
       })
     : api.getGuestCart({
