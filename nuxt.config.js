@@ -84,10 +84,12 @@ module.exports = {
       {
         providers: {
           spryker: {
-            clientId: 'clientId',
-            authUri: 'http://localhost:3000/auth',
-            tokenUri: 'https://glue.de.spryker.local/token',
+            clientId: process.env.CLIENT_ID || 'clientId',
+            authUri: process.env.AUTH_URI || 'http://localhost:3000/auth',
+            tokenUri:
+              process.env.TOKEN_URI || 'https://glue.de.spryker.local/token',
             publicKey:
+              process.env.PUBLIC_KEY ||
               'Environment public key Example: -----BEGIN PUBLIC KEY----- ...',
             enablePkce: true,
           },

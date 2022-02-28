@@ -1,6 +1,6 @@
 {
   "name": "@spryker-vsf/theme",
-  "version": "0.5.0-dev.17",
+  "version": "0.5.0-dev.20",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.2.1",
-    "@spryker-vsf/api": "^0.6.0-dev.5",
-    "@spryker-vsf/catalog-search-suggestions": "^0.2.0-dev.2",
-    "@spryker-vsf/composables": "^0.6.0-dev.6",
-    "@spryker-vsf/oidc": "^0.2.0-dev.0",
-    "@spryker-vsf/oidc-client": "^0.2.0-dev.5",
+    "@spryker-vsf/api": "^0.6.0-dev.7",
+    "@spryker-vsf/catalog-search-suggestions": "^0.2.0-dev.4",
+    "@spryker-vsf/composables": "^0.6.0-dev.8",
+    "@spryker-vsf/oidc": "^0.2.0-dev.2",
+    "@spryker-vsf/oidc-client": "^0.2.0-dev.7",
     "@storefront-ui/vue": "~0.10.5",
     "@vue-storefront/core": "~2.3.4",
     "@vue-storefront/middleware": "~2.3.4",
@@ -44,5 +44,7 @@
   },
   "resolutions": {
     "@babel/preset-env": "7.12.13"
-  }
+  },
+  "types": "src/index.ts",
+  "devTypes": "src/index.ts"
 }

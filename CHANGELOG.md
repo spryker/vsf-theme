@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-dev.20](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.19...@spryker-vsf/theme@0.5.0-dev.20) (2022-02-28)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.19](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.18...@spryker-vsf/theme@0.5.0-dev.19) (2022-02-21)
+
+**Note:** Version bump only for package @spryker-vsf/theme
+
+
+
+
+
+# [0.5.0-dev.18](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.17...@spryker-vsf/theme@0.5.0-dev.18) (2022-02-16)
+
+
+### Bug Fixes
+
+* faas-1457 Adding commit script and refactoring extract theme script ([7914e38](https://github.com/spryker/vsf-monorepo/commit/7914e3828b9dc1321af775b940645fd847cff15f))
+
+
+### Features
+
+* faas-1766 Adding netlify related configs ([b48ecad](https://github.com/spryker/vsf-monorepo/commit/b48ecadf7e02c1232a9b4b67fe12cf7238e5f1e2))
+* faas-1766 updating base nuxt config with netlify settings ([12584ee](https://github.com/spryker/vsf-monorepo/commit/12584eeb18cde576edc8ead8d263da618ab76601))
+* faas-1766 updating package.json ([e483fd4](https://github.com/spryker/vsf-monorepo/commit/e483fd4743cb6ae1e43e961626502dfecd5927df))
+
+
+
+
+
 # [0.5.0-dev.17](https://github.com/spryker/vsf-monorepo/compare/@spryker-vsf/theme@0.5.0-dev.16...@spryker-vsf/theme@0.5.0-dev.17) (2022-02-10)
 
 
