@@ -1623,40 +1623,40 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@spryker-vsf/api@^0.6.0-dev.5":
-  version "0.6.0-dev.5"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.6.0-dev.5.tgz#99dff120e943834ff60622d2a257bd1516ec6b96"
-  integrity sha512-zrQx6Ygk2iLZFoBUAo8TkHipDrrYDSAGEngj1D5rw2lig5PEsEgUe1bR0RVwvP9p12LqrNfsCS6bLE9WGc2eOQ==
+"@spryker-vsf/api@^0.6.0-dev.7":
+  version "0.6.0-dev.7"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/api/-/api-0.6.0-dev.7.tgz#084df549ef6cadd21dbd7985d200e11fe59bd9b8"
+  integrity sha512-0ZYSHvSyyzhpaC6ziO23HrzpsstUcBo/NnR5SxjNR+N1qUQd5lJjd1P6xCUcZiUoyRMwiV3+7MZKi09WyqXQQQ==
   dependencies:
     "@vue-storefront/core" "~2.3.4"
     axios "^0.21.0"
 
-"@spryker-vsf/catalog-search-suggestions@^0.2.0-dev.2":
-  version "0.2.0-dev.2"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/catalog-search-suggestions/-/catalog-search-suggestions-0.2.0-dev.2.tgz#5080972640585dd053f64d15ae4dd4572ab1fa1f"
-  integrity sha512-p/AUcFsNNaMn12fMBAPUlVFDXgoBQ8TF2AQkIA20QekmJdKKS7yIceze8lh6zKUs2P78OVf8I6wFjDu1ppU9Hg==
+"@spryker-vsf/catalog-search-suggestions@^0.2.0-dev.4":
+  version "0.2.0-dev.4"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/catalog-search-suggestions/-/catalog-search-suggestions-0.2.0-dev.4.tgz#916d09846dacbf7edb039e2b6d2662f11f50d156"
+  integrity sha512-CEUJ7ZPy3qjnLnAD4mG4RMRx3stKVeakN9CIcvpuDw4AbGRE38/iwRGbjZoCJQqVnfWe5YsIYWkqNGCcmh0r5g==
 
-"@spryker-vsf/composables@^0.6.0-dev.6":
-  version "0.6.0-dev.6"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.6.0-dev.6.tgz#062adc5c283c88ba5b9759f4d989964f66fc39b1"
-  integrity sha512-q/+hD9d6yGco0crkBQawqDOIfaRi3Ym/8N4+9k4rTRf63G+MLnuUaFPMtu/WkYjmTVkLREZKAvrFqk6rINUQ4Q==
+"@spryker-vsf/composables@^0.6.0-dev.8":
+  version "0.6.0-dev.8"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/composables/-/composables-0.6.0-dev.8.tgz#3b0996bf49711fe0041f8100b95921fb9be7f2f0"
+  integrity sha512-T/8tWJ/ogP6tA0dQJr0/H+SIV9eB03Gax4oJYWfYHh9taD7z4vR4WnJGcKisc6+h0dGduQH7ogNy0D1MBQwnvQ==
   dependencies:
-    "@spryker-vsf/api" "^0.6.0-dev.5"
+    "@spryker-vsf/api" "^0.6.0-dev.7"
     "@vue-storefront/core" "~2.3.4"
     lodash "^4.17.20"
 
-"@spryker-vsf/oidc-client@^0.2.0-dev.5":
-  version "0.2.0-dev.5"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/oidc-client/-/oidc-client-0.2.0-dev.5.tgz#5df9de1198fafaa957ddd08deaf2263bb379283c"
-  integrity sha512-IqWfdB247alG5rq0TL5f6Bg3MP8K/ziM594HJHFqzPpE8Yh4cLkU2pYmknhwJNj9RKzbzpptzqIejdwQ28AWyA==
+"@spryker-vsf/oidc-client@^0.2.0-dev.7":
+  version "0.2.0-dev.7"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/oidc-client/-/oidc-client-0.2.0-dev.7.tgz#ec8d3ea2f8d5b73b9d54d85d3efae3cbf37f3db0"
+  integrity sha512-+tRFnZMaGguuAaCunT2qa1QqGznrBPvq69UnNo01wUB4r0RM4yThs6HrVCyfQTif7Y33vujfyfrD9br86TFIcg==
   dependencies:
     jsrsasign "^10.3.0"
     jsrsasign-util "^1.0.5"
 
-"@spryker-vsf/oidc@^0.2.0-dev.0":
-  version "0.2.0-dev.0"
-  resolved "https://registry.yarnpkg.com/@spryker-vsf/oidc/-/oidc-0.2.0-dev.0.tgz#ffe5e104c5b2c4f5de4fef736fa6b935b7ca7fb5"
-  integrity sha512-fpesRepqi/FNpYtcCMAhmcJnn8osUKt9ss97A564mKQdU0b3/cPj2sxLi4DLdSuy5vn993Tw4oTID8PH1OV3zA==
+"@spryker-vsf/oidc@^0.2.0-dev.2":
+  version "0.2.0-dev.2"
+  resolved "https://registry.yarnpkg.com/@spryker-vsf/oidc/-/oidc-0.2.0-dev.2.tgz#b3a748be7e62dcf50c980549a4ae81ecb035f34f"
+  integrity sha512-dkyoCZhPYD5uG1bDibng87lM2Wu3Ozze/LulqqW4RWRiHWw2b9DzpwlnYK4vQfiplN0iVDxbqDo/1fcKmwjpaw==
 
 "@storefront-ui/shared@0.10.71":
   version "0.10.71"
