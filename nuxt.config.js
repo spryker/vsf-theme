@@ -11,6 +11,9 @@ const currencies = process.env.CURRENCIES
       },
     ];
 
+console.log('API_URL:', process.env.API_URL);
+console.log('GLUE_BASE_URL:', process.env.GLUE_BASE_URL);
+
 module.exports = {
   head: {
     title: 'Spryker VSF',
